@@ -1,7 +1,7 @@
 {
-  "name": "wastl",
+  "name": "wastl-mobile",
   "version": "1.0.0",
-  "description": "wastl: An Ionic project",
+  "description": "wastl-mobile: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^0.7.1",
