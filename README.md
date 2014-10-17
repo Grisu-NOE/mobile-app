@@ -1,4 +1,4 @@
-WASTL Mobile [![Build Status](https://travis-ci.org/l-e-X/wastl-mobile.svg?branch=master)](https://travis-ci.org/l-e-X/wastl-mobile) [![Coverage Status](https://img.shields.io/coveralls/l-e-X/wastl-mobile.svg)](https://coveralls.io/r/l-e-X/wastl-mobile)
+WASTL Mobile [![Build Status](https://travis-ci.org/l-e-X/wastl-mobile.svg?branch=master)](https://travis-ci.org/l-e-X/wastl-mobile)
 ============
 
 The already existing mobile web-app (http://mobile.leitstelle122.at/) of WASTL - shortened for "<strong>Wa</strong>rn- und Alarm<strong>st</strong>ufen<strong>l</strong>iste" in German - is used to display several realtime information of currently running fire brigade incidents in Lower Austria. The incident data is kindly provided by the voluntary fire department "Freiwillige Feuerwehr Krems". WASTL is a project by several public sector entities:
