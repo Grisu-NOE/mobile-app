@@ -5,8 +5,6 @@ node_modules
 *.tmp.*
 log.txt
 .sass-cache/
-bower_components/
-components/
 tmp
 temp
 dist
