@@ -1,5 +1,5 @@
 describe('Hello world', function() {
     it('says hello', function() {
-        expect("Hello world!").toEqual("Hello world!");
+        expect("ello world!").toEqual("Hello world!");
     });
 });
