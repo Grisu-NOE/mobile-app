@@ -10,10 +10,14 @@
     "gulp-rename": "^1.2.0"
   },
   "devDependencies": {
-    "karma": "^0.12.24",
+    "karma-cli": "^0.0.4",
     "gulp-jasmine": "^1.0.1",
     "gulp-karma": "^0.0.4",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-jasmine": "^0.1.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/l-e-X/wastl-mobile.git"
   }
 }
