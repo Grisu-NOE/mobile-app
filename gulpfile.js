@@ -12,7 +12,10 @@ var paths = {
   sass: ['./scss/**/*.scss']
 };
 
-gulp.task('build', ['sass']);
+// for integration system
+gulp.task('build-and-test', ['sass', 'test']);
+
+gulp.task('watch-all', ['watch-sass', 'watch-test']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
@@ -26,12 +29,11 @@ gulp.task('sass', function(done) {
     .on('end', done);
 });
 
-gulp.task('autosass', function() {
+gulp.task('watch-sass', function() {
   gulp.watch(paths.sass, ['sass']);
 });
 
 gulp.task('test', function() {
-  // Be sure to return the stream
   // NOTE: Using the fake './foobar' so as to run the files
   // listed in karma.conf.js INSTEAD of what was passed to
   // gulp.src !
@@ -40,15 +42,10 @@ gulp.task('test', function() {
       configFile: 'karma.conf.js',
       action: 'run'
     }));
-    //.on('error', function(err) {
-      // Make sure failed tests cause gulp to exit non-zero
-      //console.log(err);
-      //this.emit('end'); //instead of erroring the stream, end it
-    //});
 });
 
-gulp.task('autotest', function() {
-  return gulp.watch(['www/js/**/*.js', 'test/spec/*.js'], ['test']);
+gulp.task('watch-test', function() {
+  return gulp.watch(['www/js/**/*.js', 'test/unit/*.js'], ['test']);
 });
 
 gulp.task('install', ['git-check'], function() {

@@ -6,8 +6,6 @@ node_js:
 
 before_install:
   - npm install -g gulp
-  - npm install -g karma
 
 script:
-  - gulp build
-  - gulp test
+  - gulp build-and-test
