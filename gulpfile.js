@@ -7,10 +7,15 @@ var karma = require('gulp-karma');
 var paths = {
   sass: ['./scss/**/*.scss']
 };
+var isSassWatchOn = false;
 
 gulp.task('sass', function(done) {
+  var sassOptions = {};
+  if (isSassWatchOn) {
+      sassOptions.errLogToConsole = true;
+  }
   gulp.src('./scss/ionic.app.scss')
-    .pipe(sass())
+    .pipe(sass(sassOptions))
     .pipe(gulp.dest('./www/css/'))
     .pipe(minifyCss({
       keepSpecialComments: 0
@@ -23,6 +28,7 @@ gulp.task('sass', function(done) {
 gulp.task('watch-all', ['watch-sass', 'watch-test']);
 
 gulp.task('watch-sass', function() {
+  isSassWatchOn = true;
   gulp.watch(paths.sass, ['sass']);
 });
 
