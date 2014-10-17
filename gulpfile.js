@@ -39,12 +39,12 @@ gulp.task('test', function() {
     .pipe(karma({
       configFile: 'karma.conf.js',
       action: 'run'
-    }))
-    .on('error', function(err) {
+    }));
+    //.on('error', function(err) {
       // Make sure failed tests cause gulp to exit non-zero
-      console.log(err);
-      this.emit('end'); //instead of erroring the stream, end it
-    });
+      //console.log(err);
+      //this.emit('end'); //instead of erroring the stream, end it
+    //});
 });
 
 gulp.task('autotest', function() {
