@@ -12,11 +12,6 @@ var paths = {
   sass: ['./scss/**/*.scss']
 };
 
-// for integration system
-gulp.task('build-and-test', ['sass', 'test']);
-
-gulp.task('watch-all', ['watch-sass', 'watch-test']);
-
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
     .pipe(sass())
@@ -28,6 +23,8 @@ gulp.task('sass', function(done) {
     .pipe(gulp.dest('./www/css/'))
     .on('end', done);
 });
+
+gulp.task('watch-all', ['watch-sass', 'watch-test']);
 
 gulp.task('watch-sass', function() {
   gulp.watch(paths.sass, ['sass']);
