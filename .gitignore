@@ -12,3 +12,4 @@ temp
 dist
 .idea
 www/css/*
+platforms/*/www
