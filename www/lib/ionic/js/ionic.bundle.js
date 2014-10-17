@@ -16379,7 +16379,39 @@ function $InterpolateProvider() {
      *    embedded expression in order to return an interpolation function. Strings with no
      *    embedded expression will return null for the interpolation function.
      * @param {string=} trustedContext when provided, the returned function passes the interpolated
-     *    result through {@link ng.$sce#getTrusted $sce.getTrusted(intindex = length;
+     *    result through {@link ng.$sce#getTrusted $sce.getTrusted(interpolatedResult,
+     *    trustedContext)} before returning it.  Refer to the {@link ng.$sce $sce} service that
+     *    provides Strict Contextual Escaping for details.
+     * @returns {function(context)} an interpolation function which is used to compute the
+     *    interpolated string. The function has these parameters:
+     *
+     *    * `context`: an object against which any expressions embedded in the strings are evaluated
+     *      against.
+     *
+     */
+    function $interpolate(text, mustHaveExpression, trustedContext) {
+      var startIndex,
+          endIndex,
+          index = 0,
+          parts = [],
+          length = text.length,
+          hasInterpolation = false,
+          fn,
+          exp,
+          concat = [];
+
+      while(index < length) {
+        if ( ((startIndex = text.indexOf(startSymbol, index)) != -1) &&
+             ((endIndex = text.indexOf(endSymbol, startIndex + startSymbolLength)) != -1) ) {
+          (index != startIndex) && parts.push(text.substring(index, startIndex));
+          parts.push(fn = $parse(exp = text.substring(startIndex + startSymbolLength, endIndex)));
+          fn.exp = exp;
+          index = endIndex + endSymbolLength;
+          hasInterpolation = true;
+        } else {
+          // we did not find anything, so we have to add the remainder to the parts array
+          (index != length) && parts.push(text.substring(index));
+          index = length;
         }
       }
 
@@ -23768,7 +23800,62 @@ function FormController(element, attrs, $scope, $animate) {
       (isValid ? INVALID_CLASS : VALID_CLASS) + validationErrorKey);
   }
 
-  /* {
+  /**
+   * @ngdoc method
+   * @name form.FormController#$addControl
+   *
+   * @description
+   * Register a control with the form.
+   *
+   * Input elements using ngModelController do this automatically when they are linked.
+   */
+  form.$addControl = function(control) {
+    // Breaking change - before, inputs whose name was "hasOwnProperty" were quietly ignored
+    // and not added to the scope.  Now we throw an error.
+    assertNotHasOwnProperty(control.$name, 'input');
+    controls.push(control);
+
+    if (control.$name) {
+      form[control.$name] = control;
+    }
+  };
+
+  /**
+   * @ngdoc method
+   * @name form.FormController#$removeControl
+   *
+   * @description
+   * Deregister a control from the form.
+   *
+   * Input elements using ngModelController do this automatically when they are destroyed.
+   */
+  form.$removeControl = function(control) {
+    if (control.$name && form[control.$name] === control) {
+      delete form[control.$name];
+    }
+    forEach(errors, function(queue, validationToken) {
+      form.$setValidity(validationToken, true, control);
+    });
+
+    arrayRemove(controls, control);
+  };
+
+  /**
+   * @ngdoc method
+   * @name form.FormController#$setValidity
+   *
+   * @description
+   * Sets the validity of a form control.
+   *
+   * This method will also propagate to parent forms.
+   */
+  form.$setValidity = function(validationToken, isValid, control) {
+    var queue = errors[validationToken];
+
+    if (isValid) {
+      if (queue) {
+        arrayRemove(queue, control);
+        if (!queue.length) {
           invalidCount--;
           if (!invalidCount) {
             toggleValidCss(isValid);
@@ -39015,7 +39102,69 @@ function($rootScope, $state, $location, $window, $injector, $animate, $ionicNavV
         // to has an existing back view from a different history than itself, then
         // it's back view would be better represented using the current view as its back view
         var switchToViewBackView = this._getViewById(switchToView.backViewId);
-        inextViewOptions) {
+        if(switchToViewBackView && switchToView.historyId !== switchToViewBackView.historyId) {
+          hist.stack[hist.cursor].backViewId = currentView.viewId;
+        }
+
+      } else {
+
+        // set a new unique viewId
+        rsp.viewId = createViewId(currentStateId);
+
+        if(currentView) {
+          // set the forward view if there is a current view (ie: if its not the first view)
+          currentView.forwardViewId = rsp.viewId;
+
+          // its only moving forward if its in the same history
+          if(hist.historyId === currentView.historyId) {
+            rsp.navDirection = 'forward';
+          }
+          rsp.navAction = 'newView';
+
+          // check if there is a new forward view within the same history
+          if(forwardView && currentView.stateId !== forwardView.stateId &&
+             currentView.historyId === forwardView.historyId) {
+            // they navigated to a new view but the stack already has a forward view
+            // since its a new view remove any forwards that existed
+            var forwardsHistory = this._getHistoryById(forwardView.historyId);
+            if(forwardsHistory) {
+              // the forward has a history
+              for(var x=forwardsHistory.stack.length - 1; x >= forwardView.index; x--) {
+                // starting from the end destroy all forwards in this history from this point
+                forwardsHistory.stack[x].destroy();
+                forwardsHistory.stack.splice(x);
+              }
+            }
+          }
+
+        } else {
+          // there's no current view, so this must be the initial view
+          rsp.navAction = 'initialView';
+        }
+
+        // add the new view
+        viewHistory.views[rsp.viewId] = this.createView({
+          viewId: rsp.viewId,
+          index: hist.stack.length,
+          historyId: hist.historyId,
+          backViewId: (currentView && currentView.viewId ? currentView.viewId : null),
+          forwardViewId: null,
+          stateId: currentStateId,
+          stateName: this.getCurrentStateName(),
+          stateParams: this.getCurrentStateParams(),
+          url: $location.url(),
+        });
+
+        if (rsp.navAction == 'moveBack') {
+          //moveBack(from, to);
+          $rootScope.$emit('$viewHistory.viewBack', currentView.viewId, rsp.viewId);
+        }
+
+        // add the new view to this history's stack
+        hist.stack.push(viewHistory.views[rsp.viewId]);
+      }
+
+      if(nextViewOptions) {
         if(nextViewOptions.disableAnimate) rsp.navDirection = null;
         if(nextViewOptions.disableBack) viewHistory.views[rsp.viewId].backViewId = null;
         this.nextViewOptions(null);
@@ -44178,4 +44327,100 @@ function($ionicGesture, $timeout) {
              } else {
                ngModelController.$setViewValue(false);
              }
-           
+             $scope.$apply();
+           }
+         });
+
+         $scope.$on('$destroy', function() {
+           $scope.toggle.destroy();
+         });
+      };
+    }
+
+  };
+}]);
+
+/**
+ * @ngdoc directive
+ * @name ionView
+ * @module ionic
+ * @restrict E
+ * @parent ionNavView
+ *
+ * @description
+ * A container for content, used to tell a parent {@link ionic.directive:ionNavBar}
+ * about the current view.
+ *
+ * @usage
+ * Below is an example where our page will load with a navbar containing "My Page" as the title.
+ *
+ * ```html
+ * <ion-nav-bar></ion-nav-bar>
+ * <ion-nav-view class="slide-left-right">
+ *   <ion-view title="My Page">
+ *     <ion-content>
+ *       Hello!
+ *     </ion-content>
+ *   </ion-view>
+ * </ion-nav-view>
+ * ```
+ *
+ * @param {string=} title The title to display on the parent {@link ionic.directive:ionNavBar}.
+ * @param {boolean=} hide-back-button Whether to hide the back button on the parent
+ * {@link ionic.directive:ionNavBar} by default.
+ * @param {boolean=} hide-nav-bar Whether to hide the parent
+ * {@link ionic.directive:ionNavBar} by default.
+ */
+IonicModule
+.directive('ionView', ['$ionicViewService', '$rootScope', '$animate',
+           function( $ionicViewService,   $rootScope,   $animate) {
+  return {
+    restrict: 'EA',
+    priority: 1000,
+    require: ['^?ionNavBar', '^?ionModal'],
+    compile: function(tElement, tAttrs, transclude) {
+      tElement.addClass('pane');
+      tElement[0].removeAttribute('title');
+
+      return function link($scope, $element, $attr, ctrls) {
+        var navBarCtrl = ctrls[0];
+        var modalCtrl = ctrls[1];
+
+        //Don't use the ionView if we're inside a modal or there's no navbar
+        if (!navBarCtrl || modalCtrl) {
+          return;
+        }
+
+        if (angular.isDefined($attr.title)) {
+
+          var initialTitle = $attr.title;
+          navBarCtrl.changeTitle(initialTitle, $scope.$navDirection);
+
+          // watch for changes in the title, don't set initial value as changeTitle does that
+          $attr.$observe('title', function(val, oldVal) {
+            navBarCtrl.setTitle(val);
+          });
+        }
+
+        var hideBackAttr = angular.isDefined($attr.hideBackButton) ?
+          $attr.hideBackButton :
+          'false';
+        $scope.$watch(hideBackAttr, function(value) {
+          // Should we hide a back button when this tab is shown
+          navBarCtrl.showBackButton(!value);
+        });
+
+        var hideNavAttr = angular.isDefined($attr.hideNavBar) ?
+          $attr.hideNavBar :
+          'false';
+        $scope.$watch(hideNavAttr, function(value) {
+          // Should the nav bar be hidden for this view or not?
+          navBarCtrl.showBar(!value);
+        });
+
+      };
+    }
+  };
+}]);
+
+})();

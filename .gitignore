@@ -11,3 +11,5 @@ dist
 .idea
 www/css/*
 platforms/*
+plugins/*
+bower.json
