@@ -1,22 +1,65 @@
-/*
-To customize the look and feel of Ionic, you can override the variables
-in ionic's _variables.scss file.
+$light: #fff !default;
+$stable: #f8f8f8 !default;
+$positive: #4a87ee !default;
+$calm: #43cee6 !default;
+$balanced: #66cc33 !default;
+$energized: #f0b840 !default;
+$assertive: #ef4e3a !default;
+$royal: #8a6de9 !default;
+$dark: #444 !default;
 
-For example, you might change some of the default colors:
-
-$light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
-$positive:                        #4a87ee !default;
-$calm:                            #43cee6 !default;
-$balanced:                        #66cc33 !default;
-$energized:                       #f0b840 !default;
-$assertive:                       #ef4e3a !default;
-$royal:                           #8a6de9 !default;
-$dark:                            #444 !default;
-*/
-
-// The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
-
-// Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
+
+$ral-3000: #ab2524 !default; // red color of fire departments
+$map-bg-color: #FFF9B3 !default;
+$map-stroke-color: #767676 !default;
+
+svg {
+  max-height: 100%;
+  display: block;
+}
+
+ion-content {
+  background-color: $stable;
+}
+
+.bar.bar-red {
+  border-color: #EA0200;
+  background-color: $ral-3000;
+  background-image: linear-gradient(0deg, #e20000, #e20000 50%, transparent 50%);
+  color: $light;
+
+  .title {
+    color: $light;
+  }
+}
+
+.lower-austria-map {
+  max-height: calc(100% - 20px); // padding of grid
+  margin: 0 auto 0 auto;
+
+  path {
+    fill: $map-bg-color;
+    stroke: $map-stroke-color;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-miterlimit: 10;
+    stroke-dasharray: none;
+    stroke-opacity: 1;
+    fill-opacity: 1;
+  }
+
+  g {
+    stroke-width: 1.2;
+    stroke-miterlimit: 10;
+    stroke-dasharray: none;
+    fill: $map-bg-color;
+    fill-opacity: 1;
+  }
+
+  .thin {
+    stroke-width: 0.7;
+  }
+}
