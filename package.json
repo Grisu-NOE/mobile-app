@@ -1,7 +1,7 @@
 {
-  "name": "wastl-mobile",
+  "name": "grisu-noe",
   "version": "1.0.0",
-  "description": "WASTL Mobile: A modern app for firefighters in Lower Austria.",
+  "description": "A modern mobile app for firefighters from Lower Austria.",
   "devDependencies": {
     "karma": "^0.12.23",
     "gulp-jasmine": "^1.0.1",
@@ -16,6 +16,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/l-e-X/wastl-mobile.git"
+    "url": "git://github.com/l-e-X/grisu-noe.git"
   }
 }
