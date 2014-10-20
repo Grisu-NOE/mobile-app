@@ -11,55 +11,61 @@ $dark: #444 !default;
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic/scss/ionic";
 
-$ral-3000: #ab2524 !default; // red color of fire departments
+$header-bg-color: #CD0200 !default;
+$header-border-color: #ffaa00 !default;
 $map-bg-color: #FFF9B3 !default;
 $map-stroke-color: #767676 !default;
 
-svg {
-  max-height: 100%;
-  display: block;
-}
+//svg {
+    //max-height: 100%;
+    //display: block;
+//}
 
 ion-content {
-  background-color: $stable;
+    background-color: $stable;
 }
 
-.bar.bar-red {
-  border-color: #EA0200;
-  background-color: $ral-3000;
-  background-image: linear-gradient(0deg, #e20000, #e20000 50%, transparent 50%);
-  color: $light;
+.bar {
+    &.bar-red {
+        border-bottom: 4px solid $header-border-color;
+        background-color: $header-bg-color;
 
-  .title {
-    color: $light;
-  }
+        .title {
+            color: $light;
+        }
+    }
 }
 
 .lower-austria-map {
-  max-height: calc(100% - 20px); // padding of grid
-  margin: 0 auto 0 auto;
+    path {
+        fill: $map-bg-color;
+        stroke: $map-stroke-color;
+        stroke-width: 1.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-miterlimit: 10;
+        stroke-dasharray: none;
+        stroke-opacity: 1;
+        fill-opacity: 1;
+    }
 
-  path {
-    fill: $map-bg-color;
-    stroke: $map-stroke-color;
-    stroke-width: 1.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-miterlimit: 10;
-    stroke-dasharray: none;
-    stroke-opacity: 1;
-    fill-opacity: 1;
-  }
+    g {
+        stroke-width: 1.2;
+        stroke-miterlimit: 10;
+        stroke-dasharray: none;
+        fill: $map-bg-color;
+        fill-opacity: 1;
+    }
 
-  g {
-    stroke-width: 1.2;
-    stroke-miterlimit: 10;
-    stroke-dasharray: none;
-    fill: $map-bg-color;
-    fill-opacity: 1;
-  }
+    .thin {
+        stroke-width: 0.7;
+    }
+}
 
-  .thin {
-    stroke-width: 0.7;
-  }
+.list {
+    &.list-small {
+        .item {
+            padding: 8px;
+        }
+    }
 }
