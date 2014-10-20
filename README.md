@@ -30,6 +30,7 @@ Please consider to write unit and integration tests for your code. We use [Travi
   - `org.apache.cordova.console`
   - `org.apache.cordova.device`
   - `com.ionic.keyboard`
+  - `org.apache.cordova.statusbar`
 - Add platforms
   - `ionic platform add ios`
   - `ionic platform add android`
