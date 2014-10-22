@@ -54,16 +54,23 @@ angular.module("grisu", ["ionic", "pascalprecht.translate"])
     $urlRouterProvider.otherwise("/tab/overview");
 
     $translateProvider.translations('en', {
-        'overview.departmentCount': 'Fire departments in action',
-        'overview.incidentCount': 'Current incidents'
+        'overview': {
+            'departmentCount': 'Fire departments in action:',
+            'incidentCount': 'Current incidents:'
+        }
     });
 
     $translateProvider.translations('de', {
-        'overview.departmentCount': 'Feuerwehren im Einsatz',
-        'overview.incidentCount': 'Aktuelle Einsätze'
+        'overview': {
+            'departmentCount': 'Feuerwehren im Einsatz:',
+            'incidentCount': 'Aktuelle Einsätze:'
+        }
     });
 
-    $translateProvider.preferredLanguage('de');
+    //$translateProvider.preferredLanguage('de');
+    $translateProvider.determinePreferredLanguage();
+    $translateProvider.fallbackLanguage('de');
+    $translateProvider.useMissingTranslationHandlerLog();
 })
 
 .service('DataProvider', function($http, $q) {
