@@ -1,4 +1,4 @@
-angular.module("grisu", ["ionic"])
+angular.module("grisu", ["ionic", "pascalprecht.translate"])
 
 .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -14,7 +14,7 @@ angular.module("grisu", ["ionic"])
     });
 })
 
-.config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider) {
+.config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider, $translateProvider) {
     // Override the Android platform default to add "tabs-striped" class to "ion-tabs" elements.
     $ionicTabsConfig.type = '';
 
@@ -48,9 +48,22 @@ angular.module("grisu", ["ionic"])
                     templateUrl: "templates/statistics.html"
                 }
             }
-        });
+        }
+    );
 
-        $urlRouterProvider.otherwise("/tab/overview");
+    $urlRouterProvider.otherwise("/tab/overview");
+
+    $translateProvider.translations('en', {
+        'overview.departmentCount': 'Fire departments in action',
+        'overview.incidentCount': 'Current incidents'
+    });
+
+    $translateProvider.translations('de', {
+        'overview.departmentCount': 'Feuerwehren im Einsatz',
+        'overview.incidentCount': 'Aktuelle Einsätze'
+    });
+
+    $translateProvider.preferredLanguage('de');
 })
 
 .service('DataProvider', function($http, $q) {
@@ -80,7 +93,7 @@ angular.module("grisu", ["ionic"])
         return count;
     };
 
-    this.getIncidentsCount = function(districts) {
+    this.getIncidentCount = function(districts) {
         var count = 0;
         angular.forEach(districts, function(value, key) {
             count += value.e;
@@ -105,7 +118,7 @@ angular.module("grisu", ["ionic"])
     $scope.doRefresh = function() {
         DataProvider.getMainData().then(function(data) {
             $scope.departmentCount = DataProvider.getDepartmentCount(data.Bezirke);
-            $scope.incidentsCount = DataProvider.getIncidentsCount(data.Bezirke);
+            $scope.incidentCount = DataProvider.getIncidentCount(data.Bezirke);
             $scope.$broadcast("scroll.refreshComplete");
         }, function(data) {
             Util.showErrorDialog("Error refreshing main data");

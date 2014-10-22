@@ -6,7 +6,14 @@
     <title>Grisu NÖ</title>
 
     <link href="css/ionic.app.min.css" rel="stylesheet">
-    <script src="lib/ionic/js/ionic.bundle.min.js"></script>
+
+    <script src="lib/ionic/js/ionic.min.js"></script>
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular-animate/angular-animate.min.js"></script>
+    <script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="lib/ionic/js/ionic-angular.min.js"></script>
+    <script src="lib/angular-translate/angular-translate.min.js"></script>
     <script src="cordova.js"></script>
 
     <script src="js/app.js"></script>
@@ -48,10 +55,10 @@
             </ion-refresher>
             <div class="list list-inset list-small">
                 <div class="item">
-                    Aktuelle Einsätze: {{incidentsCount}}
+                    {{ 'overview.incidentCount' | translate }}: {{incidentCount}}
                 </div>
                 <div class="item">
-                    Feuerwehren im Einsatz: {{departmentCount}}
+                    {{ 'overview.departmentCount' | translate }}: {{departmentCount}}
                 </div>
             </div>
             <svg class="lower-austria-map" viewBox="0 0 1050 970">
