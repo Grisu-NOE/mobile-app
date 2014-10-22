@@ -10,7 +10,7 @@ temp
 dist
 .idea
 www/css/*
+www/lib/*
 platforms/*
 plugins/*
-bower.json
 ionic.project
