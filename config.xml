@@ -2,7 +2,7 @@
 <widget id="com.ionicframework.grisunoe" version="1.0.0"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>Grisu</name>
+  <name>Grisu NOE</name>
   <description>A modern mobile app for firefighters in Lower Austria.</description>
   <author email="office@alex-gassner.at" href="https://github.com/l-e-X/grisu-noe">l-e-X</author>
   <content src="index.html"/>

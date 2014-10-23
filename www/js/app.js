@@ -1,20 +1,35 @@
 angular.module("grisu", ["ionic", "pascalprecht.translate"])
 
-.run(function ($ionicPlatform) {
-    $ionicPlatform.ready(function () {
-        // Hide the accessory bar by default (remove this to show the accessory bar
-        // above the keyboard for form inputs)
-        if (window.cordova && window.cordova.plugins.Keyboard) {
-            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+.constant('CONFIG', {
+    'languages': [
+        {
+            'key': 'de',
+            'translations': {
+                'common': {
+                    'loading': 'Lade Daten ...'
+                },
+                'overview': {
+                    'departmentCount': 'Feuerwehren im Einsatz:',
+                    'incidentCount': 'Aktuelle Einsätze:'
+                }
+            }
+        },
+        {
+            'key': 'en',
+            'translations': {
+                'common': {
+                    'loading': 'Loading data ...'
+                },
+                'overview': {
+                    'departmentCount': 'Fire departments in action:',
+                    'incidentCount': 'Current incidents:'
+                }
+            }
         }
-
-        if (window.StatusBar) {
-            window.StatusBar.styleLightContent();
-        }
-    });
+    ]
 })
 
-.config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider, $translateProvider) {
+.config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider, $translateProvider, CONFIG) {
     // Override the Android platform default to add "tabs-striped" class to "ion-tabs" elements.
     $ionicTabsConfig.type = '';
 
@@ -53,24 +68,45 @@ angular.module("grisu", ["ionic", "pascalprecht.translate"])
 
     $urlRouterProvider.otherwise("/tab/overview");
 
-    $translateProvider.translations('en', {
-        'overview': {
-            'departmentCount': 'Fire departments in action:',
-            'incidentCount': 'Current incidents:'
-        }
-    });
+    var langs = CONFIG.languages;
+    for (var i = 0; i < langs.length; i++) {
+        var lang = langs[i];
+        $translateProvider.translations(lang.key, lang.translations);
+    }
 
-    $translateProvider.translations('de', {
-        'overview': {
-            'departmentCount': 'Feuerwehren im Einsatz:',
-            'incidentCount': 'Aktuelle Einsätze:'
-        }
-    });
-
-    //$translateProvider.preferredLanguage('de');
-    $translateProvider.determinePreferredLanguage();
-    $translateProvider.fallbackLanguage('de');
+    $translateProvider.preferredLanguage(langs[0].key);
+    $translateProvider.fallbackLanguage(langs[0].key);
     $translateProvider.useMissingTranslationHandlerLog();
+})
+
+.run(function($ionicPlatform, $translate, CONFIG) {
+    $ionicPlatform.ready(function () {
+        // Hide the accessory bar by default (remove this to show the accessory bar
+        // above the keyboard for form inputs)
+        if (window.cordova && window.cordova.plugins.Keyboard) {
+            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        }
+
+        if (window.StatusBar) {
+            window.StatusBar.styleLightContent();
+        }
+
+        if (navigator.globalization) {
+            navigator.globalization.getPreferredLanguage(function(language) {
+                var langShort = language.value.substring(0, 2).toLowerCase();
+                var langs = CONFIG.languages;
+                for (var i = 0; i < langs.length; i++) {
+                    var lang = langs[i];
+                    if (lang.key == langShort) {
+                        $translate.use(langShort);
+                        break;
+                    }
+                }
+            }, function() {
+                console.warn('Can\'t determine preferred language');
+            });
+        }
+    });
 })
 
 .service('DataProvider', function($http, $q) {
@@ -89,7 +125,7 @@ angular.module("grisu", ["ionic", "pascalprecht.translate"])
         }, function(response) {
             console.info("Error loading main data. Something went wrong", response);
             return $q.reject(response.data);
-        })
+        });
     };
 
     this.getDepartmentCount = function(districts) {
@@ -109,7 +145,7 @@ angular.module("grisu", ["ionic", "pascalprecht.translate"])
     };
 })
 
-.service('Util', function($ionicPopup) {
+.service('Util', function($ionicPopup, $translate, $ionicLoading) {
     this.showErrorDialog = function(title) {
         $ionicPopup.alert({
             title: title,
@@ -118,7 +154,18 @@ angular.module("grisu", ["ionic", "pascalprecht.translate"])
                 type: 'button-assertive'
             }]
         });
-    }
+    };
+
+    this.showLoading = function() {
+        $ionicLoading.show({
+            template: $translate('common.loading'),
+            delay: 1000
+        });
+    };
+
+    this.hideLoading = function() {
+        $ionicLoading.hide();
+    };
 })
 
 .controller("OverviewTabCtrl", function($scope, DataProvider, Util) {
@@ -126,13 +173,17 @@ angular.module("grisu", ["ionic", "pascalprecht.translate"])
         DataProvider.getMainData().then(function(data) {
             $scope.departmentCount = DataProvider.getDepartmentCount(data.Bezirke);
             $scope.incidentCount = DataProvider.getIncidentCount(data.Bezirke);
-            $scope.$broadcast("scroll.refreshComplete");
         }, function(data) {
             Util.showErrorDialog("Error refreshing main data");
+        }).finally(function() {
             $scope.$broadcast("scroll.refreshComplete");
+            Util.hideLoading();
         });
     };
 
+    $scope.departmentCount = 0;
+    $scope.incidentCount = 0;
+    Util.showLoading();
     $scope.doRefresh();
 });
 

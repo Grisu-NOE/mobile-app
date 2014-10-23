@@ -12,14 +12,9 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic/scss/ionic";
 
 $header-bg-color: #CD0200 !default;
-$header-border-color: #ffaa00 !default;
-$map-bg-color: #FFF9B3 !default;
+$header-border-color: #474747 !default;
+$map-bg-color: #e0e0e0 !default;
 $map-stroke-color: #767676 !default;
-
-//svg {
-    //max-height: 100%;
-    //display: block;
-//}
 
 ion-content {
     background-color: $stable;
@@ -27,7 +22,7 @@ ion-content {
 
 .bar {
     &.bar-red {
-        border-bottom: 4px solid $header-border-color;
+        background-image: linear-gradient(0deg, $header-border-color, $header-border-color 50%, transparent 50%);
         background-color: $header-bg-color;
 
         .title {
@@ -37,6 +32,8 @@ ion-content {
 }
 
 .lower-austria-map {
+    max-height: 200%; // fixes a bug with mobile browsers
+
     path {
         fill: $map-bg-color;
         stroke: $map-stroke-color;
