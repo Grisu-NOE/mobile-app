@@ -14,7 +14,10 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 $header-bg-color: #CD0200 !default;
 $header-border-color: #474747 !default;
 $map-bg-color: #e0e0e0 !default;
-$map-stroke-color: #767676 !default;
+$map-stroke-color: #666 !default;
+$low-warn-color: #65FF65 !default;
+$medium-warn-color: #FFC55A !default;
+$high-warn-color: #FF6E5C !default;
 
 ion-content {
     background-color: $stable;
@@ -56,6 +59,18 @@ ion-content {
 
     .thin {
         stroke-width: 0.7;
+    }
+
+    .low {
+        fill: $low-warn-color;
+    }
+
+    .medium {
+        fill: $medium-warn-color;
+    }
+
+    .high {
+        fill: $high-warn-color;
     }
 }
 

@@ -1,151 +1,249 @@
-angular.module("grisu", ["ionic", "pascalprecht.translate"])
+angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
 
-.constant('CONFIG', {
-    'languages': [
-        {
-            'key': 'de',
-            'translations': {
-                'common': {
-                    'loading': 'Lade Daten ...'
-                },
-                'overview': {
-                    'departmentCount': 'Feuerwehren im Einsatz:',
-                    'incidentCount': 'Aktuelle Einsätze:'
-                }
-            }
-        },
-        {
-            'key': 'en',
-            'translations': {
-                'common': {
-                    'loading': 'Loading data ...'
-                },
-                'overview': {
-                    'departmentCount': 'Fire departments in action:',
-                    'incidentCount': 'Current incidents:'
-                }
-            }
-        }
-    ]
-})
-
-.config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider, $translateProvider, CONFIG) {
-    // Override the Android platform default to add "tabs-striped" class to "ion-tabs" elements.
-    $ionicTabsConfig.type = '';
-
-    $stateProvider
-        .state('tabs', {
-            url: "/tab",
+.constant('config', {
+    defaultAppState: '/tab/overview',
+    appStates: [{
+        key: 'tabs',
+        config: {
+            url: '/tab',
             abstract: true,
-            templateUrl: "templates/tabs.html"
-        })
-        .state('tabs.overview', {
-            url: "/overview",
+            templateUrl: 'templates/tabs.html'
+        }
+    }, {
+        key: 'tabs.overview',
+        config: {
+            url: '/overview',
             views: {
                 'overview-tab': {
-                    templateUrl: "templates/overview.html",
-                    controller: 'OverviewTabCtrl'
-                }
-            }
-        })
-        .state('tabs.list', {
-            url: "/list",
-            views: {
-                'list-tab': {
-                    templateUrl: "templates/list.html"
-                }
-            }
-        })
-        .state('tabs.statistics', {
-            url: "/statistics",
-            views: {
-                'statistics-tab': {
-                    templateUrl: "templates/statistics.html"
+                    templateUrl: 'templates/overview.html',
+                    controller: 'OverviewTabController'
                 }
             }
         }
-    );
+    }, {
+        key: 'tabs.list',
+        config: {
+            url: '/list',
+            views: {
+                'list-tab': {
+                    templateUrl: 'templates/list.html'
+                }
+            }
+        }
+    }, {
+        key: 'tabs.statistics',
+        config: {
+            url: '/statistics',
+            views: {
+                'statistics-tab': {
+                    templateUrl: 'templates/statistics.html'
+                }
+            }
+        }
+    }],
+    languages: [{
+        key: 'de',
+        translations: {
+            common: {
+                loading: 'Lade Daten ...',
+                loadingError: 'Daten konnten nicht geladen werden: Fehler {{code}}',
+                close: 'Schließen'
+            },
+            overview: {
+                title: 'Grisu NÖ',
+                tabName: 'Übersicht',
+                departmentCount: 'Feuerwehren im Einsatz',
+                incidentCount: 'Aktuelle Einsätze',
+                districtCount: 'Aktive Bezirke'
+            },
+            list: {
+                title: 'Aktuelle Einsätze',
+                tabName: 'Liste'
+            },
+            statistics: {
+                title: 'Statistiken',
+                tabName: 'Statistik'
+            },
+            about: {
+                title: 'Info'
+            }
+        }
+    }, {
+        key: 'en',
+        translations: {
+            common: {
+                loading: 'Loading data ...',
+                loadingError: 'Can\'t fetch data: Error {{code}}',
+                close: 'Close'
+            },
+            overview: {
+                title: 'Grisu NÖ',
+                tabName: 'Overview',
+                departmentCount: 'Fire departments in action',
+                incidentCount: 'Current incidents',
+                districtCount: 'Active districts'
+            },
+            list: {
+                title: 'Active incidents',
+                tabName: 'List'
+            },
+            statistics: {
+                title: 'Statistics',
+                tabName: 'Statistics'
+            },
+            about: {
+                title: 'About'
+            }
+        }
+    }]
+})
 
-    $urlRouterProvider.otherwise("/tab/overview");
+.config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider, $translateProvider, config) {
+    // app states
+    angular.forEach(config.appStates, function(state) {
+        $stateProvider.state(state.key, state.config);
+    });
+    $urlRouterProvider.otherwise(config.defaultAppState);
 
-    var langs = CONFIG.languages;
-    for (var i = 0; i < langs.length; i++) {
-        var lang = langs[i];
+    // translations
+    angular.forEach(config.languages, function(lang) {
         $translateProvider.translations(lang.key, lang.translations);
-    }
+    });
 
-    $translateProvider.preferredLanguage(langs[0].key);
-    $translateProvider.fallbackLanguage(langs[0].key);
+    $translateProvider.preferredLanguage(config.languages[0].key);
+    $translateProvider.fallbackLanguage(config.languages[0].key);
     $translateProvider.useMissingTranslationHandlerLog();
 })
 
-.run(function($ionicPlatform, $translate, CONFIG) {
-    $ionicPlatform.ready(function () {
+.run(function($ionicPlatform, $translate, config, $window, $rootScope, util) {
+    $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar
         // above the keyboard for form inputs)
-        if (window.cordova && window.cordova.plugins.Keyboard) {
+        if ($window.cordova && $window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
 
-        if (window.StatusBar) {
-            window.StatusBar.styleLightContent();
+        if ($window.StatusBar) {
+            $window.StatusBar.styleLightContent();
         }
 
         if (navigator.globalization) {
             navigator.globalization.getPreferredLanguage(function(language) {
                 var langShort = language.value.substring(0, 2).toLowerCase();
-                var langs = CONFIG.languages;
-                for (var i = 0; i < langs.length; i++) {
-                    var lang = langs[i];
-                    if (lang.key == langShort) {
+
+                angular.forEach(config.languages, function(lang) {
+                    if (angular.equals(lang.key, langShort)) {
                         $translate.use(langShort);
-                        break;
+                        // TODO: use break (return false) here as soon angular supports it
                     }
-                }
+                });
             }, function() {
                 console.warn('Can\'t determine preferred language');
             });
         }
+
+        document.addEventListener('resume', function() {
+            console.debug('Resuming app. Broadcasting event.');
+            $rootScope.$broadcast('cordova.resume');
+        }, false);
     });
 })
 
-.service('DataProvider', function($http, $q) {
-    var infoScreenUrl = "https://infoscreen.florian10.info/OWS/Infoscreen/";
-    var baseUrl = "https://infoscreen.florian10.info/OWS/wastlMobile/";
+.factory('dataService', function($http, $q) {
+    var config = {
+        districtMapMappings: {
+            '01': 'amstetten',
+            '02': 'baden',
+            '03': 'bruck-leitha',
+            '04': 'gaenserndorf',
+            '05': 'gmuend',
+            '061': 'klosterneuburg',
+            '062': 'purkersdorf',
+            '063': 'schwechat',
+            '07': 'hollabrunn',
+            '08': 'horn',
+            '09': 'stockerau',
+            '10': 'krems',
+            '11': 'lilienfeld',
+            '12': 'melk',
+            '13': 'mistelbach',
+            '14': 'moedling',
+            '15': 'neunkirchen',
+            '17': 'st-poelten',
+            '18': 'scheibbs',
+            '19': 'tulln',
+            '20': 'waidhofen-thaya',
+            '21': 'wr-neustadt',
+            '22': 'zwettl'
+        },
+        warnStates: ['none', 'low', 'medium', 'high'],
+        infoScreenBaseUrl: 'https://infoscreen.florian10.info/OWS/Infoscreen/',
+        wastlMobileBaseUrl: 'https://infoscreen.florian10.info/OWS/wastlMobile/'
+    };
 
-    this.getMainData = function() {
-        return $http.get(baseUrl + "getMainData.ashx").then(function(response) {
-            if (typeof response.data === 'object') {
-                console.info("Main data loaded.", response.data);
-                return response.data;
-            } else {
-                console.info("Error loading main data. Main data is no valid object.", response);
-                return $q.reject(response.data);
+    var cache = {
+        mainData: null
+    };
+
+    function processMainData(data) {
+        var extension = {
+            departmentCount: 0,
+            incidentCount: 0,
+            districtCount: 0,
+            mapColorStates: []
+        };
+
+        angular.forEach(data.Bezirke, function(district) {
+            extension.departmentCount += district.f;
+            extension.incidentCount += district.e;
+
+            // k = identifier of district, LWZ = 'Landeswarnzentrale', is not on map
+            if (district.k == '') {
+                district.k = 'LWZ';
             }
-        }, function(response) {
-            console.info("Error loading main data. Something went wrong", response);
-            return $q.reject(response.data);
-        });
-    };
 
-    this.getDepartmentCount = function(districts) {
-        var count = 0;
-        angular.forEach(districts, function(value, key) {
-            count += value.f;
+            if (district.z > 0) {
+                extension.mapColorStates.push({
+                    key: config.districtMapMappings[district.k],
+                    value: config.warnStates[district.z]
+                });
+            }
         });
-        return count;
-    };
 
-    this.getIncidentCount = function(districts) {
-        var count = 0;
-        angular.forEach(districts, function(value, key) {
-            count += value.e;
-        });
-        return count;
+        extension.districtCount = extension.mapColorStates.length;
+
+        console.debug('Extended WASTL data with', extension);
+        return angular.extend(data, extension);
+    }
+
+    return {
+        getMainData: function(loadFromCache) {
+            var deferred = $q.defer();
+
+            if (loadFromCache && cache.mainData !== null) {
+                console.info('Main data loaded from cache', cache.mainData);
+                deferred.resolve(cache.mainData);
+                return deferred.promise;
+            }
+
+            $http.get(config.wastlMobileBaseUrl + 'getMainData.ashx').success(function(data) {
+                console.info('Main data loaded from server', data);
+                cache.mainData = processMainData(data);
+                deferred.resolve(cache.mainData);
+            }).error(function(data, code) {
+                deferred.reject(code, data);
+                console.error('Error loading main data. Error code', code);
+            });
+
+            return deferred.promise;
+        },
+        getWarnStates: function() {
+            return config.warnStates;
+        }
     };
 })
 
-.service('Util', function($ionicPopup, $translate, $ionicLoading) {
+.service('util', function($ionicPopup, $translate, $ionicLoading) {
     this.showErrorDialog = function(title) {
         $ionicPopup.alert({
             title: title,
@@ -168,76 +266,63 @@ angular.module("grisu", ["ionic", "pascalprecht.translate"])
     };
 })
 
-.controller("OverviewTabCtrl", function($scope, DataProvider, Util) {
-    $scope.doRefresh = function() {
-        DataProvider.getMainData().then(function(data) {
-            $scope.departmentCount = DataProvider.getDepartmentCount(data.Bezirke);
-            $scope.incidentCount = DataProvider.getIncidentCount(data.Bezirke);
-        }, function(data) {
-            Util.showErrorDialog("Error refreshing main data");
+.controller('OverviewTabController', function($scope, dataService, util, $translate, $ionicModal) {
+    $scope.doRefresh = function(loadFromCache) {
+        var promise = dataService.getMainData(loadFromCache);
+
+        promise.then(function(data) {
+            $scope.departmentCount = data.departmentCount;
+            $scope.incidentCount = data.incidentCount;
+            $scope.districtCount = data.districtCount;
+
+            var svg = document.getElementsByClassName('lower-austria-map');
+            angular.forEach(data.mapColorStates, function(colorState) {
+                var svgPaths = svg[0].getElementsByClassName(colorState.key);
+                angular.forEach(svgPaths, function(path) {
+                    var elem = angular.element(path);
+                    angular.forEach(dataService.getWarnStates(), function(warnState) {
+                        elem.removeClass(warnState);
+                    });
+                    elem.addClass(colorState.value);
+                });
+            });
+        }, function(code) {
+            $translate('common.loadingError', {code: code}).then(function(translation) {
+                util.showErrorDialog(translation);
+            });
         }).finally(function() {
-            $scope.$broadcast("scroll.refreshComplete");
-            Util.hideLoading();
+            $scope.$broadcast('scroll.refreshComplete');
+            util.hideLoading();
         });
     };
 
-    $scope.departmentCount = 0;
-    $scope.incidentCount = 0;
-    Util.showLoading();
-    $scope.doRefresh();
+    $ionicModal.fromTemplateUrl('templates/about.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.aboutDialog = modal;
+    });
+
+    $scope.openAboutDialog = function() {
+        $scope.aboutDialog.show();
+    };
+
+    $scope.closeAboutDialog = function() {
+        $scope.aboutDialog.hide();
+    };
+
+    // cleanup the dialog when we're done with it!
+    $scope.$on('$destroy', function() {
+        $scope.aboutDialog.remove();
+    });
+
+    $scope.$on('cordova.resume', function() {
+        $scope.doRefresh(true);
+    });
+
+    util.showLoading();
+    $scope.doRefresh(true);
+
+    // TODO write tests
+    // TODO gulp install script (plugins, platform resources)
 });
-
-/*
- WastlMobile.processData = function(data) {
-
- var self = this;
- var zustandStorageTemp = "";
-
- if(!self.initialized){
- WastlMobile.Initialize(data);
- }
-
- self.countFeuerwehren = 0;
- self.countEinsatz = 0;
-
- for (var i = 0; i < data.Bezirke.length ; i++) {
-
- var val = data.Bezirke[i];
-
- if(val.k == ""){
- val.k = "LWZ";
- }
-
- self.daten[val.k] = val.z;
- zustandStorageTemp += val.z;
-
- self.countFeuerwehren += val.f;
- self.countEinsatz += val.e;
-
- $("#listItemBezirk_"+val.k+" span.ui-li-count").html(self.GetLeitstelleStatusText(val.f,val.e));
-
- var target = $("#listItemBezirk_"+val.k+" span.bezirkEinsatzCounter");
- if(self.GetLeitstelleStatusText(val.f,val.e) == ""){
- target.hide();
- target.css("border-bottom","");
- }else{
- target.show();
- target.css("border-bottom","3px solid " + self.colors[val.z]);
- }
-
- }
-
- $("#einsatzHistory1").html(self.GetEinsatzHistoryContent(data.h1));
- $("#einsatzHistory2").html(self.GetEinsatzHistoryContent(data.h2));
- $("#einsatzHistory3").html(self.GetEinsatzHistoryContent(data.h3));
-
- $("#countText").html(self.GetNoeStatusText(self.countFeuerwehren,self.countEinsatz));
-
- if(self.zustandStorage != zustandStorageTemp){
- self.zustandStorage = zustandStorageTemp;
- if(self.DrawNoe)
- self.DrawNoe();
- }
-
- }; //processData();
- */
