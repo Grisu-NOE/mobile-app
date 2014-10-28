@@ -37,9 +37,10 @@ Please consider to write unit and integration tests for your code. We use [Travi
   - `org.apache.cordova.statusbar`
   - `org.apache.cordova.globalization`
 - Add platforms
-  - `ionic platform add ios`
-  - `ionic platform add android`
+  - `ionic platform add ios` (only works on Mac OSX)
+  - `ionic platform add android` (you need to install the [Android SDK](https://developer.android.com/sdk/) before)
 - Copy platform specific assets from folder `platform_assets` to corresponding folder in generated platform
+- Run app server with command `ionic serve`
 
 Licencing
 ---------
