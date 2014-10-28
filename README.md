@@ -25,9 +25,11 @@ Please consider to write unit and integration tests for your code. We use [Travi
 ### Setup of development environment
 
 - Install [node.js](http://nodejs.org/)
-- `npm install -g cordova ionic gulp
+- `npm install -g cordova ionic gulp`
 - Go to project root folder
-- Install required dependencies: `gulp install`
+- Install required node dependencies: `npm install`
+- Run Gulp dependency installation: `gulp install`
+  - If you have problems to execute the Gulp task, try to execute `git config url."https://".insteadOf git://` before
 - Install Cordova and Ionic plugins with command `ionic plugin add <plugin>`
   - `org.apache.cordova.console`
   - `org.apache.cordova.device`
@@ -35,9 +37,11 @@ Please consider to write unit and integration tests for your code. We use [Travi
   - `org.apache.cordova.statusbar`
   - `org.apache.cordova.globalization`
 - Add platforms
-  - `ionic platform add ios`
-  - `ionic platform add android`
+  - `ionic platform add ios` (only works on Mac OSX)
+  - `ionic platform add android` (you need to install the [Android SDK](https://developer.android.com/sdk/) before)
 - Copy platform specific assets from folder `platform_assets` to corresponding folder in generated platform
+- Copile SASS files with `gulp sass` (watch changes with `gulp watch-sass`) and start app server with command `ionic serve`.
+- ENJOY!
 
 Licencing
 ---------
