@@ -40,7 +40,7 @@ Please consider to write unit and integration tests for your code. We use [Travi
   - `ionic platform add ios` (only works on Mac OSX)
   - `ionic platform add android` (you need to install the [Android SDK](https://developer.android.com/sdk/) before)
 - Copy platform specific assets from folder `platform_assets` to corresponding folder in generated platform
-- Run app server with command `ionic serve`
+- Copile SASS files with `gulp sass` (watch changes with `gulp watch-sass`) and start app server with command `ionic serve`. ENJOY!
 
 Licencing
 ---------
