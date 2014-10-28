@@ -91,7 +91,8 @@ ion-content {
 }
 
 .item .badge {
-    font-size: 11px;
+    font-size: 10px;
+    right: 16px;
 
     &.warn-none {
         background-color: #e0e0e0;

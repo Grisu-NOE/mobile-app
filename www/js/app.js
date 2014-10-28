@@ -72,7 +72,10 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
                 title: 'Aktuelle Einsätze',
                 tabName: 'Bezirke',
                 incidents: 'Einsätze',
-                departments: 'Feuerwehren'
+                departments: 'FF'
+            },
+            incidents: {
+                title: 'Einsätze von Bezirk'
             },
             statistics: {
                 title: 'Statistiken',
@@ -100,8 +103,11 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             districts: {
                 title: 'Active incidents',
                 tabName: 'Districts',
-                incidents: 'Incidents',
-                departments: 'Departments'
+                incidents: 'Incid',
+                departments: 'Deps'
+            },
+            incidents: {
+                title: 'Incidents of district'
             },
             statistics: {
                 title: 'Statistics',
@@ -256,7 +262,11 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
         getActiveIncidents: function(districtId) {
             var deferred = $q.defer();
 
-            $http.get(config.wastlMobileBaseUrl + 'getEinsatzAktiv.ashx?id=bezirk_' + districtId).success(function(data) {
+            $http.get(config.wastlMobileBaseUrl + 'getEinsatzAktiv.ashx', {
+                params: {
+                    id: 'bezirk_' + districtId
+                }
+            }).success(function(data) {
                 console.info('Incident data for district "' + districtId + '" loaded from server', data);
                 deferred.resolve(data);
             }).error(function(data, code) {
@@ -266,8 +276,8 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
 
             return deferred.promise;
         },
-        getWarnStates: function() {
-            return config.warnStates;
+        getConfig: function() {
+            return config;
         }
     };
 })
@@ -283,7 +293,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
         });
     };
 
-    this.showLoading = function() {
+    this.showLoadingDelayed = function() {
         $ionicLoading.show({
             template: $translate('common.loading'),
             delay: 1000
@@ -295,7 +305,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     };
 })
 
-.controller('OverviewTabController', function($scope, dataService, util, $translate, $ionicModal) {
+.controller('OverviewTabController', function($scope, dataService, util, $translate, $ionicModal, $state) {
     $scope.doRefresh = function(loadFromCache) {
         var promise = dataService.getMainData(loadFromCache);
 
@@ -305,7 +315,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             $scope.districtCount = data.districtCount;
 
             var svg = document.getElementsByClassName('lower-austria-map');
-            var warnStatesString = dataService.getWarnStates().join(' ');
+            var warnStatesString = dataService.getConfig().warnStates.join(' ');
 
             // cleanup of css classes
             angular.forEach(svg[0].getElementsByTagName('path'), function(path) {
@@ -354,10 +364,18 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     });
 
     $scope.onMapClicked = function(event) {
-        console.debug(event);
+        var district = event.target.classList[0];
+        var mappings = dataService.getConfig().districtMapMappings;
+        for (var key in mappings) {
+            if (mappings.hasOwnProperty(key)) {
+                if (mappings[key] === district) {
+                    $state.go('tabs.incidents', { id: key });
+                }
+            }
+        }
     };
 
-    util.showLoading();
+    util.showLoadingDelayed();
     $scope.doRefresh(true);
 })
 
@@ -371,7 +389,6 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     };
 
     $scope.doRefresh = function(loadFromCache) {
-        util.showLoading();
         $scope.isRefreshing = true;
         dataService.getMainData(loadFromCache).then(function(data) {
             $scope.districts = data.Bezirke;
@@ -380,22 +397,32 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
                 util.showErrorDialog(translation);
             });
         }).finally(function() {
-            util.hideLoading();
             $scope.isRefreshing = false;
         });
     };
 
-    $scope.doRefresh(true);
+    $scope.$on('cordova.resume', function() {
+        $scope.doRefresh(false);
+    });
 
-    // todo device resume
+    $scope.doRefresh(true);
 })
 
 .controller('IncidentsListController', function($scope, $stateParams, dataService) {
+    dataService.getMainData(true).then(function(data) {
+        angular.forEach(data.Bezirke, function(district) {
+            if (district.k == $stateParams.id) {
+                $scope.title = district.t;
+            }
+        });
 
-
+        if (!$scope.title.length) {
+            $scope.title = $translate('incidents.title');
+        }
+    });
 
     dataService.getActiveIncidents($stateParams.id).then(function(data) {
-        console.info(data);
+        $scope.incidents = data.Einsatz;
     });
     // TODO write tests
     // TODO gulp install script (plugins, platform resources)
