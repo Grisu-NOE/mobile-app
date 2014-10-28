@@ -25,7 +25,7 @@ Please consider to write unit and integration tests for your code. We use [Travi
 ### Setup of development environment
 
 - Install [node.js](http://nodejs.org/)
-- `npm install -g cordova ionic gulp
+- `npm install -g cordova ionic gulp`
 - Go to project root folder
 - Install required dependencies: `gulp install`
 - Install Cordova and Ionic plugins with command `ionic plugin add <plugin>`
