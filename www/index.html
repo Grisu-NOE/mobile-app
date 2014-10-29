@@ -14,6 +14,8 @@
     <script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="lib/ionic/js/ionic-angular.min.js"></script>
     <script src="lib/angular-translate/angular-translate.min.js"></script>
+    <script src="lib/angular-charts/dist/angular-charts.min.js"></script>
+    <script src="lib/d3/d3.min.js"></script>
     <script src="cordova.js"></script>
 
     <script src="js/app.js"></script>
@@ -123,7 +125,7 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item ng-repeat="district in districts | filter : search" ui-sref="tabs.incidents({id: district.k})">
+                <ion-item ng-repeat="district in districts | filter : search" ui-sref="tabs.districts-incidents({id: district.k})">
                     <h2>{{district.t}}</h2>
                     <div ng-if="district.f || dictrict.e"
                          ng-class="{'warn-none': district.z == 0, 'warn-low': district.z == 1, 'warn-medium': district.z == 2, 'warn-high': district.z == 3}"
@@ -138,9 +140,11 @@
 </script>
 
 <script id="templates/incidents.html" type="text/ng-template">
-    <ion-view title="{{ title }}">
-        <ion-content padding="true">
-            <h2 ng-if="!incidents.length">Kein</h2>
+    <ion-view>
+        <ion-content>
+            <div class="card" ng-if="!incidents.length">
+                <div class="item item-text-wrap">{{ 'incidents.noEntries' | translate }}</div>
+            </div>
             <ion-list>
                 <ion-item ng-repeat="incident in incidents">
                     <h2><span ng-if="incident.a" class="incident-type">{{incident.a}}</span> {{incident.m}}</h2>
@@ -154,6 +158,7 @@
 <script id="templates/statistics.html" type="text/ng-template">
     <ion-view title="{{'statistics.title' | translate }}">
         <ion-content>
+            <div ac-chart="'bar'" ac-data="data" ac-config="config" class="chart"></div>
         </ion-content>
     </ion-view>
 </script>

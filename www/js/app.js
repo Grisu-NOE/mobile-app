@@ -1,4 +1,4 @@
-angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
+angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts'])
 
 .constant('config', {
     defaultAppState: '/tab/overview',
@@ -21,6 +21,19 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             }
         }
     }, {
+        // ionic doesn't support nested states/views very well yet.
+        // so we are faking nested states with conventions
+        key: 'tabs.overview-incidents',
+        config: {
+            url: '/overview-incidents/:id',
+            views: {
+                'overview-tab': {
+                    templateUrl: 'templates/incidents.html',
+                    controller: 'IncidentsListController'
+                }
+            }
+        }
+    }, {
         key: 'tabs.districts',
         config: {
             url: '/districts',
@@ -32,9 +45,9 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             }
         }
     }, {
-        key: 'tabs.incidents',
+        key: 'tabs.districts-incidents',
         config: {
-            url: '/incidents/:id',
+            url: '/district-incidents/:id',
             views: {
                 'districts-tab': {
                     templateUrl: 'templates/incidents.html',
@@ -48,7 +61,8 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             url: '/statistics',
             views: {
                 'statistics-tab': {
-                    templateUrl: 'templates/statistics.html'
+                    templateUrl: 'templates/statistics.html',
+                    controller: 'DistrictsTabController'
                 }
             }
         }
@@ -75,7 +89,8 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
                 departments: 'FF'
             },
             incidents: {
-                title: 'Einsätze von Bezirk'
+                title: 'Einsätze von Bezirk',
+                noEntries: 'Zurzeit sind keine Einsätze vorhanden.'
             },
             statistics: {
                 title: 'Statistiken',
@@ -107,7 +122,8 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
                 departments: 'Deps'
             },
             incidents: {
-                title: 'Incidents of district'
+                title: 'Incidents of district',
+                noEntries: 'Currently there are no incidents.'
             },
             statistics: {
                 title: 'Statistics',
@@ -369,7 +385,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
         for (var key in mappings) {
             if (mappings.hasOwnProperty(key)) {
                 if (mappings[key] === district) {
-                    $state.go('tabs.incidents', { id: key });
+                    $state.go('tabs.overview-incidents', { id: key });
                 }
             }
         }
@@ -408,22 +424,59 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     $scope.doRefresh(true);
 })
 
-.controller('IncidentsListController', function($scope, $stateParams, dataService) {
+.controller('IncidentsListController', function($scope, $stateParams, dataService, $translate, $ionicNavBarDelegate) {
     dataService.getMainData(true).then(function(data) {
         angular.forEach(data.Bezirke, function(district) {
             if (district.k == $stateParams.id) {
-                $scope.title = district.t;
+                $ionicNavBarDelegate.setTitle(district.t);
             }
         });
 
-        if (!$scope.title.length) {
-            $scope.title = $translate('incidents.title');
+        if (!$ionicNavBarDelegate.getTitle().length) {
+            $translate('incidents.title').then(function(msg) {
+                $ionicNavBarDelegate.setTitle(msg);
+            });
         }
     });
 
     dataService.getActiveIncidents($stateParams.id).then(function(data) {
         $scope.incidents = data.Einsatz;
     });
+
     // TODO write tests
     // TODO gulp install script (plugins, platform resources)
+})
+
+.controller('StatisticsTabController', function($scope) {
+    $scope.config = {
+        title: 'Products',
+        tooltips: true,
+        labels: false,
+        mouseover: function() {},
+        mouseout: function() {},
+        click: function() {},
+        legend: {
+            display: true,
+            //could be 'left, right'
+            position: 'right'
+        }
+    };
+
+    $scope.data = {
+        series: ['Sales', 'Income', 'Expense', 'Laptops', 'Keyboards'],
+        data: [{
+            x: "Laptops",
+            y: [100, 500, 0],
+            tooltip: "this is tooltip"
+        }, {
+            x: "Desktops",
+            y: [300, 100, 100]
+        }, {
+            x: "Mobiles",
+            y: [351]
+        }, {
+            x: "Tablets",
+            y: [54, 0, 879]
+        }]
+    };
 });
