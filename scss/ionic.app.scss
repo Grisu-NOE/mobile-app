@@ -11,21 +11,25 @@ $dark: #444 !default;
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic/scss/ionic";
 
+$main-bg-color: #272727 !default;
 $header-bg-color: #CD0200 !default;
-$header-border-color: #474747 !default;
-$map-bg-color: #e0e0e0 !default;
-$map-stroke-color: #666 !default;
-$low-warn-color: #65FF65 !default;
-$medium-warn-color: #FFC55A !default;
-$high-warn-color: #FF6E5C !default;
+$header-border-color: #450000 !default;
+$map-bg-color: #545454 !default;
+$map-stroke-color: #1d1d1d !default;
+$low-warn-color: #ffff00 !default;
+$medium-warn-color: #FF6600 !default;
+$high-warn-color: #CD0200 !default;
 
-ion-content {
-    background-color: $stable;
+.scroll-content,
+.modal,
+.card,
+.list-inset {
+    background-color: $main-bg-color;
 }
 
 .bar {
     &.bar-red {
-        background-image: linear-gradient(0deg, $header-border-color, $header-border-color 50%, transparent 50%);
+        border-color: $header-border-color;
         background-color: $header-bg-color;
 
         .title {
@@ -56,7 +60,8 @@ ion-content {
         stroke-opacity: 1;
         fill-opacity: 1;
 
-        &.activated {
+        &.activated,
+        &:active {
             opacity: 0.4;
         }
     }
@@ -86,27 +91,52 @@ ion-content {
     }
 }
 
-.list.list-small .item {
-    padding: 8px;
+.list {
+    .item-dark {
+        background-color: $main-bg-color;
+        border-color: $dark;
+
+        .item-content {
+            background-color: $main-bg-color;
+            border-color: $dark;
+
+            &:active,
+            &.activated {
+                background-color: #171717;
+            }
+
+            h2 {
+                color: #fff;
+            }
+        }
+    }
+
+    &.list-small .item {
+        padding: 8px;
+    }
 }
 
 .item .badge {
     font-size: 10px;
     right: 16px;
 
+    &.high {
+        top: 25px;
+    }
+
     &.warn-none {
         background-color: #e0e0e0;
-        color: #5f5f5f;
+        color: #333;
     }
 
     &.warn-low {
         background-color: $low-warn-color;
-        color: #5f5f5f;
+        color: #333;
     }
 
     &.warn-medium {
         background-color: $medium-warn-color;
-        color: #5f5f5f;
+        color: #333;
     }
 
     &.warn-high {
@@ -115,7 +145,12 @@ ion-content {
     }
 }
 
-.chart {
-    width: 500px;
-    height: 500px;
+span.incident-type {
+    padding: 3px;
+
+    &.T1,
+    &.T2,
+    &.T3 {
+        background-color: $positive;
+    }
 }

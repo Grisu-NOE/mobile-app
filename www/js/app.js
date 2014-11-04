@@ -1,4 +1,4 @@
-angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts'])
+angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
 
 .constant('config', {
     defaultAppState: '/tab/overview',
@@ -34,6 +34,17 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
             }
         }
     }, {
+        key: 'tabs.overview-incident',
+        config: {
+            url: '/overview-incident/:id',
+            views: {
+                'overview-tab': {
+                    templateUrl: 'templates/incident.html',
+                    controller: 'IncidentController'
+                }
+            }
+        }
+    }, {
         key: 'tabs.districts',
         config: {
             url: '/districts',
@@ -56,13 +67,24 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
             }
         }
     }, {
+        key: 'tabs.districts-incident',
+        config: {
+            url: '/district-incident/:id',
+            views: {
+                'districts-tab': {
+                    templateUrl: 'templates/incident.html',
+                    controller: 'IncidentController'
+                }
+            }
+        }
+    }, {
         key: 'tabs.statistics',
         config: {
             url: '/statistics',
             views: {
                 'statistics-tab': {
                     templateUrl: 'templates/statistics.html',
-                    controller: 'DistrictsTabController'
+                    controller: 'StatisticsTabController'
                 }
             }
         }
@@ -78,7 +100,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
             overview: {
                 title: 'Grisu NÖ',
                 tabName: 'Übersicht',
-                departmentCount: 'Feuerwehren im Einsatz',
+                departmentCount: 'Ausgerückte Feuerwehren',
                 incidentCount: 'Aktuelle Einsätze',
                 districtCount: 'Aktive Bezirke'
             },
@@ -137,6 +159,9 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
 })
 
 .config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider, $translateProvider, config) {
+    // Override the Android platform default to add "tabs-striped" class to "ion-tabs" elements.
+    $ionicTabsConfig.type = '';
+
     // app states
     angular.forEach(config.appStates, function(state) {
         $stateProvider.state(state.key, state.config);
@@ -275,6 +300,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
 
             return deferred.promise;
         },
+
         getActiveIncidents: function(districtId) {
             var deferred = $q.defer();
 
@@ -292,8 +318,27 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
 
             return deferred.promise;
         },
+
         getConfig: function() {
             return config;
+        },
+
+        getIncidentData: function(incidentId) {
+            var deferred = $q.defer();
+
+            $http.get(config.wastlMobileBaseUrl + 'geteinsatzdata.ashx', {
+                params: {
+                    id: incidentId
+                }
+            }).success(function(data) {
+                console.info('Detailed data for incidentId "' + incidentId + '" loaded from server', data);
+                deferred.resolve(data);
+            }).error(function(data, code) {
+                deferred.reject(code, data);
+                console.error('Error loading detailed data for incident "' + incidentId + '". Error code', code);
+            });
+
+            return deferred.promise;
         }
     };
 })
@@ -323,6 +368,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
 
 .controller('OverviewTabController', function($scope, dataService, util, $translate, $ionicModal, $state) {
     $scope.doRefresh = function(loadFromCache) {
+        util.showLoadingDelayed();
         var promise = dataService.getMainData(loadFromCache);
 
         promise.then(function(data) {
@@ -391,7 +437,6 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
         }
     };
 
-    util.showLoadingDelayed();
     $scope.doRefresh(true);
 })
 
@@ -406,6 +451,8 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
 
     $scope.doRefresh = function(loadFromCache) {
         $scope.isRefreshing = true;
+        util.showLoadingDelayed();
+
         dataService.getMainData(loadFromCache).then(function(data) {
             $scope.districts = data.Bezirke;
         }, function(code) {
@@ -414,6 +461,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
             });
         }).finally(function() {
             $scope.isRefreshing = false;
+            util.hideLoading();
         });
     };
 
@@ -424,59 +472,106 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate', 'angularCharts']
     $scope.doRefresh(true);
 })
 
-.controller('IncidentsListController', function($scope, $stateParams, dataService, $translate, $ionicNavBarDelegate) {
-    dataService.getMainData(true).then(function(data) {
-        angular.forEach(data.Bezirke, function(district) {
-            if (district.k == $stateParams.id) {
-                $ionicNavBarDelegate.setTitle(district.t);
+.controller('IncidentsListController', function($scope, $state, $stateParams, dataService, $translate, $ionicNavBarDelegate, util, $window) {
+    $scope.doRefresh = function() {
+        util.showLoadingDelayed();
+        $scope.isRefreshing = true;
+
+        dataService.getMainData(true).then(function(data) {
+            angular.forEach(data.Bezirke, function(district) {
+                if (district.k == $stateParams.id) {
+                    $ionicNavBarDelegate.setTitle(district.t);
+                }
+            });
+
+            if (!$ionicNavBarDelegate.getTitle().length) {
+                $translate('incidents.title').then(function(msg) {
+                    $ionicNavBarDelegate.setTitle(msg);
+                });
             }
         });
 
-        if (!$ionicNavBarDelegate.getTitle().length) {
-            $translate('incidents.title').then(function(msg) {
-                $ionicNavBarDelegate.setTitle(msg);
+        dataService.getActiveIncidents($stateParams.id).then(function(data) {
+            $scope.incidents = data.Einsatz;
+        }, function(code) {
+            $translate('common.loadingError', {code: code}).then(function(translation) {
+                util.showErrorDialog(translation);
             });
+        }).finally(function() {
+            $scope.isRefreshing = false;
+            util.hideLoading();
+        });
+    };
+
+    $scope.goToIncident = function(incidentId) {
+        if ($window.location.hash.indexOf('overview-incidents') > -1) {
+            $state.go('tabs.overview-incident', { id: incidentId });
+        } else if ($window.location.hash.indexOf('district-incidents') > -1) {
+            $state.go('tabs.districts-incident', { id: incidentId });
+        } else {
+            console.error("Wrong window location hash set", $window.location.hash);
         }
+    };
+
+    $scope.$on('cordova.resume', function() {
+        $scope.doRefresh();
     });
 
-    dataService.getActiveIncidents($stateParams.id).then(function(data) {
-        $scope.incidents = data.Einsatz;
-    });
-
-    // TODO write tests
-    // TODO gulp install script (plugins, platform resources)
+    $scope.doRefresh();
 })
 
-.controller('StatisticsTabController', function($scope) {
-    $scope.config = {
-        title: 'Products',
-        tooltips: true,
-        labels: false,
-        mouseover: function() {},
-        mouseout: function() {},
-        click: function() {},
-        legend: {
-            display: true,
-            //could be 'left, right'
-            position: 'right'
-        }
+.controller('IncidentController', function($scope, $stateParams, dataService, $translate, util) {
+    dataService.getIncidentData($stateParams.id).then(function(data) {
+        $scope.incident = data;
+    }, function(code) {
+        $translate('common.loadingError', {code: code}).then(function(translation) {
+            util.showErrorDialog(translation);
+        });
+    }).finally(function() {
+        $scope.isRefreshing = false;
+        util.hideLoading();
+    });
+})
+
+.controller('StatisticsTabController', function() {
+    var data = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+            {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.5)",
+                strokeColor: "rgba(220,220,220,0.8)",
+                highlightFill: "rgba(220,220,220,0.75)",
+                highlightStroke: "rgba(220,220,220,1)",
+                data: [65, 59, 80, 81, 56, 55, 40]
+            },
+            {
+                label: "My Second dataset",
+                fillColor: "rgba(151,187,205,0.5)",
+                strokeColor: "rgba(151,187,205,0.8)",
+                highlightFill: "rgba(151,187,205,0.75)",
+                highlightStroke: "rgba(151,187,205,1)",
+                data: [28, 48, 40, 19, 86, 27, 90]
+            }
+        ]
     };
 
-    $scope.data = {
-        series: ['Sales', 'Income', 'Expense', 'Laptops', 'Keyboards'],
-        data: [{
-            x: "Laptops",
-            y: [100, 500, 0],
-            tooltip: "this is tooltip"
-        }, {
-            x: "Desktops",
-            y: [300, 100, 100]
-        }, {
-            x: "Mobiles",
-            y: [351]
-        }, {
-            x: "Tablets",
-            y: [54, 0, 879]
-        }]
-    };
+    var ctx = document.getElementById("myChart").getContext("2d");
+    var myBarChart = new Chart(ctx).Bar(data, {
+        responsive: true,
+        maintainAspectRatio: true
+    });
 });
+
+// write issues for this list following list
+// einfärben rest von einsatzstufen
+// write tests
+// gulp install script (plugins, platform resources)
+// icons for ios/android and also splashscreen (cordova plugin), 512x512 android...
+// statistics (provided by main data, only list and diagram per unit)
+// collapsible accordion: http://forum.ionicframework.com/t/how-to-create-collapsible-list-in-ionic/6920/3
+// alle einsätze auf einmal von ganz NÖ (all in one) -> leider alle bezirke abfragen, mit cache! auch mit OSM karte, wenn geolaction ok! (wastl mobile daten xml?)
+// direkt in meinen bezirk springen -> einstellungen (localStorage)
+// infoscreendaten verwenden, einsatz mit speziellen icon kennzeichen und erweiterte daten laden, anzeigen von token + beschreibung für freischaltung
+// komme/komme nicht funktion, müsste eventuell eigener server laufen (DB-id -> einsatzid, abfrage ob android oder ios (sicherheit, kein overflow), keine ip verwenden sondern geräteid)
+// wasser.leitstelle122.at nahmachen

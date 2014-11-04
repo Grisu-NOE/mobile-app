@@ -14,8 +14,7 @@
     <script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="lib/ionic/js/ionic-angular.min.js"></script>
     <script src="lib/angular-translate/angular-translate.min.js"></script>
-    <script src="lib/angular-charts/dist/angular-charts.min.js"></script>
-    <script src="lib/d3/d3.min.js"></script>
+    <script src="lib/chartjs/Chart.min.js"></script>
     <script src="cordova.js"></script>
 
     <script src="js/app.js"></script>
@@ -52,17 +51,17 @@
         <ion-nav-buttons side="right">
             <button class="button icon button-white button-clear ion-gear-a"></button>
         </ion-nav-buttons>
-        <ion-content>
+        <ion-content has-bouncing="true">
             <ion-refresher on-refresh="doRefresh(false)">
             </ion-refresher>
             <div class="list list-inset list-small">
-                <div class="item">
+                <div class="item item-dark">
                     {{'overview.incidentCount' | translate}}: {{incidentCount}}
                 </div>
-                <div class="item">
+                <div class="item item-dark">
                     {{'overview.departmentCount' | translate}}: {{departmentCount}}
                 </div>
-                <div class="item">
+                <div class="item item-dark">
                     {{'overview.districtCount' | translate}}: {{districtCount}}
                 </div>
             </div>
@@ -116,16 +115,16 @@
         <ion-nav-buttons side="right">
             <button ng-click="doRefresh(false)" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
         </ion-nav-buttons>
-        <ion-header-bar class="bar-light bar-subheader item-input-inset">
+        <ion-header-bar class="bar-dark bar-subheader item-input-inset">
             <label class="item-input-wrapper">
             <i class="icon ion-search placeholder-icon"></i>
             <input ng-model="search" ng-change="scrollTop()" type="search" placeholder="{{'common.search' | translate }}">
             </label>
             <button ng-if="search.length" ng-click="clearSearch()" class="button button-stable ion-android-close button-clear"></button>
         </ion-header-bar>
-        <ion-content>
+        <ion-content has-bouncing="true">
             <ion-list>
-                <ion-item ng-repeat="district in districts | filter : search" ui-sref="tabs.districts-incidents({id: district.k})">
+                <ion-item class="item-dark" ng-repeat="district in districts | filter : search" ui-sref="tabs.districts-incidents({id: district.k})">
                     <h2>{{district.t}}</h2>
                     <div ng-if="district.f || dictrict.e"
                          ng-class="{'warn-none': district.z == 0, 'warn-low': district.z == 1, 'warn-medium': district.z == 2, 'warn-high': district.z == 3}"
@@ -141,24 +140,39 @@
 
 <script id="templates/incidents.html" type="text/ng-template">
     <ion-view>
-        <ion-content>
-            <div class="card" ng-if="!incidents.length">
-                <div class="item item-text-wrap">{{ 'incidents.noEntries' | translate }}</div>
-            </div>
+        <ion-nav-buttons side="right">
+            <button ng-click="doRefresh()" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
+        </ion-nav-buttons>
+        <ion-content has-bouncing="true">
             <ion-list>
-                <ion-item ng-repeat="incident in incidents">
-                    <h2><span ng-if="incident.a" class="incident-type">{{incident.a}}</span> {{incident.m}}</h2>
-                    <p>{{incident.o}} ({{incident.n}})</p>
+                <ion-item class="item-dark" ng-repeat="incident in incidents" href="" ng-click="goToIncident(incident.i)">
+                    <div class="badge high">{{incident.d}} {{incident.t}}</div>
+                    <h2><span ng-if="incident.a" class="incident-type {{incident.a}}">{{incident.a}}</span> {{incident.m}}</h2>
+                    <p>{{incident.o}} | {{incident.o2}} ({{incident.n}})</p>
                 </ion-item>
             </ion-list>
+            <div class="card" ng-show="incidents.length === 0">
+                <div class="item item-text-wrap">{{ 'incidents.noEntries' | translate }}</div>
+            </div>
+        </ion-content>
+    </ion-view>
+</script>
+
+<script id="templates/incident.html" type="text/ng-template">
+    <ion-view title="{{ incident.n }}">
+        <ion-nav-buttons side="right">
+            <button ng-click="doRefresh()" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
+        </ion-nav-buttons>
+        <ion-content has-bouncing="true">
+            {{district.i}}
         </ion-content>
     </ion-view>
 </script>
 
 <script id="templates/statistics.html" type="text/ng-template">
     <ion-view title="{{'statistics.title' | translate }}">
-        <ion-content>
-            <div ac-chart="'bar'" ac-data="data" ac-config="config" class="chart"></div>
+        <ion-content has-bouncing="true">
+            <canvas id="myChart"></canvas>
         </ion-content>
     </ion-view>
 </script>
@@ -171,10 +185,10 @@
                 <button ng-click="closeAboutDialog()" class="button ion-close button-clear"></button>
             </div>
         </ion-header-bar>
-        <ion-content>
-            <div class="list list-inset list-small">
-                <div class="item">Version: 1.0.0</div>
-                <div class="item">Info ...</div>
+        <ion-content has-bouncing="true">
+            <div class="list">
+                <div class="item item-dark">Version: 1.0.0</div>
+                <div class="item item-dark">Info ...</div>
             </div>
         </ion-content>
     </ion-modal-view>

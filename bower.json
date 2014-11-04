@@ -4,6 +4,6 @@
     "dependencies": {
         "ionic": "driftyco/ionic-bower#1.0.0-beta.13",
         "angular-translate": "2.4.2",
-        "angular-charts": "0.2.6"
+        "chartjs": "1.0.1-beta.4"
     }
 }
