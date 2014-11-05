@@ -563,6 +563,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     });
 });
 
+// issues with number of ffs/incidents (oft inkonstistenz), klosterneuburg auf karte aktiv, obwohl einsätze in stockerau
 // write issues for this list following list
 // einfärben rest von einsatzstufen
 // write tests
