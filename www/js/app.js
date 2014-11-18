@@ -1,208 +1,91 @@
-angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
+angular.module('grisu-noe', ['ionic'])
 
-.constant('config', {
-    defaultAppState: '/tab/overview',
-    appStates: [{
-        key: 'tabs',
-        config: {
-            url: '/tab',
-            abstract: true,
-            templateUrl: 'templates/tabs.html'
-        }
-    }, {
-        key: 'tabs.overview',
-        config: {
-            url: '/overview',
-            views: {
-                'overview-tab': {
-                    templateUrl: 'templates/overview.html',
-                    controller: 'OverviewTabController'
-                }
-            }
-        }
-    }, {
-        // ionic doesn't support nested states/views very well yet.
-        // so we are faking nested states with conventions
-        key: 'tabs.overview-incidents',
-        config: {
-            url: '/overview-incidents/:id',
-            views: {
-                'overview-tab': {
-                    templateUrl: 'templates/incidents.html',
-                    controller: 'IncidentsListController'
-                }
-            }
-        }
-    }, {
-        key: 'tabs.overview-incident',
-        config: {
-            url: '/overview-incident/:id',
-            views: {
-                'overview-tab': {
-                    templateUrl: 'templates/incident.html',
-                    controller: 'IncidentController'
-                }
-            }
-        }
-    }, {
-        key: 'tabs.districts',
-        config: {
-            url: '/districts',
-            views: {
-                'districts-tab': {
-                    templateUrl: 'templates/districts.html',
-                    controller: 'DistrictsTabController'
-                }
-            }
-        }
-    }, {
-        key: 'tabs.districts-incidents',
-        config: {
-            url: '/district-incidents/:id',
-            views: {
-                'districts-tab': {
-                    templateUrl: 'templates/incidents.html',
-                    controller: 'IncidentsListController'
-                }
-            }
-        }
-    }, {
-        key: 'tabs.districts-incident',
-        config: {
-            url: '/district-incident/:id',
-            views: {
-                'districts-tab': {
-                    templateUrl: 'templates/incident.html',
-                    controller: 'IncidentController'
-                }
-            }
-        }
-    }, {
-        key: 'tabs.statistics',
-        config: {
-            url: '/statistics',
-            views: {
-                'statistics-tab': {
-                    templateUrl: 'templates/statistics.html',
-                    controller: 'StatisticsTabController'
-                }
-            }
-        }
-    }],
-    languages: [{
-        key: 'de',
-        translations: {
-            common: {
-                loading: 'Lade Daten ...',
-                loadingError: 'Daten konnten nicht geladen werden: Fehler {{code}}',
-                search: 'Suche',
-                noAlarmImage: 'Kein Meldebild'
-            },
-            overview: {
-                title: 'Grisu NÖ',
-                tabName: 'Übersicht',
-                departmentCount: 'Ausgerückte Feuerwehren',
-                incidentCount: 'Aktuelle Einsätze',
-                districtCount: 'Aktive Bezirke'
-            },
-            districts: {
-                title: 'Aktuelle Einsätze',
-                tabName: 'Bezirke',
-                incidents: 'Einsätze',
-                departments: 'FF'
-            },
-            incidents: {
-                title: 'Einsätze von Bezirk',
-                noEntries: 'Zurzeit sind keine Einsätze vorhanden.'
-            },
-            incident: {
-                disposition: 'Disposition',
-                alarmed: 'Alarmierung',
-                disengaged: 'Ausgerückt',
-                indented: 'Eingerückt',
-                ownAlarmed: 'Eigenalarmiert'
-            },
-            statistics: {
-                title: 'Statistiken',
-                tabName: 'Statistik',
-                history6: 'Rückblick 6h',
-                history12: 'Rückblick 12h',
-                history24: 'Rückblick 24h',
-                sum: 'Insgesamt {{ sum }} Einsätze'
-            },
-            about: {
-                title: 'Info'
-            }
-        }
-    }, {
-        key: 'en',
-        translations: {
-            common: {
-                loading: 'Loading data ...',
-                loadingError: 'Can\'t fetch data: Error {{code}}',
-                search: 'Search',
-                noAlarmImage: 'No alarm image'
-            },
-            overview: {
-                title: 'Grisu NÖ',
-                tabName: 'Overview',
-                departmentCount: 'Fire departments in action',
-                incidentCount: 'Current incidents',
-                districtCount: 'Active districts'
-            },
-            districts: {
-                title: 'Active incidents',
-                tabName: 'Districts',
-                incidents: 'Incid',
-                departments: 'Deps'
-            },
-            incidents: {
-                title: 'Incidents of district',
-                noEntries: 'Currently there are no incidents.'
-            },
-            incident: {
-                disposition: 'Disposition',
-                alarmed: 'Alarmed',
-                disengaged: 'Disengaged',
-                indented: 'Indented',
-                ownAlarmed: 'Own alarmed'
-            },
-            statistics: {
-                title: 'Statistics',
-                tabName: 'Statistics',
-                history6: 'History 6h',
-                history12: 'History 12h',
-                history24: 'History 24h',
-                sum: '{{ sum }} incidents in total'
-            },
-            about: {
-                title: 'About'
-            }
-        }
-    }]
-})
-
-.config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider, $translateProvider, config) {
+.config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider) {
     // Override the Android platform default to add "tabs-striped" class to "ion-tabs" elements.
     $ionicTabsConfig.type = '';
 
-    // app states
-    angular.forEach(config.appStates, function(state) {
-        $stateProvider.state(state.key, state.config);
-    });
-    $urlRouterProvider.otherwise(config.defaultAppState);
-
-    // translations
-    angular.forEach(config.languages, function(lang) {
-        $translateProvider.translations(lang.key, lang.translations);
+    $stateProvider.state('tabs', {
+        url: '/tab',
+        abstract: true,
+        templateUrl: 'templates/tabs.html'
     });
 
-    $translateProvider.preferredLanguage(config.languages[0].key);
-    $translateProvider.fallbackLanguage(config.languages[0].key);
-    $translateProvider.useMissingTranslationHandlerLog();
+    $stateProvider.state('tabs.overview', {
+        url: '/overview',
+        views: {
+            'overview-tab': {
+                templateUrl: 'templates/overview.html',
+                controller: 'OverviewTabController'
+            }
+        }
+    });
+
+    // ionic doesn't support nested states/views very well yet.
+    // so we are faking nested states with conventions
+    $stateProvider.state('tabs.overview-incidents', {
+        url: '/overview-incidents/:id',
+        views: {
+            'overview-tab': {
+                templateUrl: 'templates/incidents.html',
+                controller: 'IncidentsListController'
+            }
+        }
+    });
+
+    $stateProvider.state('tabs.overview-incident', {
+        url: '/overview-incident/:id',
+        views: {
+            'overview-tab': {
+                templateUrl: 'templates/incident.html',
+                controller: 'IncidentController'
+            }
+        }
+    });
+
+    $stateProvider.state('tabs.districts', {
+        url: '/districts',
+        views: {
+            'districts-tab': {
+                templateUrl: 'templates/districts.html',
+                controller: 'DistrictsTabController'
+            }
+        }
+    });
+
+    $stateProvider.state('tabs.districts-incidents', {
+        url: '/district-incidents/:id',
+        views: {
+            'districts-tab': {
+                templateUrl: 'templates/incidents.html',
+                controller: 'IncidentsListController'
+            }
+        }
+    });
+
+    $stateProvider.state('tabs.districts-incident', {
+        url: '/district-incident/:id',
+        views: {
+            'districts-tab': {
+                templateUrl: 'templates/incident.html',
+                controller: 'IncidentController'
+            }
+        }
+    });
+
+    $stateProvider.state('tabs.statistics', {
+        url: '/statistics',
+        views: {
+            'statistics-tab': {
+                templateUrl: 'templates/statistics.html',
+                controller: 'StatisticsTabController'
+            }
+        }
+    });
+
+    $urlRouterProvider.otherwise('/tab/overview');
 })
 
-.run(function($ionicPlatform, $translate, config, $window, $rootScope) {
+.run(function($ionicPlatform, $window, $rootScope) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar
         // above the keyboard for form inputs)
@@ -212,21 +95,6 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
 
         if ($window.StatusBar) {
             $window.StatusBar.styleLightContent();
-        }
-
-        if (navigator.globalization) {
-            navigator.globalization.getPreferredLanguage(function(language) {
-                var langShort = language.value.substring(0, 2).toLowerCase();
-
-                angular.forEach(config.languages, function(lang) {
-                    if (angular.equals(lang.key, langShort)) {
-                        $translate.use(langShort);
-                        // TODO: use break (return false) here as soon angular supports it
-                    }
-                });
-            }, function() {
-                console.warn('Can\'t determine preferred language');
-            });
         }
 
         document.addEventListener('resume', function() {
@@ -265,7 +133,8 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
         },
         warnStates: ['none', 'low', 'medium', 'high'],
         infoScreenBaseUrl: 'https://infoscreen.florian10.info/OWS/Infoscreen/',
-        wastlMobileBaseUrl: 'https://infoscreen.florian10.info/OWS/wastlMobile/'
+        wastlMobileBaseUrl: 'https://infoscreen.florian10.info/OWS/wastlMobile/',
+        httpTimeout: 30000 // 30 sec. max req. time
     };
 
     var cache = {
@@ -340,7 +209,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
                 return deferred.promise;
             }
 
-            $http.get(config.wastlMobileBaseUrl + 'getMainData.ashx').success(function(data) {
+            $http.get(config.wastlMobileBaseUrl + 'getMainData.ashx', { timeout: config.httpTimeout }).success(function(data) {
                 console.info('Main data loaded from server', data);
                 cache.mainData = processMainData(data);
                 cache.mainDataCreated = createCurrentTimestamp();
@@ -358,6 +227,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             var deferred = $q.defer();
 
             $http.get(config.wastlMobileBaseUrl + 'getEinsatzAktiv.ashx', {
+                timeout: config.httpTimeout,
                 params: {
                     id: 'bezirk_' + districtId
                 }
@@ -380,6 +250,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             var deferred = $q.defer();
 
             $http.get(config.wastlMobileBaseUrl + 'geteinsatzdata.ashx', {
+                timeout: config.httpTimeout,
                 params: {
                     id: incidentId
                 }
@@ -396,7 +267,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     };
 })
 
-.service('util', function($ionicPopup, $translate, $ionicLoading) {
+.service('util', function($ionicPopup, $ionicLoading) {
     this.showErrorDialog = function(title) {
         $ionicPopup.alert({
             title: title,
@@ -409,7 +280,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
 
     this.showLoadingDelayed = function() {
         $ionicLoading.show({
-            template: $translate('common.loading'),
+            template: '<i class="icon ion-loading-c"></i> Lade Daten...',
             delay: 1000
         });
     };
@@ -419,7 +290,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     };
 })
 
-.controller('OverviewTabController', function($scope, dataService, util, $translate, $ionicModal, $state, $window) {
+.controller('OverviewTabController', function($scope, dataService, util, $ionicModal, $state, $window) {
     $scope.doRefresh = function(loadFromCache) {
         util.showLoadingDelayed();
         var promise = dataService.getMainData(loadFromCache);
@@ -445,9 +316,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
                 });
             });
         }, function(code) {
-            $translate('common.loadingError', {code: code}).then(function(translation) {
-                util.showErrorDialog(translation);
-            });
+            util.showErrorDialog('Daten konnten nicht geladen werden: Fehler ' + code);
         }).finally(function() {
             $scope.$broadcast('scroll.refreshComplete');
             util.hideLoading();
@@ -501,7 +370,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     $scope.doRefresh(true);
 })
 
-.controller('DistrictsTabController', function($scope, dataService, $ionicScrollDelegate, util, $translate) {
+.controller('DistrictsTabController', function($scope, dataService, $ionicScrollDelegate, util) {
     $scope.clearSearch = function() {
         $scope.search = '';
     };
@@ -517,9 +386,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
         dataService.getMainData(loadFromCache).then(function(data) {
             $scope.districts = data.Bezirke;
         }, function(code) {
-            $translate('common.loadingError', {code: code}).then(function(translation) {
-                util.showErrorDialog(translation);
-            });
+            util.showErrorDialog('Daten konnten nicht geladen werden: Fehler ' + code);
         }).finally(function() {
             $scope.isRefreshing = false;
             $scope.$broadcast('scroll.refreshComplete');
@@ -542,7 +409,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     $scope.doRefresh(true);
 })
 
-.controller('IncidentsListController', function($scope, $state, $stateParams, dataService, $translate, $ionicNavBarDelegate, util, $window) {
+.controller('IncidentsListController', function($scope, $state, $stateParams, dataService, $ionicNavBarDelegate, util, $window) {
     $scope.doRefresh = function() {
         util.showLoadingDelayed();
         $scope.isRefreshing = true;
@@ -555,18 +422,14 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             });
 
             if (!$ionicNavBarDelegate.getTitle().length) {
-                $translate('incidents.title').then(function(msg) {
-                    $ionicNavBarDelegate.setTitle(msg);
-                });
+                $ionicNavBarDelegate.setTitle('Einsätze von Bezirk');
             }
         });
 
         dataService.getActiveIncidents($stateParams.id).then(function(data) {
             $scope.incidents = data.Einsatz;
         }, function(code) {
-            $translate('common.loadingError', {code: code}).then(function(translation) {
-                util.showErrorDialog(translation);
-            });
+            util.showErrorDialog('Daten konnten nicht geladen werden: Fehler ' + code);
         }).finally(function() {
             $scope.isRefreshing = false;
             $scope.$broadcast('scroll.refreshComplete');
@@ -580,7 +443,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
         } else if ($window.location.hash.indexOf('district-incidents') > -1) {
             $state.go('tabs.districts-incident', { id: incidentId });
         } else {
-            console.error("Wrong window location hash set", $window.location.hash);
+            console.error('Wrong window location hash set', $window.location.hash);
         }
     };
 
@@ -591,7 +454,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     $scope.doRefresh();
 })
 
-.controller('IncidentController', function($scope, $stateParams, dataService, $translate, util) {
+.controller('IncidentController', function($scope, $stateParams, dataService, util) {
     $scope.doRefresh = function() {
         util.showLoadingDelayed();
         $scope.isRefreshing = true;
@@ -599,9 +462,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
         dataService.getIncidentData($stateParams.id).then(function(data) {
            $scope.incident = data;
         }, function(code) {
-            $translate('common.loadingError', {code: code}).then(function(translation) {
-                util.showErrorDialog(translation);
-            });
+            util.showErrorDialog('Daten konnten nicht geladen werden: Fehler ' + code);
         }).finally(function() {
             $scope.isRefreshing = false;
             $scope.$broadcast('scroll.refreshComplete');
@@ -633,7 +494,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     $scope.doRefresh();
 })
 
-.controller('StatisticsTabController', function($translate, util, dataService, $scope, $timeout, $ionicScrollDelegate) {
+.controller('StatisticsTabController', function(util, dataService, $scope, $timeout, $ionicScrollDelegate) {
     $scope.tabs = [
         { isActive: true },
         { isActive: false },
@@ -650,9 +511,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             $scope.mainData = data;
             $scope.createCharts(data);
         }, function(code) {
-            $translate('common.loadingError', {code: code}).then(function(translation) {
-                util.showErrorDialog(translation);
-            });
+            util.showErrorDialog('Daten konnten nicht geladen werden: Fehler ' + code);
         }).finally(function() {
             $scope.isRefreshing = false;
             $scope.$broadcast('scroll.refreshComplete');
@@ -842,19 +701,3 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
         chartInstances.push(tryBuildPieChart('piechart3', 'c3'));
     };
 });
-
-// statistik sehr sehr langsam auf android animation
-// write issues for this list following list
-// doRefresh() inheritance with callback
-// write tests
-// gulp install script (plugins, platform resources)
-// icons for ios/android and also splashscreen (cordova plugin), 512x512 android...
-// alle einsätze auf einmal von ganz NÖ (all in one) -> leider alle bezirke abfragen, mit cache! auch mit OSM karte, wenn geolaction ok! (wastl mobile daten xml?)
-// direkt in meinen bezirk springen -> einstellungen (localStorage)
-// infoscreendaten verwenden, einsatz mit speziellen icon kennzeichen und erweiterte daten laden, anzeigen von token + beschreibung für freischaltung
-// komme/komme nicht funktion, müsste eventuell eigener server laufen (DB-id -> einsatzid, abfrage ob android oder ios (sicherheit, kein overflow), keine ip verwenden sondern geräteid)
-// dazu krems fragen, ob sie funktion implementieren wollen
-// wasser.leitstelle122.at nahmachen
-// analyze rest of other apps to see if there are some features to implement
-// ausrückscreen flo
-// remove our app and set link to appstore (info -> flo admin/ alex)

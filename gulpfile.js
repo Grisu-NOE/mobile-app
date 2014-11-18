@@ -8,56 +8,56 @@ var karma = require('gulp-karma');
 var sh = require('shelljs');
 
 var paths = {
-  sass: ['./scss/**/*.scss']
+    sass: ['./scss/**/*.scss']
 };
 var isSassWatchOn = false;
 
-gulp.task('sass', function(done) {
-  var sassOptions = {};
-  if (isSassWatchOn) {
-      sassOptions.errLogToConsole = true;
-  }
-  gulp.src('./scss/ionic.app.scss')
-    .pipe(sass(sassOptions))
-    .pipe(gulp.dest('./www/css/'))
-    .pipe(minifyCss({
-      keepSpecialComments: 0
-    }))
-    .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest('./www/css/'))
-    .on('end', done);
+gulp.task('sass', function (done) {
+    var sassOptions = {};
+    if (isSassWatchOn) {
+        sassOptions.errLogToConsole = true;
+    }
+    gulp.src('./scss/ionic.app.scss')
+        .pipe(sass(sassOptions))
+        .pipe(gulp.dest('./www/css/'))
+        .pipe(minifyCss({
+            keepSpecialComments: 0
+        }))
+        .pipe(rename({ extname: '.min.css' }))
+        .pipe(gulp.dest('./www/css/'))
+        .on('end', done);
 });
 
 gulp.task('watch-all', ['watch-sass', 'watch-test']);
 
-gulp.task('watch-sass', function() {
-  isSassWatchOn = true;
-  gulp.watch(paths.sass, ['sass']);
+gulp.task('watch-sass', function () {
+    isSassWatchOn = true;
+    gulp.watch(paths.sass, ['sass']);
 });
 
-gulp.task('test', function() {
-  // NOTE: Using the fake './foobar' so as to run the files
-  // listed in karma.conf.js INSTEAD of what was passed to
-  // gulp.src !
-  return gulp.src('./foobar')
-    .pipe(karma({
-      configFile: 'karma.conf.js',
-      action: 'run'
-    }));
+gulp.task('test', function () {
+    // NOTE: Using the fake './foobar' so as to run the files
+    // listed in karma.conf.js INSTEAD of what was passed to
+    // gulp.src !
+    return gulp.src('./foobar')
+        .pipe(karma({
+            configFile: 'karma.conf.js',
+            action: 'run'
+        }));
 });
 
-gulp.task('watch-test', function() {
-  return gulp.watch(['www/js/**/*.js', 'test/unit/*.js'], ['test']);
+gulp.task('watch-test', function () {
+    return gulp.watch(['www/js/**/*.js', 'test/unit/*.js'], ['test']);
 });
 
-gulp.task('install', ['git-check'], function() {
+gulp.task('install', ['git-check'], function () {
     return bower.commands.install()
-        .on('log', function(data) {
+        .on('log', function (data) {
             gutil.log('bower', gutil.colors.cyan(data.id), data.message);
         });
 });
 
-gulp.task('git-check', function(done) {
+gulp.task('git-check', function (done) {
     if (!sh.which('git')) {
         console.log(
                 '  ' + gutil.colors.red('Git is not installed.'),

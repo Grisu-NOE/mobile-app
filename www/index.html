@@ -13,7 +13,6 @@
     <script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="lib/ionic/js/ionic-angular.min.js"></script>
-    <script src="lib/angular-translate/angular-translate.min.js"></script>
     <script src="lib/chartjs/Chart.min.js"></script>
     <script src="cordova.js"></script>
 
@@ -29,22 +28,22 @@
 
 <script id="templates/tabs.html" type="text/ng-template">
     <ion-tabs class="tabs-icon-top tabs-dark">
-        <ion-tab title="{{'overview.tabName' | translate }}" icon="ion-map" href="#/tab/overview">
+        <ion-tab title="Übersicht" icon="ion-map" href="#/tab/overview">
             <ion-nav-view name="overview-tab"></ion-nav-view>
         </ion-tab>
 
-        <ion-tab title="{{'districts.tabName' | translate }}" icon="ion-clipboard" href="#/tab/districts">
+        <ion-tab title="Bezirke" icon="ion-clipboard" href="#/tab/districts">
             <ion-nav-view name="districts-tab"></ion-nav-view>
         </ion-tab>
 
-        <ion-tab title="{{'statistics.tabName' | translate }}" icon="ion-stats-bars" ui-sref="tabs.statistics">
+        <ion-tab title="Statistik" icon="ion-stats-bars" ui-sref="tabs.statistics">
             <ion-nav-view name="statistics-tab"></ion-nav-view>
         </ion-tab>
     </ion-tabs>
 </script>
 
 <script id="templates/overview.html" type="text/ng-template">
-    <ion-view title="{{'overview.title' | translate}}">
+    <ion-view title="Grisu NÖ">
         <ion-nav-buttons side="left">
             <button ng-click="openAboutDialog()" class="button icon button-white button-clear ion-more"></button>
         </ion-nav-buttons>
@@ -57,13 +56,13 @@
             </ion-refresher>
             <div class="list list-inset list-small">
                 <div class="item item-dark">
-                    {{'overview.incidentCount' | translate}}: {{incidentCount}}
+                    Aktuelle Einsätze: {{incidentCount}}
                 </div>
                 <div class="item item-dark">
-                    {{'overview.departmentCount' | translate}}: {{departmentCount}}
+                    Ausgerückte Feuerwehren: {{departmentCount}}
                 </div>
                 <div class="item item-dark">
-                    {{'overview.districtCount' | translate}}: {{districtCount}}
+                    Aktive Bezirke: {{districtCount}}
                 </div>
             </div>
 
@@ -112,15 +111,15 @@
 </script>
 
 <script id="templates/districts.html" type="text/ng-template">
-    <ion-view title="{{'districts.title' | translate }}">
+    <ion-view title="Aktuelle Einsätze">
         <ion-nav-buttons side="right">
             <button ng-click="doRefresh(false)" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
         </ion-nav-buttons>
 
         <ion-header-bar class="bar-dark bar-subheader item-input-inset">
             <label class="item-input-wrapper">
-            <i class="icon ion-search placeholder-icon"></i>
-            <input ng-model="search" ng-change="scrollTop()" type="search" placeholder="{{'common.search' | translate }}">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input ng-model="search" ng-change="scrollTop()" type="search" placeholder="Suche">
             </label>
             <button ng-if="search.length" ng-click="clearSearch()" class="button button-stable ion-android-close button-clear"></button>
         </ion-header-bar>
@@ -134,9 +133,9 @@
                     <div ng-if="showBadge(district)"
                          ng-class="{'warn-none': district.z == 0, 'warn-low': district.z == 1, 'warn-medium': district.z == 2, 'warn-high': district.z == 3}"
                          class="badge">
-                        <span ng-if="district.f">{{'districts.departments' | translate }}: {{district.f}}</span>
+                        <span ng-if="district.f">FF: {{district.f}}</span>
                         <span ng-if="incidentsAndDepartments(district)">,&nbsp;</span>
-                        <span ng-if="district.e">{{'districts.incidents' | translate }}: {{district.e}}</span>
+                        <span ng-if="district.e">Einsätze: {{district.e}}</span>
                     </div>
                 </ion-item>
             </ion-list>
@@ -158,13 +157,13 @@
                     <h2>
                         <span ng-if="incident.a" class="incident-type {{incident.a}}">{{incident.a}}</span>
                         <span ng-if="incident.m != ''">{{incident.m}}</span>
-                        <span ng-if="incident.m == ''" class="no-alarm-image">{{ 'common.noAlarmImage' | translate }}</span>
+                        <span ng-if="incident.m == ''" class="no-alarm-image">Kein Meldebild</span>
                     </h2>
                     <p>{{incident.o}}, {{incident.o2}} {{incident.d}} {{incident.t}}</p>
                 </ion-item>
             </ion-list>
             <div class="card" ng-show="incidents.length === 0">
-                <div class="item item-text-wrap">{{ 'incidents.noEntries' | translate }}</div>
+                <div class="item item-text-wrap">Zurzeit sind keine Einsätze vorhanden.</div>
             </div>
         </ion-content>
     </ion-view>
@@ -184,7 +183,7 @@
                     <h2>
                         <span ng-if="incident.a" class="incident-type {{incident.a}}">{{incident.a}}</span>
                         <span ng-if="incident.m != ''">{{incident.m}}</span>
-                        <span ng-if="incident.m == ''" class="no-alarm-image">{{ 'common.noAlarmImage' | translate }}</span>
+                        <span ng-if="incident.m == ''" class="no-alarm-image">Kein Meldebild</span>
                     </h2>
                 </div>
                 <div class="item item-text-wrap">
@@ -201,18 +200,18 @@
                         {{dispo.n}}
                     </ion-item>
                     <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.dt != ''">
-                        {{ 'incident.disposition' | translate }}: {{dispo.dt}}
+                        Disposition: {{dispo.dt}}
                     </ion-item>
                     <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.at != ''">
-                        {{ 'incident.alarmed' | translate }}:
-                        <span ng-if="dispo.at == 'own'">{{ 'incident.ownAlarmed' | translate }}</span>
+                        Alarmierung:
+                        <span ng-if="dispo.at == 'own'">Eigenalarmiert</span>
                         <span ng-if="dispo.at != 'own'">{{dispo.at}}</span>
                     </ion-item>
                     <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.ot != ''">
-                        {{ 'incident.disengaged' | translate }}: {{dispo.ot}}
+                        Ausgerückt: {{dispo.ot}}
                     </ion-item>
                     <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.it != ''">
-                        {{ 'incident.indented' | translate }}: {{dispo.it}}
+                        Eingerückt: {{dispo.it}}
                     </ion-item>
                 </div>
             </ion-list>
@@ -221,23 +220,24 @@
 </script>
 
 <script id="templates/statistics.html" type="text/ng-template">
-    <ion-view title="{{'statistics.title' | translate }}">
+    <ion-view title="Statistiken">
         <ion-nav-buttons side="right">
-            <button ng-click="doRefresh(false)" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
+            <button ng-click="doRefresh(false)" ng-class="{'ion-looping': isRefreshing}"
+                    class="button icon button-white button-clear ion-loop"></button>
         </ion-nav-buttons>
 
         <div class="tabs tabs-top tabs-icon-top">
             <a class="tab-item" ng-class="{'active': tabs[0].isActive}" ng-click="setTabActive(0)">
                 <i class="icon ion-clock"></i>
-                {{'statistics.history6' | translate }}
+                Rückblick 6h
             </a>
             <a class="tab-item" ng-class="{'active': tabs[1].isActive}" ng-click="setTabActive(1)">
                 <i class="icon ion-clock"></i>
-                {{'statistics.history12' | translate }}
+                Rückblick 12h
             </a>
             <a class="tab-item" ng-class="{'active': tabs[2].isActive}" ng-click="setTabActive(2)">
                 <i class="icon ion-clock"></i>
-                {{'statistics.history24' | translate }}
+                Rückblick 24h
             </a>
         </div>
 
@@ -251,13 +251,13 @@
                 <div class="row" ng-repeat="historyEntry in mainData.h1.v">
                     <div class="col col-80">
                         <span class="incident-type {{ historyEntry.a }}">{{ historyEntry.a }}</span>
-                        <span ng-if="historyEntry.m == 'unspezifiziert'" class="no-alarm-image">{{ 'common.noAlarmImage' | translate }}</span>
+                        <span ng-if="historyEntry.m == 'unspezifiziert'" class="no-alarm-image">Kein Meldebild</span>
                         <span ng-if="historyEntry.m != 'unspezifiziert'">{{ historyEntry.m }}</span>
                     </div>
                     <div class="col">{{ historyEntry.s }}</div>
                 </div>
                 <div class="row">
-                    <div class="col sum">{{ 'statistics.sum' | translate: {sum: mainData.h1.s} }}</div>
+                    <div class="col sum">Insgesamt {{ mainData.h1.s }} Einsätze</div>
                 </div>
             </div>
 
@@ -267,13 +267,13 @@
                 <div class="row" ng-repeat="historyEntry in mainData.h2.v">
                     <div class="col col-80">
                         <span class="incident-type {{ historyEntry.a }}">{{ historyEntry.a }}</span>
-                        <span ng-if="historyEntry.m == 'unspezifiziert'" class="no-alarm-image">{{ 'common.noAlarmImage' | translate }}</span>
+                        <span ng-if="historyEntry.m == 'unspezifiziert'" class="no-alarm-image">Kein Meldebild</span>
                         <span ng-if="historyEntry.m != 'unspezifiziert'">{{ historyEntry.m }}</span>
                     </div>
                     <div class="col">{{ historyEntry.s }}</div>
                 </div>
                 <div class="row">
-                    <div class="col sum">{{ 'statistics.sum' | translate: {sum: mainData.h2.s} }}</div>
+                    <div class="col sum">Insgesamt {{ mainData.h1.s }} Einsätze</div>
                 </div>
             </div>
 
@@ -283,13 +283,13 @@
                 <div class="row" ng-repeat="historyEntry in mainData.h3.v">
                     <div class="col col-80">
                         <span class="incident-type {{ historyEntry.a }}">{{ historyEntry.a }}</span>
-                        <span ng-if="historyEntry.m == 'unspezifiziert'" class="no-alarm-image">{{ 'common.noAlarmImage' | translate }}</span>
+                        <span ng-if="historyEntry.m == 'unspezifiziert'" class="no-alarm-image">Kein Meldebild</span>
                         <span ng-if="historyEntry.m != 'unspezifiziert'">{{ historyEntry.m }}</span>
                     </div>
                     <div class="col">{{ historyEntry.s }}</div>
                 </div>
                 <div class="row">
-                    <div class="col sum">{{ 'statistics.sum' | translate: {sum: mainData.h3.s} }}</div>
+                    <div class="col sum">Insgesamt {{ mainData.h1.s }} Einsätze</div>
                 </div>
             </div>
         </ion-content>
@@ -299,13 +299,18 @@
 <script id="templates/about.html" type="text/ng-template">
     <ion-modal-view>
         <ion-header-bar class="bar-dark">
-            <h1 class="title">{{'about.title' | translate }}</h1>
+            <h1 class="title">Info</h1>
             <div class="buttons">
                 <button ng-click="closeAboutDialog()" class="button ion-close button-clear"></button>
             </div>
         </ion-header-bar>
 
         <ion-content has-bouncing="true">
+            <div class="text-center padding-top">
+                <img src="img/app-icon.png" width="72" height="72">
+                <h3 class="stable">Grisu NÖ</h3>
+            </div>
+
             <div class="list">
                 <div class="item item-dark">Version: {{ appVersion }}</div>
                 <div class="item item-dark">Info ...</div>
