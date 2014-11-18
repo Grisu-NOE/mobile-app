@@ -95,7 +95,8 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             common: {
                 loading: 'Lade Daten ...',
                 loadingError: 'Daten konnten nicht geladen werden: Fehler {{code}}',
-                search: 'Suche'
+                search: 'Suche',
+                noAlarmImage: 'Kein Meldebild'
             },
             overview: {
                 title: 'Grisu NÖ',
@@ -114,9 +115,20 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
                 title: 'Einsätze von Bezirk',
                 noEntries: 'Zurzeit sind keine Einsätze vorhanden.'
             },
+            incident: {
+                disposition: 'Disposition',
+                alarmed: 'Alarmierung',
+                disengaged: 'Ausgerückt',
+                indented: 'Eingerückt',
+                ownAlarmed: 'Eigenalarmiert'
+            },
             statistics: {
                 title: 'Statistiken',
-                tabName: 'Statistik'
+                tabName: 'Statistik',
+                history6: 'Rückblick 6h',
+                history12: 'Rückblick 12h',
+                history24: 'Rückblick 24h',
+                sum: 'Insgesamt {{ sum }} Einsätze'
             },
             about: {
                 title: 'Info'
@@ -128,7 +140,8 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             common: {
                 loading: 'Loading data ...',
                 loadingError: 'Can\'t fetch data: Error {{code}}',
-                search: 'Search'
+                search: 'Search',
+                noAlarmImage: 'No alarm image'
             },
             overview: {
                 title: 'Grisu NÖ',
@@ -147,9 +160,20 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
                 title: 'Incidents of district',
                 noEntries: 'Currently there are no incidents.'
             },
+            incident: {
+                disposition: 'Disposition',
+                alarmed: 'Alarmed',
+                disengaged: 'Disengaged',
+                indented: 'Indented',
+                ownAlarmed: 'Own alarmed'
+            },
             statistics: {
                 title: 'Statistics',
-                tabName: 'Statistics'
+                tabName: 'Statistics',
+                history6: 'History 6h',
+                history12: 'History 12h',
+                history24: 'History 24h',
+                sum: '{{ sum }} incidents in total'
             },
             about: {
                 title: 'About'
@@ -245,7 +269,8 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     };
 
     var cache = {
-        mainData: null
+        mainData: null,
+        mainDataCreated: null
     };
 
     function processMainData(data) {
@@ -279,11 +304,37 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
         return angular.extend(data, extension);
     }
 
+    function createCurrentTimestamp() {
+        return parseInt(Date.now() / 1000);
+    }
+
+    /**
+     * Checks if cache is valid and if cache creation time isn't too old.
+     */
+    function isCacheAlive(cacheData, cacheTimestamp) {
+        if (cacheData === null) {
+            return false;
+        }
+
+        var nowTimestamp = createCurrentTimestamp();
+        var timeDifference = nowTimestamp - cacheTimestamp;
+        console.debug('Now timestamp', nowTimestamp);
+        console.debug('Cache timestamp', cacheTimestamp);
+        console.debug('Time difference in seconds', timeDifference);
+
+        // max. age of cache is one minute
+        if (cacheTimestamp === null || timeDifference >= 60) {
+            return false;
+        }
+
+        return true;
+    }
+
     return {
         getMainData: function(loadFromCache) {
             var deferred = $q.defer();
 
-            if (loadFromCache && cache.mainData !== null) {
+            if (loadFromCache && isCacheAlive(cache.mainData, cache.mainDataCreated)) {
                 console.info('Main data loaded from cache', cache.mainData);
                 deferred.resolve(cache.mainData);
                 return deferred.promise;
@@ -292,6 +343,8 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             $http.get(config.wastlMobileBaseUrl + 'getMainData.ashx').success(function(data) {
                 console.info('Main data loaded from server', data);
                 cache.mainData = processMainData(data);
+                cache.mainDataCreated = createCurrentTimestamp();
+                console.debug('Updated mainData cache with timestamp', cache.mainDataCreated);
                 deferred.resolve(cache.mainData);
             }).error(function(data, code) {
                 deferred.reject(code, data);
@@ -366,7 +419,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     };
 })
 
-.controller('OverviewTabController', function($scope, dataService, util, $translate, $ionicModal, $state) {
+.controller('OverviewTabController', function($scope, dataService, util, $translate, $ionicModal, $state, $window) {
     $scope.doRefresh = function(loadFromCache) {
         util.showLoadingDelayed();
         var promise = dataService.getMainData(loadFromCache);
@@ -409,6 +462,14 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     });
 
     $scope.openAboutDialog = function() {
+        if ($window.cordova) {
+            cordova.getAppVersion().then(function(version) {
+               $scope.appVersion = version;
+            });
+        } else {
+            $scope.appVersion = 'N/A';
+        }
+
         $scope.aboutDialog.show();
     };
 
@@ -440,7 +501,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     $scope.doRefresh(true);
 })
 
-.controller('DistrictsTabController', function($scope, dataService, $ionicScrollDelegate, util) {
+.controller('DistrictsTabController', function($scope, dataService, $ionicScrollDelegate, util, $translate) {
     $scope.clearSearch = function() {
         $scope.search = '';
     };
@@ -461,8 +522,17 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             });
         }).finally(function() {
             $scope.isRefreshing = false;
+            $scope.$broadcast('scroll.refreshComplete');
             util.hideLoading();
         });
+    };
+
+    $scope.showBadge = function(district) {
+        return district.e || district.f;
+    };
+
+    $scope.incidentsAndDepartments = function(district) {
+        return district.f && district.e;
     };
 
     $scope.$on('cordova.resume', function() {
@@ -499,6 +569,7 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
             });
         }).finally(function() {
             $scope.isRefreshing = false;
+            $scope.$broadcast('scroll.refreshComplete');
             util.hideLoading();
         });
     };
@@ -521,57 +592,269 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
 })
 
 .controller('IncidentController', function($scope, $stateParams, dataService, $translate, util) {
-    dataService.getIncidentData($stateParams.id).then(function(data) {
-        $scope.incident = data;
-    }, function(code) {
-        $translate('common.loadingError', {code: code}).then(function(translation) {
-            util.showErrorDialog(translation);
-        });
-    }).finally(function() {
-        $scope.isRefreshing = false;
-        util.hideLoading();
-    });
-})
+    $scope.doRefresh = function() {
+        util.showLoadingDelayed();
+        $scope.isRefreshing = true;
 
-.controller('StatisticsTabController', function() {
-    var data = {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
-        datasets: [
-            {
-                label: "My First dataset",
-                fillColor: "rgba(220,220,220,0.5)",
-                strokeColor: "rgba(220,220,220,0.8)",
-                highlightFill: "rgba(220,220,220,0.75)",
-                highlightStroke: "rgba(220,220,220,1)",
-                data: [65, 59, 80, 81, 56, 55, 40]
-            },
-            {
-                label: "My Second dataset",
-                fillColor: "rgba(151,187,205,0.5)",
-                strokeColor: "rgba(151,187,205,0.8)",
-                highlightFill: "rgba(151,187,205,0.75)",
-                highlightStroke: "rgba(151,187,205,1)",
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }
-        ]
+        dataService.getIncidentData($stateParams.id).then(function(data) {
+           $scope.incident = data;
+        }, function(code) {
+            $translate('common.loadingError', {code: code}).then(function(translation) {
+                util.showErrorDialog(translation);
+            });
+        }).finally(function() {
+            $scope.isRefreshing = false;
+            $scope.$broadcast('scroll.refreshComplete');
+            util.hideLoading();
+        });
     };
 
-    var ctx = document.getElementById("myChart").getContext("2d");
-    var myBarChart = new Chart(ctx).Bar(data, {
-        responsive: true,
-        maintainAspectRatio: true
+    $scope.toggleDispo = function(dispo) {
+        if ($scope.isDispoShown(dispo)) {
+            $scope.shownDispo = null;
+        } else {
+            $scope.shownDispo = dispo;
+        }
+    };
+
+    $scope.isDispoShown = function(dispo) {
+        if (typeof $scope.shownDispo == 'undefined' || $scope.shownDispo == null) {
+            return false;
+        }
+
+        // don't compare object equality, compare name equality because of refresh
+        return $scope.shownDispo.n === dispo.n;
+    };
+
+    $scope.$on('cordova.resume', function() {
+        $scope.doRefresh();
     });
+
+    $scope.doRefresh();
+})
+
+.controller('StatisticsTabController', function($translate, util, dataService, $scope, $timeout, $ionicScrollDelegate) {
+    $scope.tabs = [
+        { isActive: true },
+        { isActive: false },
+        { isActive: false }
+    ];
+
+    var chartInstances = [];
+
+    $scope.doRefresh = function(loadFromCache) {
+        $scope.isRefreshing = true;
+        util.showLoadingDelayed();
+
+        dataService.getMainData(loadFromCache).then(function(data) {
+            $scope.mainData = data;
+            $scope.createCharts(data);
+        }, function(code) {
+            $translate('common.loadingError', {code: code}).then(function(translation) {
+                util.showErrorDialog(translation);
+            });
+        }).finally(function() {
+            $scope.isRefreshing = false;
+            $scope.$broadcast('scroll.refreshComplete');
+            util.hideLoading();
+        });
+    };
+
+    $scope.setTabActive = function(tabNo) {
+        var activeTab = -1;
+        for (var i = 0; i < $scope.tabs.length; i++) {
+            if ($scope.tabs[i].isActive) {
+                activeTab = i;
+                break;
+            }
+        }
+
+        if (activeTab != -1 && tabNo != activeTab) {
+            $scope.tabs[activeTab].isActive = false;
+            $scope.tabs[tabNo].isActive = true;
+
+            // hack to render chart correctly
+            $timeout(function() {
+                $scope.createCharts($scope.mainData);
+            }, 1);
+
+            $ionicScrollDelegate.scrollTop(true);
+        }
+    };
+
+    $scope.$on('cordova.resume', function() {
+        $scope.doRefresh(false);
+    });
+
+    $scope.doRefresh(true);
+
+    $scope.createCharts = function(data) {
+        var chartData = [
+            { key: 'T1', c1: 0, c2: 0, c3: 0},
+            { key: 'T2', c1: 0, c2: 0, c3: 0},
+            { key: 'T3', c1: 0, c2: 0, c3: 0},
+            { key: 'B1', c1: 0, c2: 0, c3: 0},
+            { key: 'B2', c1: 0, c2: 0, c3: 0},
+            { key: 'B3', c1: 0, c2: 0, c3: 0},
+            { key: 'B4', c1: 0, c2: 0, c3: 0},
+            { key: 'S1', c1: 0, c2: 0, c3: 0},
+            { key: 'S2', c1: 0, c2: 0, c3: 0},
+            { key: 'S3', c1: 0, c2: 0, c3: 0},
+        ];
+
+        function createArray(key) {
+            var result = [];
+            for (var i = 0; i < chartData.length; i++) {
+                if (chartData[i].hasOwnProperty(key)) {
+                    result.push(chartData[i][key]);
+                }
+            }
+            return result;
+        }
+
+        function populateData(key, historyData) {
+            angular.forEach(historyData, function(entry) {
+                for (var i = 0; i < chartData.length; i++) {
+                    if (chartData[i].key == entry.a) {
+                        chartData[i][key] += entry.s;
+                    }
+                }
+            });
+        }
+
+        function isElementHidden(element) {
+            return (element.offsetParent === null);
+        }
+
+        function tryBuildBarChart(cssId, matrixKey) {
+            var element = document.getElementById(cssId);
+            if (isElementHidden(element)) {
+                return null;
+            }
+
+            var data = {
+                labels: createArray('key'),
+                datasets: [{
+                    fillColor: 'rgba(220,220,220,0.5)',
+                    strokeColor: 'white',
+                    highlightFill: 'rgba(220,220,220,0.75)',
+                    highlightStroke: 'white',
+                    data: createArray(matrixKey)
+                }]
+            };
+
+            var ctx = element.getContext('2d');
+            var barChart = new Chart(ctx).Bar(data, {
+                responsive: true,
+                scaleGridLineColor : 'rgba(255,255,255,.09)',
+                barStrokeWidth: 1,
+                animation: false
+            });
+
+            // hack to specify different colors for bars of a dataset
+            for (var i = 0; i < 10; i++) {
+                var color;
+                var highlightColor;
+
+                if (i < 3) {
+                    color = '#4a87ee';
+                    highlightColor = '#4a99ee';
+                } else if (i < 7) {
+                    color = '#ef4e3a';
+                    highlightColor = '#ed6657';
+                } else {
+                    color = '#66cc33';
+                    highlightColor = '#80e050';
+                }
+
+                barChart.datasets[0].bars[i].fillColor = color;
+                barChart.datasets[0].bars[i].highlightFill = highlightColor;
+            }
+
+            barChart.update();
+
+            return barChart;
+        }
+
+        function tryBuildPieChart(cssId, matrixKey) {
+            var element = document.getElementById(cssId);
+            if (isElementHidden(element)) {
+                return null;
+            }
+
+            var t = 0;
+            var b = 0;
+            var s = 0;
+
+            for (var i = 0; i < chartData.length; i++) {
+                if (chartData[i].key.substr(0, 1) == 'T') {
+                    t += chartData[i][matrixKey];
+                } else if (chartData[i].key.substr(0, 1) == 'B') {
+                    b += chartData[i][matrixKey];
+                } else {
+                    s += chartData[i][matrixKey];
+                }
+            }
+
+            var data = [{
+                value: t,
+                color: '#4a87ee',
+                highlight: '#4a99ee',
+                label: 'T'
+            }, {
+                value: b,
+                color: '#ef4e3a',
+                highlight: '#ed6657',
+                label: 'B'
+            }, {
+                value: s,
+                color: '#66cc33',
+                highlight: '#80e050',
+                label: 'S'
+            }];
+
+            var ctx = element.getContext('2d');
+            return new Chart(ctx).Pie(data, {
+                responsive: true,
+                segmentStrokeWidth: 1,
+                // android is too slow for animation ;(
+                animation: false
+            });
+        }
+
+        populateData('c1', data.h1.v);
+        populateData('c2', data.h2.v);
+        populateData('c3', data.h3.v);
+
+        // cleanup of existing instances to prevent memory leaks
+        angular.forEach(chartInstances, function(instance) {
+            if (instance !== null) {
+                instance.destroy();
+            }
+        });
+        chartInstances = [];
+
+        chartInstances.push(tryBuildBarChart('barchart1', 'c1'));
+        chartInstances.push(tryBuildPieChart('piechart1', 'c1'));
+        chartInstances.push(tryBuildBarChart('barchart2', 'c2'));
+        chartInstances.push(tryBuildPieChart('piechart2', 'c2'));
+        chartInstances.push(tryBuildBarChart('barchart3', 'c3'));
+        chartInstances.push(tryBuildPieChart('piechart3', 'c3'));
+    };
 });
 
+// statistik sehr sehr langsam auf android animation
 // write issues for this list following list
-// einfärben rest von einsatzstufen
+// doRefresh() inheritance with callback
 // write tests
 // gulp install script (plugins, platform resources)
 // icons for ios/android and also splashscreen (cordova plugin), 512x512 android...
-// statistics (provided by main data, only list and diagram per unit)
-// collapsible accordion: http://forum.ionicframework.com/t/how-to-create-collapsible-list-in-ionic/6920/3
 // alle einsätze auf einmal von ganz NÖ (all in one) -> leider alle bezirke abfragen, mit cache! auch mit OSM karte, wenn geolaction ok! (wastl mobile daten xml?)
 // direkt in meinen bezirk springen -> einstellungen (localStorage)
 // infoscreendaten verwenden, einsatz mit speziellen icon kennzeichen und erweiterte daten laden, anzeigen von token + beschreibung für freischaltung
 // komme/komme nicht funktion, müsste eventuell eigener server laufen (DB-id -> einsatzid, abfrage ob android oder ios (sicherheit, kein overflow), keine ip verwenden sondern geräteid)
+// dazu krems fragen, ob sie funktion implementieren wollen
 // wasser.leitstelle122.at nahmachen
+// analyze rest of other apps to see if there are some features to implement
+// ausrückscreen flo
+// remove our app and set link to appstore (info -> flo admin/ alex)

@@ -51,6 +51,7 @@
         <ion-nav-buttons side="right">
             <button class="button icon button-white button-clear ion-gear-a"></button>
         </ion-nav-buttons>
+
         <ion-content has-bouncing="true">
             <ion-refresher on-refresh="doRefresh(false)">
             </ion-refresher>
@@ -115,6 +116,7 @@
         <ion-nav-buttons side="right">
             <button ng-click="doRefresh(false)" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
         </ion-nav-buttons>
+
         <ion-header-bar class="bar-dark bar-subheader item-input-inset">
             <label class="item-input-wrapper">
             <i class="icon ion-search placeholder-icon"></i>
@@ -122,15 +124,19 @@
             </label>
             <button ng-if="search.length" ng-click="clearSearch()" class="button button-stable ion-android-close button-clear"></button>
         </ion-header-bar>
+
         <ion-content has-bouncing="true">
+            <ion-refresher on-refresh="doRefresh(false)">
+            </ion-refresher>
             <ion-list>
                 <ion-item class="item-dark" ng-repeat="district in districts | filter : search" ui-sref="tabs.districts-incidents({id: district.k})">
                     <h2>{{district.t}}</h2>
-                    <div ng-if="district.f || dictrict.e"
+                    <div ng-if="showBadge(district)"
                          ng-class="{'warn-none': district.z == 0, 'warn-low': district.z == 1, 'warn-medium': district.z == 2, 'warn-high': district.z == 3}"
                          class="badge">
                         <span ng-if="district.f">{{'districts.departments' | translate }}: {{district.f}}</span>
-                        <span ng-if="district.e">&nbsp;| {{'districts.incidents' | translate }}: {{district.e}}</span>
+                        <span ng-if="incidentsAndDepartments(district)">,&nbsp;</span>
+                        <span ng-if="district.e">{{'districts.incidents' | translate }}: {{district.e}}</span>
                     </div>
                 </ion-item>
             </ion-list>
@@ -143,12 +149,18 @@
         <ion-nav-buttons side="right">
             <button ng-click="doRefresh()" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
         </ion-nav-buttons>
+
         <ion-content has-bouncing="true">
+            <ion-refresher on-refresh="doRefresh()">
+            </ion-refresher>
             <ion-list>
                 <ion-item class="item-dark" ng-repeat="incident in incidents" href="" ng-click="goToIncident(incident.i)">
-                    <div class="badge high">{{incident.d}} {{incident.t}}</div>
-                    <h2><span ng-if="incident.a" class="incident-type {{incident.a}}">{{incident.a}}</span> {{incident.m}}</h2>
-                    <p>{{incident.o}} | {{incident.o2}} ({{incident.n}})</p>
+                    <h2>
+                        <span ng-if="incident.a" class="incident-type {{incident.a}}">{{incident.a}}</span>
+                        <span ng-if="incident.m != ''">{{incident.m}}</span>
+                        <span ng-if="incident.m == ''" class="no-alarm-image">{{ 'common.noAlarmImage' | translate }}</span>
+                    </h2>
+                    <p>{{incident.o}}, {{incident.o2}} {{incident.d}} {{incident.t}}</p>
                 </ion-item>
             </ion-list>
             <div class="card" ng-show="incidents.length === 0">
@@ -163,16 +175,123 @@
         <ion-nav-buttons side="right">
             <button ng-click="doRefresh()" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
         </ion-nav-buttons>
-        <ion-content has-bouncing="true">
-            {{district.i}}
+
+        <ion-content has-bouncing="true" padding="true">
+            <ion-refresher on-refresh="doRefresh()">
+            </ion-refresher>
+            <div class="card" ng-if="incident">
+                <div class="item item-divider">
+                    <h2>
+                        <span ng-if="incident.a" class="incident-type {{incident.a}}">{{incident.a}}</span>
+                        <span ng-if="incident.m != ''">{{incident.m}}</span>
+                        <span ng-if="incident.m == ''" class="no-alarm-image">{{ 'common.noAlarmImage' | translate }}</span>
+                    </h2>
+                </div>
+                <div class="item item-text-wrap">
+                    <h3>{{incident.o}}<br>{{incident.o2}}</h3>
+                    <p>{{incident.d}} {{incident.t}}</p>
+                </div>
+            </div>
+
+            <ion-list class="list-small">
+                <div ng-repeat="dispo in incident.Dispo">
+                    <ion-item class="item-dark item-accordion-header" ng-click="toggleDispo(dispo)" ng-class="{active: isDispoShown(dispo)}">
+                        <i class="icon" ng-class="isDispoShown(dispo) ? 'ion-minus' : 'ion-plus'"></i>
+                        &nbsp;
+                        {{dispo.n}}
+                    </ion-item>
+                    <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.dt != ''">
+                        {{ 'incident.disposition' | translate }}: {{dispo.dt}}
+                    </ion-item>
+                    <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.at != ''">
+                        {{ 'incident.alarmed' | translate }}:
+                        <span ng-if="dispo.at == 'own'">{{ 'incident.ownAlarmed' | translate }}</span>
+                        <span ng-if="dispo.at != 'own'">{{dispo.at}}</span>
+                    </ion-item>
+                    <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.ot != ''">
+                        {{ 'incident.disengaged' | translate }}: {{dispo.ot}}
+                    </ion-item>
+                    <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.it != ''">
+                        {{ 'incident.indented' | translate }}: {{dispo.it}}
+                    </ion-item>
+                </div>
+            </ion-list>
         </ion-content>
     </ion-view>
 </script>
 
 <script id="templates/statistics.html" type="text/ng-template">
     <ion-view title="{{'statistics.title' | translate }}">
-        <ion-content has-bouncing="true">
-            <canvas id="myChart"></canvas>
+        <ion-nav-buttons side="right">
+            <button ng-click="doRefresh(false)" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
+        </ion-nav-buttons>
+
+        <div class="tabs tabs-top tabs-icon-top">
+            <a class="tab-item" ng-class="{'active': tabs[0].isActive}" ng-click="setTabActive(0)">
+                <i class="icon ion-clock"></i>
+                {{'statistics.history6' | translate }}
+            </a>
+            <a class="tab-item" ng-class="{'active': tabs[1].isActive}" ng-click="setTabActive(1)">
+                <i class="icon ion-clock"></i>
+                {{'statistics.history12' | translate }}
+            </a>
+            <a class="tab-item" ng-class="{'active': tabs[2].isActive}" ng-click="setTabActive(2)">
+                <i class="icon ion-clock"></i>
+                {{'statistics.history24' | translate }}
+            </a>
+        </div>
+
+        <ion-content has-bouncing="true" class="has-subheader subheader-top-fix">
+            <ion-refresher on-refresh="doRefresh(false)">
+            </ion-refresher>
+
+            <div class="subtab-content statistics-container" ng-show="tabs[0].isActive">
+                <canvas id="barchart1" class="chart-padding-left"></canvas>
+                <canvas id="piechart1"></canvas>
+                <div class="row" ng-repeat="historyEntry in mainData.h1.v">
+                    <div class="col col-80">
+                        <span class="incident-type {{ historyEntry.a }}">{{ historyEntry.a }}</span>
+                        <span ng-if="historyEntry.m == 'unspezifiziert'" class="no-alarm-image">{{ 'common.noAlarmImage' | translate }}</span>
+                        <span ng-if="historyEntry.m != 'unspezifiziert'">{{ historyEntry.m }}</span>
+                    </div>
+                    <div class="col">{{ historyEntry.s }}</div>
+                </div>
+                <div class="row">
+                    <div class="col sum">{{ 'statistics.sum' | translate: {sum: mainData.h1.s} }}</div>
+                </div>
+            </div>
+
+            <div class="subtab-content statistics-container" ng-show="tabs[1].isActive">
+                <canvas id="barchart2" class="chart-padding-left"></canvas>
+                <canvas id="piechart2"></canvas>
+                <div class="row" ng-repeat="historyEntry in mainData.h2.v">
+                    <div class="col col-80">
+                        <span class="incident-type {{ historyEntry.a }}">{{ historyEntry.a }}</span>
+                        <span ng-if="historyEntry.m == 'unspezifiziert'" class="no-alarm-image">{{ 'common.noAlarmImage' | translate }}</span>
+                        <span ng-if="historyEntry.m != 'unspezifiziert'">{{ historyEntry.m }}</span>
+                    </div>
+                    <div class="col">{{ historyEntry.s }}</div>
+                </div>
+                <div class="row">
+                    <div class="col sum">{{ 'statistics.sum' | translate: {sum: mainData.h2.s} }}</div>
+                </div>
+            </div>
+
+            <div class="subtab-content statistics-container" ng-show="tabs[2].isActive">
+                <canvas id="barchart3" class="chart-padding-left"></canvas>
+                <canvas id="piechart3"></canvas>
+                <div class="row" ng-repeat="historyEntry in mainData.h3.v">
+                    <div class="col col-80">
+                        <span class="incident-type {{ historyEntry.a }}">{{ historyEntry.a }}</span>
+                        <span ng-if="historyEntry.m == 'unspezifiziert'" class="no-alarm-image">{{ 'common.noAlarmImage' | translate }}</span>
+                        <span ng-if="historyEntry.m != 'unspezifiziert'">{{ historyEntry.m }}</span>
+                    </div>
+                    <div class="col">{{ historyEntry.s }}</div>
+                </div>
+                <div class="row">
+                    <div class="col sum">{{ 'statistics.sum' | translate: {sum: mainData.h3.s} }}</div>
+                </div>
+            </div>
         </ion-content>
     </ion-view>
 </script>
@@ -185,9 +304,10 @@
                 <button ng-click="closeAboutDialog()" class="button ion-close button-clear"></button>
             </div>
         </ion-header-bar>
+
         <ion-content has-bouncing="true">
             <div class="list">
-                <div class="item item-dark">Version: 1.0.0</div>
+                <div class="item item-dark">Version: {{ appVersion }}</div>
                 <div class="item item-dark">Info ...</div>
             </div>
         </ion-content>

@@ -12,6 +12,7 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic/scss/ionic";
 
 $main-bg-color: #272727 !default;
+$main-font-color: #666 !default;
 $header-bg-color: #CD0200 !default;
 $header-border-color: #450000 !default;
 $map-bg-color: #545454 !default;
@@ -19,6 +20,10 @@ $map-stroke-color: #1d1d1d !default;
 $low-warn-color: #ffff00 !default;
 $medium-warn-color: #FF6600 !default;
 $high-warn-color: #CD0200 !default;
+
+.ionic-body, body {
+    color: $main-font-color;
+}
 
 .scroll-content,
 .modal,
@@ -106,23 +111,49 @@ $high-warn-color: #CD0200 !default;
             }
 
             h2 {
-                color: #fff;
+                color: $light;
             }
         }
     }
 
-    &.list-small .item {
-        padding: 8px;
+    .item {
+        &.item-accordion-header {
+            font-size: 15px;
+        }
+
+        &.item-accordion-header.active,
+        &.item-accordion-header.activated {
+            border-color: $dark;
+            color: $assertive;
+        }
+
+        &.item-accordion {
+            line-height: 28px;
+            height: 28px;
+            padding-top: 0;
+            padding-bottom: 0;
+            font-size: inherit;
+            transition: all linear 0.09s;
+        }
+
+        &.item-accordion.ng-hide {
+            height: 0;
+        }
+
+        &.item-accordion.ng-hide-add,
+        &.item-accordion.ng-hide-remove {
+            display: block !important;
+        }
     }
+}
+
+.list-small .item {
+    padding: 8px;
 }
 
 .item .badge {
     font-size: 10px;
     right: 16px;
-
-    &.high {
-        top: 25px;
-    }
 
     &.warn-none {
         background-color: #e0e0e0;
@@ -152,5 +183,64 @@ span.incident-type {
     &.T2,
     &.T3 {
         background-color: $positive;
+        color: white;
     }
+
+    &.B1,
+    &.B2,
+    &.B3,
+    &.B4 {
+        background-color: $assertive;
+        color: white;
+    }
+
+    &.S1,
+    &.S2,
+    &.S3 {
+        background-color: $balanced;
+        color: white;
+    }
+}
+
+.popup-head {
+    border-bottom: 1px solid #bbb;
+}
+
+span.no-alarm-image {
+    font-style: italic;
+    color: $main-font-color;
+}
+
+.subheader-top-fix {
+    top: 94px;
+}
+
+.subtab-content {
+    opacity: 1;
+    transition: all linear 0.3s;
+}
+
+.subtab-content.ng-hide {
+    opacity: 0;
+}
+
+.statistics-container {
+    .col {
+        border-top: 1px solid $dark;
+        color: white;
+        text-align: right;
+
+        &.col-80 {
+            text-align: left;
+        }
+
+        &.sum {
+            border-bottom: none;
+            border-top: 3px solid $dark;
+        }
+    }
+}
+
+.chart-padding-left {
+    padding-left: 10px;
 }

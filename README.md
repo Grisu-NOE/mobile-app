@@ -36,12 +36,19 @@ Please consider to write unit and integration tests for your code. We use [Travi
   - `com.ionic.keyboard`
   - `org.apache.cordova.statusbar`
   - `org.apache.cordova.globalization`
+  - `https://github.com/whiteoctober/cordova-plugin-app-version.git`
 - Add platforms
   - `ionic platform add ios` (only works on Mac OSX)
   - `ionic platform add android` (you need to install the [Android SDK](https://developer.android.com/sdk/) before)
 - Copy platform specific assets from folder `platform_assets` to corresponding folder in generated platform
 - Copile SASS files with `gulp sass` (watch changes with `gulp watch-sass`) and start app server with command `ionic serve`.
 - ENJOY!
+
+### Useful commands and hints
+- Show app log in console when debugging app on Android device with USB
+  - `adb logcat -s CordovaLog:D`
+- Start Google Chrome with disabled web security to retrieve data from remote servers
+  - see http://stackoverflow.com/a/6083677/1296333
 
 Licencing
 ---------
