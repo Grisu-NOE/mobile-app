@@ -563,6 +563,13 @@ angular.module('grisu-noe', ['ionic', 'pascalprecht.translate'])
     });
 });
 
+// ionic loading icons not really round when animated
+// timeout for refreshing (1 minute)
+// disable animations at statistics, maybe fix performance issues
+// border of list in infoindow needs to be removed
+// split files
+// remove english language. not needed
+// icons in subheader statistics not aligned correctly on android
 // issues with number of ffs/incidents (oft inkonstistenz), klosterneuburg auf karte aktiv, obwohl einsätze in stockerau
 // write issues for this list following list
 // einfärben rest von einsatzstufen
