@@ -606,7 +606,6 @@ angular.module('grisu-noe', ['ionic'])
             var barChart = new Chart(ctx).Bar(data, {
                 responsive: true,
                 scaleGridLineColor : 'rgba(255,255,255,.09)',
-                barStrokeWidth: 1,
                 animation: false
             });
 
@@ -675,7 +674,6 @@ angular.module('grisu-noe', ['ionic'])
             var ctx = element.getContext('2d');
             return new Chart(ctx).Pie(data, {
                 responsive: true,
-                segmentStrokeWidth: 1,
                 // android is too slow for animation ;(
                 animation: false
             });
