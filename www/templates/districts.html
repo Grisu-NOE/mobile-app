@@ -1,0 +1,30 @@
+<ion-view title="Aktuelle Einsätze">
+    <ion-nav-buttons side="right">
+        <button ng-click="doRefresh(false)" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
+    </ion-nav-buttons>
+
+    <ion-header-bar class="bar-dark bar-subheader item-input-inset">
+        <label class="item-input-wrapper">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input ng-model="search" ng-change="scrollTop()" type="search" placeholder="Suche">
+        </label>
+        <button ng-if="search.length" ng-click="clearSearch()" class="button button-stable ion-android-close button-clear"></button>
+    </ion-header-bar>
+
+    <ion-content has-bouncing="true">
+        <ion-refresher on-refresh="doRefresh(false)">
+        </ion-refresher>
+        <ion-list>
+            <ion-item class="item-dark" ng-repeat="district in districts | filter : search" ui-sref="tabs.districts-incidents({id: district.k})">
+                <h2>{{district.t}}</h2>
+                <div ng-if="showBadge(district)"
+                     ng-class="{'warn-none': district.z == 0, 'warn-low': district.z == 1, 'warn-medium': district.z == 2, 'warn-high': district.z == 3}"
+                     class="badge">
+                    <span ng-if="district.f">FF: {{district.f}}</span>
+                    <span ng-if="incidentsAndDepartments(district)">,&nbsp;</span>
+                    <span ng-if="district.e">Einsätze: {{district.e}}</span>
+                </div>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

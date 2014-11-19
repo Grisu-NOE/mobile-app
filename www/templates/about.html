@@ -1,0 +1,20 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-dark">
+        <h1 class="title">Info</h1>
+        <div class="buttons">
+            <button ng-click="closeAboutDialog()" class="button ion-close button-clear"></button>
+        </div>
+    </ion-header-bar>
+
+    <ion-content has-bouncing="true">
+        <div class="text-center padding-top">
+            <img src="img/app-icon.png" width="72" height="72">
+            <h3 class="stable">Grisu NÖ</h3>
+        </div>
+
+        <div class="list">
+            <div class="item item-dark">Version: {{ appVersion }}</div>
+            <div class="item item-dark">Info ...</div>
+        </div>
+    </ion-content>
+</ion-modal-view>

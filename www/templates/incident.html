@@ -1,0 +1,47 @@
+<ion-view title="{{ incident.n }}">
+    <ion-nav-buttons side="right">
+        <button ng-click="doRefresh()" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
+    </ion-nav-buttons>
+
+    <ion-content has-bouncing="true" padding="true">
+        <ion-refresher on-refresh="doRefresh()">
+        </ion-refresher>
+        <div class="card" ng-if="incident">
+            <div class="item item-divider">
+                <h2>
+                    <span ng-if="incident.a" class="incident-type {{incident.a}}">{{incident.a}}</span>
+                    <span ng-if="incident.m != ''">{{incident.m}}</span>
+                    <span ng-if="incident.m == ''" class="no-alarm-image">Kein Meldebild</span>
+                </h2>
+            </div>
+            <div class="item item-text-wrap">
+                <h3>{{incident.o}}<br>{{incident.o2}}</h3>
+                <p>{{incident.d}} {{incident.t}}</p>
+            </div>
+        </div>
+
+        <ion-list class="list-small">
+            <div ng-repeat="dispo in incident.Dispo">
+                <ion-item class="item-dark item-accordion-header" ng-click="toggleDispo(dispo)" ng-class="{active: isDispoShown(dispo)}">
+                    <i class="icon" ng-class="isDispoShown(dispo) ? 'ion-minus' : 'ion-plus'"></i>
+                    &nbsp;
+                    {{dispo.n}}
+                </ion-item>
+                <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.dt != ''">
+                    Disposition: {{dispo.dt}}
+                </ion-item>
+                <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.at != ''">
+                    Alarmierung:
+                    <span ng-if="dispo.at == 'own'">Eigenalarmiert</span>
+                    <span ng-if="dispo.at != 'own'">{{dispo.at}}</span>
+                </ion-item>
+                <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.ot != ''">
+                    Ausgerückt: {{dispo.ot}}
+                </ion-item>
+                <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.it != ''">
+                    Eingerückt: {{dispo.it}}
+                </ion-item>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-view>
