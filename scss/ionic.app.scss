@@ -14,7 +14,6 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 $main-bg-color: #272727 !default;
 $main-font-color: #666 !default;
 $header-bg-color: #CD0200 !default;
-$header-border-color: #450000 !default;
 $map-bg-color: #545454 !default;
 $map-stroke-color: #1d1d1d !default;
 $low-warn-color: #ffff00 !default;
@@ -34,7 +33,6 @@ $high-warn-color: #CD0200 !default;
 
 .bar {
     &.bar-red {
-        border-color: $header-border-color;
         background-color: $header-bg-color;
 
         .title {
@@ -241,6 +239,7 @@ span.no-alarm-image {
     }
 }
 
-.chart-padding-left {
+.chart-padding {
     padding-left: 10px;
+    padding-right: 10px;
 }
