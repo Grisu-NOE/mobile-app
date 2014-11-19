@@ -268,14 +268,29 @@ angular.module('grisu-noe', ['ionic'])
 })
 
 .service('util', function($ionicPopup, $ionicLoading) {
-    this.showErrorDialog = function(title) {
+    this.showErrorDialog = function(message) {
         $ionicPopup.alert({
-            title: title,
+            title: message,
             buttons: [{
                 text: 'OK',
                 type: 'button-assertive'
             }]
         });
+    };
+
+    this.showLoadingErrorDialog = function(httpCode) {
+        var message = 'Daten konnten nicht geladen werden. ';
+
+        switch (httpCode) {
+            case 0:
+                message += 'Möglicherweise besteht keine Internetverbindung.';
+                break;
+            default:
+                message += 'Fehlercode ' + code;
+                break;
+        }
+
+        this.showErrorDialog(message);
     };
 
     this.showLoadingDelayed = function() {
@@ -316,7 +331,7 @@ angular.module('grisu-noe', ['ionic'])
                 });
             });
         }, function(code) {
-            util.showErrorDialog('Daten konnten nicht geladen werden: Fehler ' + code);
+            util.showLoadingErrorDialog(code);
         }).finally(function() {
             $scope.$broadcast('scroll.refreshComplete');
             util.hideLoading();
@@ -386,7 +401,7 @@ angular.module('grisu-noe', ['ionic'])
         dataService.getMainData(loadFromCache).then(function(data) {
             $scope.districts = data.Bezirke;
         }, function(code) {
-            util.showErrorDialog('Daten konnten nicht geladen werden: Fehler ' + code);
+            util.showLoadingErrorDialog(code);
         }).finally(function() {
             $scope.isRefreshing = false;
             $scope.$broadcast('scroll.refreshComplete');
@@ -429,7 +444,7 @@ angular.module('grisu-noe', ['ionic'])
         dataService.getActiveIncidents($stateParams.id).then(function(data) {
             $scope.incidents = data.Einsatz;
         }, function(code) {
-            util.showErrorDialog('Daten konnten nicht geladen werden: Fehler ' + code);
+            util.showLoadingErrorDialog(code);
         }).finally(function() {
             $scope.isRefreshing = false;
             $scope.$broadcast('scroll.refreshComplete');
@@ -462,7 +477,7 @@ angular.module('grisu-noe', ['ionic'])
         dataService.getIncidentData($stateParams.id).then(function(data) {
            $scope.incident = data;
         }, function(code) {
-            util.showErrorDialog('Daten konnten nicht geladen werden: Fehler ' + code);
+            util.showLoadingErrorDialog(code);
         }).finally(function() {
             $scope.isRefreshing = false;
             $scope.$broadcast('scroll.refreshComplete');
@@ -511,7 +526,7 @@ angular.module('grisu-noe', ['ionic'])
             $scope.mainData = data;
             $scope.createCharts(data);
         }, function(code) {
-            util.showErrorDialog('Daten konnten nicht geladen werden: Fehler ' + code);
+            util.showLoadingErrorDialog(code);
         }).finally(function() {
             $scope.isRefreshing = false;
             $scope.$broadcast('scroll.refreshComplete');
