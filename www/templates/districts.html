@@ -1,6 +1,9 @@
 <ion-view title="Aktuelle Einsätze">
     <ion-nav-buttons side="right">
-        <button ng-click="doRefresh(false)" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
+        <button ng-click="doRefresh(false)"
+                ng-class="{'ion-looping': isRefreshing}"
+                class="button icon button-white button-clear ion-loop">
+        </button>
     </ion-nav-buttons>
 
     <ion-header-bar class="bar-dark bar-subheader item-input-inset">
@@ -15,13 +18,20 @@
         <ion-refresher on-refresh="doRefresh(false)">
         </ion-refresher>
         <ion-list>
-            <ion-item class="item-dark" ng-repeat="district in districts | filter : search" ui-sref="tabs.districts-incidents({id: district.k})">
+            <ion-item class="item-dark"
+                      ng-repeat="district in districts | filter : search"
+                      ui-sref="tabs.districts-incidents({id: district.k})">
                 <h2>{{district.t}}</h2>
-                <div ng-if="showBadge(district)"
-                     ng-class="{'warn-none': district.z == 0, 'warn-low': district.z == 1, 'warn-medium': district.z == 2, 'warn-high': district.z == 3}"
+                <div ng-if="district.e || district.f"
+                     ng-class="{
+                         'warn-none': district.z == 0,
+                         'warn-low': district.z == 1,
+                         'warn-medium': district.z == 2,
+                         'warn-high': district.z == 3
+                     }"
                      class="badge">
                     <span ng-if="district.f">FF: {{district.f}}</span>
-                    <span ng-if="incidentsAndDepartments(district)">,&nbsp;</span>
+                    <span ng-if="district.f && district.e">,&nbsp;</span>
                     <span ng-if="district.e">Einsätze: {{district.e}}</span>
                 </div>
             </ion-item>

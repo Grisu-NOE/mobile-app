@@ -1,6 +1,9 @@
 <ion-view title="{{ incident.n }}">
     <ion-nav-buttons side="right">
-        <button ng-click="doRefresh()" ng-class="{'ion-looping': isRefreshing}" class="button icon button-white button-clear ion-loop"></button>
+        <button ng-click="doRefresh()"
+                ng-class="{'ion-looping': isRefreshing}"
+                class="button icon button-white button-clear ion-loop">
+        </button>
     </ion-nav-buttons>
 
     <ion-content has-bouncing="true" padding="true">
@@ -22,7 +25,9 @@
 
         <ion-list class="list-small">
             <div ng-repeat="dispo in incident.Dispo">
-                <ion-item class="item-dark item-accordion-header" ng-click="toggleDispo(dispo)" ng-class="{active: isDispoShown(dispo)}">
+                <ion-item class="item-dark item-accordion-header"
+                          ng-click="toggleDispo(dispo)"
+                          ng-class="{active: isDispoShown(dispo)}">
                     <i class="icon" ng-class="isDispoShown(dispo) ? 'ion-minus' : 'ion-plus'"></i>
                     &nbsp;
                     {{dispo.n}}

@@ -34,4 +34,20 @@ angular.module('grisu-noe').service('util', function($ionicPopup, $ionicLoading)
     this.hideLoading = function() {
         $ionicLoading.hide();
     };
+
+    this.genericRefresh = function(scope, dataPromise, callback) {
+        var self = this;
+        scope.isRefreshing = true;
+        this.showLoadingDelayed();
+
+        dataPromise.then(function(data) {
+            callback(data);
+        }, function(errCode) {
+            self.showLoadingErrorDialog(errCode);
+        }).finally(function() {
+            scope.isRefreshing = false;
+            scope.$broadcast('scroll.refreshComplete');
+            self.hideLoading();
+        });
+    };
 });

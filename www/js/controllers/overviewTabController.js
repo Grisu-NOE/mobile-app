@@ -1,9 +1,7 @@
 angular.module('grisu-noe').controller('overviewTabController', function($scope, dataService, util, $ionicModal, $state, $window) {
-    $scope.doRefresh = function(loadFromCache) {
-        util.showLoadingDelayed();
-        var promise = dataService.getMainData(loadFromCache);
 
-        promise.then(function(data) {
+    $scope.doRefresh = function(loadFromCache) {
+        util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
             $scope.departmentCount = data.departmentCount;
             $scope.incidentCount = data.incidentCount;
             $scope.districtCount = data.districtCount;
@@ -23,12 +21,25 @@ angular.module('grisu-noe').controller('overviewTabController', function($scope,
                     angular.element(path).addClass(colorState.value);
                 });
             });
-        }, function(code) {
-            util.showLoadingErrorDialog(code);
-        }).finally(function() {
-            $scope.$broadcast('scroll.refreshComplete');
-            util.hideLoading();
         });
+    };
+
+    $scope.$on('cordova.resume', function() {
+        $scope.doRefresh(false);
+    });
+
+    $scope.doRefresh(true);
+
+    $scope.onMapClicked = function(event) {
+        var district = event.target.classList[0];
+        var mappings = dataService.getConfig().districtMapMappings;
+        for (var key in mappings) {
+            if (mappings.hasOwnProperty(key)) {
+                if (mappings[key] === district) {
+                    $state.go('tabs.overview-incidents', { id: key });
+                }
+            }
+        }
     };
 
     $ionicModal.fromTemplateUrl('templates/about.html', {
@@ -58,22 +69,4 @@ angular.module('grisu-noe').controller('overviewTabController', function($scope,
     $scope.$on('$destroy', function() {
         $scope.aboutDialog.remove();
     });
-
-    $scope.$on('cordova.resume', function() {
-        $scope.doRefresh(false);
-    });
-
-    $scope.onMapClicked = function(event) {
-        var district = event.target.classList[0];
-        var mappings = dataService.getConfig().districtMapMappings;
-        for (var key in mappings) {
-            if (mappings.hasOwnProperty(key)) {
-                if (mappings[key] === district) {
-                    $state.go('tabs.overview-incidents', { id: key });
-                }
-            }
-        }
-    };
-
-    $scope.doRefresh(true);
 });

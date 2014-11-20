@@ -10,20 +10,17 @@ angular.module('grisu-noe').controller('statisticsTabController',
     var chartInstances = [];
 
     $scope.doRefresh = function(loadFromCache) {
-        $scope.isRefreshing = true;
-        util.showLoadingDelayed();
-
-        dataService.getMainData(loadFromCache).then(function(data) {
+        util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
             $scope.mainData = data;
             $scope.createCharts(data);
-        }, function(code) {
-            util.showLoadingErrorDialog(code);
-        }).finally(function() {
-            $scope.isRefreshing = false;
-            $scope.$broadcast('scroll.refreshComplete');
-            util.hideLoading();
         });
     };
+
+    $scope.$on('cordova.resume', function() {
+        $scope.doRefresh(false);
+    });
+
+    $scope.doRefresh(true);
 
     $scope.setTabActive = function(tabNo) {
         var activeTab = -1;
@@ -46,12 +43,6 @@ angular.module('grisu-noe').controller('statisticsTabController',
             $ionicScrollDelegate.scrollTop(true);
         }
     };
-
-    $scope.$on('cordova.resume', function() {
-        $scope.doRefresh(false);
-    });
-
-    $scope.doRefresh(true);
 
     $scope.createCharts = function(data) {
         var chartData = [

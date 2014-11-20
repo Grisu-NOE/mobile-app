@@ -1,3 +1,7 @@
+angular.isUndefinedOrNull = function(val) {
+    return angular.isUndefined(val) || val === null;
+};
+
 angular.module('grisu-noe', ['ionic'])
 
 .config(function ($ionicTabsConfig, $stateProvider, $urlRouterProvider) {
@@ -97,7 +101,7 @@ angular.module('grisu-noe', ['ionic'])
             $window.StatusBar.styleLightContent();
         }
 
-        document.addEventListener('resume', function () {
+        document.addEventListener('resume', function() {
             console.debug('Resuming app. Broadcasting event.');
             $rootScope.$broadcast('cordova.resume');
         }, false);

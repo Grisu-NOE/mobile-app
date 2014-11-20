@@ -2,10 +2,7 @@ angular.module('grisu-noe').controller('incidentsListController',
     function($scope, $state, $stateParams, dataService, $ionicNavBarDelegate, util, $window) {
 
     $scope.doRefresh = function() {
-        util.showLoadingDelayed();
-        $scope.isRefreshing = true;
-
-        dataService.getMainData(true).then(function(data) {
+        util.genericRefresh($scope, dataService.getMainData(true), function(data) {
             angular.forEach(data.Bezirke, function(district) {
                 if (district.k == $stateParams.id) {
                     $ionicNavBarDelegate.setTitle(district.t);
@@ -17,16 +14,16 @@ angular.module('grisu-noe').controller('incidentsListController',
             }
         });
 
-        dataService.getActiveIncidents($stateParams.id).then(function(data) {
+        util.genericRefresh($scope, dataService.getActiveIncidents($stateParams.id), function(data) {
             $scope.incidents = data.Einsatz;
-        }, function(code) {
-            util.showLoadingErrorDialog(code);
-        }).finally(function() {
-            $scope.isRefreshing = false;
-            $scope.$broadcast('scroll.refreshComplete');
-            util.hideLoading();
         });
     };
+
+    $scope.$on('cordova.resume', function() {
+        $scope.doRefresh();
+    });
+
+    $scope.doRefresh();
 
     $scope.goToIncident = function(incidentId) {
         if ($window.location.hash.indexOf('overview-incidents') > -1) {
@@ -37,10 +34,4 @@ angular.module('grisu-noe').controller('incidentsListController',
             console.error('Wrong window location hash set', $window.location.hash);
         }
     };
-
-    $scope.$on('cordova.resume', function() {
-        $scope.doRefresh();
-    });
-
-    $scope.doRefresh();
 });
