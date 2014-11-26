@@ -4,9 +4,8 @@ node_js:
   - 0.10
 
 before_install:
-  - npm install -g gulp
+  - npm install -g cordova ionic gulp
 
 script:
   - gulp install
-  - gulp sass
   - gulp test
