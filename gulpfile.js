@@ -59,7 +59,7 @@ gulp.task('watch-test', function() {
     return gulp.watch(['www/js/**/*.js', 'test/unit/*.js'], ['test']);
 });
 
-gulp.task('install', ['git-check', 'install-cordova-plugins', 'sass'], function() {
+gulp.task('install-bower-components', function() {
     return bower.commands.install()
         .on('log', function(data) {
             gutil.log('bower', gutil.colors.cyan(data.id), data.message);
@@ -86,6 +86,8 @@ gulp.task('git-check', function(done) {
     }
     done();
 });
+
+gulp.task('install', ['git-check', 'install-cordova-plugins', 'install-bower-components', 'sass']);
 
 function printErrorMessageAndExit(msg) {
     console.log(gutil.colors.red(msg));
