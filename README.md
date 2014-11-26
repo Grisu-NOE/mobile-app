@@ -46,6 +46,9 @@ Please consider to write unit and integration tests for your code. We use [Travi
   - `gulp test`
 - Start web server and open browser. It also watches for code changes.
   - `ionic serve`
+- Emulate an iOS device with Mac OSX
+  - List available emulators: `<PROJECT_ROOT>/platforms/ios/cordova/lib/list-emulator-images`
+  - Start emulator: `ionic emulate ios --target="<TARGET>"` e.g.: `ionic emulate ios --target="iPad (Retina)"`
 
 Licencing
 ---------
