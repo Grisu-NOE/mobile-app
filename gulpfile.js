@@ -59,10 +59,15 @@ gulp.task('watch-test', function() {
     return gulp.watch(['www/js/**/*.js', 'test/unit/*.js'], ['test']);
 });
 
-gulp.task('install-bower-components', function() {
-    return bower.commands.install()
+gulp.task('install-bower-components', function(done) {
+    bower.commands.install()
         .on('log', function(data) {
             gutil.log('bower', gutil.colors.cyan(data.id), data.message);
+        }).on('end', function() {
+            gutil.log(gutil.colors.cyan('Bower install ended OK:'));
+            done();
+        }).on('error', function() {
+            printErrorMessageAndExit('ERROR: Bower install ended NOT OK!');
         });
 });
 
