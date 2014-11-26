@@ -21,20 +21,8 @@ var requiredCordovaPlugins = [
 
 var isSassWatchOn = false;
 
-gulp.task('sass', function(done) {
-    var sassOptions = {};
-    if (isSassWatchOn) {
-        sassOptions.errLogToConsole = true;
-    }
-    gulp.src('./scss/ionic.app.scss')
-        .pipe(sass(sassOptions))
-        .pipe(gulp.dest('./www/css/'))
-        .pipe(minifyCss({
-            keepSpecialComments: 0
-        }))
-        .pipe(rename({ extname: '.min.css' }))
-        .pipe(gulp.dest('./www/css/'))
-        .on('end', done);
+gulp.task('sass', function() {
+    processSass();
 });
 
 gulp.task('watch-all', ['watch-sass', 'watch-test']);
@@ -64,7 +52,6 @@ gulp.task('install-bower-components', function(done) {
         .on('log', function(data) {
             gutil.log('bower', gutil.colors.cyan(data.id), data.message);
         }).on('end', function() {
-            gutil.log(gutil.colors.cyan('Bower install ended OK:'));
             done();
         }).on('error', function() {
             printErrorMessageAndExit('ERROR: Bower install ended NOT OK!');
@@ -92,9 +79,28 @@ gulp.task('git-check', function(done) {
     done();
 });
 
-gulp.task('install', ['git-check', 'install-cordova-plugins', 'install-bower-components', 'sass']);
+gulp.task('install', ['git-check', 'install-cordova-plugins', 'install-bower-components'], function() {
+    // this is a hack for simulating a synchronous behavior
+    console.log("*** Compiling SASS ***");
+    processSass();
+});
 
 function printErrorMessageAndExit(msg) {
     console.log(gutil.colors.red(msg));
     process.exit(1);
+}
+
+function processSass() {
+    var sassOptions = {};
+    if (isSassWatchOn) {
+        sassOptions.errLogToConsole = true;
+    }
+    return gulp.src('./scss/ionic.app.scss')
+        .pipe(sass(sassOptions))
+        .pipe(gulp.dest('./www/css/'))
+        .pipe(minifyCss({
+            keepSpecialComments: 0
+        }))
+        .pipe(rename({ extname: '.min.css' }))
+        .pipe(gulp.dest('./www/css/'));
 }
