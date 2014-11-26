@@ -30,16 +30,9 @@ Please consider to write unit and integration tests for your code. We use [Travi
 - Install required node dependencies: `npm install`
 - Run Gulp dependency installation: `gulp install`
   - If you have problems to execute the Gulp task, try to execute `git config url."https://".insteadOf git://` before
-- Install Cordova and Ionic plugins with command `ionic plugin add <plugin>`
-  - `org.apache.cordova.console`
-  - `org.apache.cordova.device`
-  - `com.ionic.keyboard`
-  - `org.apache.cordova.statusbar`
-  - `https://github.com/whiteoctober/cordova-plugin-app-version.git`
 - Add platforms
   - `ionic platform add ios` (only works on Mac OSX)
   - `ionic platform add android` (you need to install the [Android SDK](https://developer.android.com/sdk/) before)
-- Copile SASS files with `gulp sass` (watch changes with `gulp watch-sass`) and start app server with command `ionic serve`.
 - ENJOY!
 
 ### Useful commands and hints
@@ -47,6 +40,12 @@ Please consider to write unit and integration tests for your code. We use [Travi
   - `adb logcat -s CordovaLog:D`
 - Start Google Chrome with disabled web security to retrieve data from remote servers
   - see http://stackoverflow.com/a/6083677/1296333
+- Watch SASS changes and compile / move it immediately
+  - `gulp watch-sass`
+- Run unit and integration test suite
+  - `gulp test`
+- Start web server and open browser. It also watches for code changes.
+  - `ionic serve`
 
 Licencing
 ---------

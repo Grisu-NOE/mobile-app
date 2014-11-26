@@ -10,9 +10,18 @@ var sh = require('shelljs');
 var paths = {
     sass: ['./scss/**/*.scss']
 };
+
+var requiredCordovaPlugins = [
+    'org.apache.cordova.console',
+    'org.apache.cordova.device',
+    'com.ionic.keyboard',
+    'org.apache.cordova.statusbar',
+    'https://github.com/whiteoctober/cordova-plugin-app-version.git'
+];
+
 var isSassWatchOn = false;
 
-gulp.task('sass', function (done) {
+gulp.task('sass', function(done) {
     var sassOptions = {};
     if (isSassWatchOn) {
         sassOptions.errLogToConsole = true;
@@ -30,12 +39,12 @@ gulp.task('sass', function (done) {
 
 gulp.task('watch-all', ['watch-sass', 'watch-test']);
 
-gulp.task('watch-sass', function () {
+gulp.task('watch-sass', function() {
     isSassWatchOn = true;
     gulp.watch(paths.sass, ['sass']);
 });
 
-gulp.task('test', function () {
+gulp.task('test', function() {
     // NOTE: Using the fake './foobar' so as to run the files
     // listed in karma.conf.js INSTEAD of what was passed to
     // gulp.src !
@@ -46,26 +55,39 @@ gulp.task('test', function () {
         }));
 });
 
-gulp.task('watch-test', function () {
+gulp.task('watch-test', function() {
     return gulp.watch(['www/js/**/*.js', 'test/unit/*.js'], ['test']);
 });
 
-gulp.task('install', ['git-check'], function () {
+gulp.task('install', ['git-check', 'install-cordova-plugins', 'sass'], function() {
     return bower.commands.install()
-        .on('log', function (data) {
+        .on('log', function(data) {
             gutil.log('bower', gutil.colors.cyan(data.id), data.message);
         });
 });
 
-gulp.task('git-check', function (done) {
-    if (!sh.which('git')) {
-        console.log(
-                '  ' + gutil.colors.red('Git is not installed.'),
-            '\n  Git, the version control system, is required to download Ionic.',
-            '\n  Download git here:', gutil.colors.cyan('http://git-scm.com/downloads') + '.',
-                '\n  Once git is installed, run \'' + gutil.colors.cyan('gulp install') + '\' again.'
-        );
-        process.exit(1);
+gulp.task('install-cordova-plugins', function(done) {
+    for (var i = 0; i < requiredCordovaPlugins.length; i++) {
+        var plugin = requiredCordovaPlugins[i];
+        if (sh.exec('ionic plugin add ' + plugin).code !== 0) {
+            printErrorMessageAndExit('Error: Couldn\'t install Cordova plugin ' + plugin);
+        }
     }
     done();
 });
+
+gulp.task('git-check', function(done) {
+    if (!sh.which('git')) {
+        printErrorMessageAndExit('Git is not installed.\n' +
+            'Git, the version control system, is required to download Ionic.\n' +
+            'Download git here: http://git-scm.com/downloads\n' +
+            'Once git is installed, run \'gulp install\' again.'
+        );
+    }
+    done();
+});
+
+function printErrorMessageAndExit(msg) {
+    console.log(gutil.colors.red(msg));
+    process.exit(1);
+}
