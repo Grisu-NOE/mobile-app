@@ -6,6 +6,7 @@ var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var karma = require('gulp-karma');
 var sh = require('shelljs');
+var del = require('del');
 
 var paths = {
     sass: ['./scss/**/*.scss']
@@ -83,6 +84,16 @@ gulp.task('install', ['git-check', 'install-cordova-plugins', 'install-bower-com
     // this is a hack for simulating a synchronous behavior
     console.log("*** Compiling SASS ***");
     processSass();
+});
+
+gulp.task('clean', function(done) {
+    del([
+        'node_modules/**',
+        'plugins/**',
+        'platforms/**',
+        'www/css/**',
+        'www/lib/**'
+    ], done());
 });
 
 function printErrorMessageAndExit(msg) {
