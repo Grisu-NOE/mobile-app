@@ -2,9 +2,9 @@ angular.isUndefinedOrNull = function(val) {
     return angular.isUndefined(val) || val === null;
 };
 
-angular.module('grisu-noe', ['ionic'])
+angular.module('grisu-noe', ['ionic', 'ngCordova'])
 
-.config(function ($ionicTabsConfig, $stateProvider, $urlRouterProvider) {
+.config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider) {
     // Override the Android platform default to add "tabs-striped" class to "ion-tabs" elements.
     $ionicTabsConfig.type = '';
 
@@ -89,11 +89,19 @@ angular.module('grisu-noe', ['ionic'])
     $urlRouterProvider.otherwise('/tab/overview');
 })
 
-.run(function ($ionicPlatform, $window, $rootScope) {
+.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen) {
     $ionicPlatform.ready(function () {
+
+        if ($window.cordova) {
+            $timeout(function() {
+                console.debug("hiding splash screen");
+                $cordovaSplashscreen.hide();
+            }, 2000);
+        }
+
         // Hide the accessory bar by default (remove this to show the accessory bar
         // above the keyboard for form inputs)
-        if ($window.cordova && $window.cordova.plugins.Keyboard) {
+        if ($window.cordova) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
 

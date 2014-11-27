@@ -17,7 +17,8 @@ var requiredCordovaPlugins = [
     'org.apache.cordova.device',
     'com.ionic.keyboard',
     'org.apache.cordova.statusbar',
-    'https://github.com/whiteoctober/cordova-plugin-app-version.git'
+    'https://github.com/whiteoctober/cordova-plugin-app-version.git',
+    'org.apache.cordova.splashscreen'
 ];
 
 var isSassWatchOn = false;
