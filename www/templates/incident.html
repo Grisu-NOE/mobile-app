@@ -24,6 +24,22 @@
                     {{incident.o2}}
                 </h3>
                 <p>{{incident.d}} {{incident.t}}</p>
+                <p ng-if="bygone != null">
+                    <span ng-if="bygone.hours != 0 || bygone.minutes != 0">Im Einsatz seit</span>
+                    <ng-pluralize count="bygone.hours" when="{
+                        '0': '',
+                        'one': '1 Stunde',
+                        'other': '{} Stunden'
+                    }">
+                    </ng-pluralize>
+                    <span ng-if="bygone.hours != 0 && bygone.minutes != 0">und</span>
+                    <ng-pluralize count="bygone.minutes" when="{
+                        '0': '',
+                        'one': '1 Minute',
+                        'other': '{} Minuten'
+                    }">
+                    </ng-pluralize>
+                </p>
             </div>
         </div>
 

@@ -1,4 +1,4 @@
-Grisu NÖ [![Build Status](https://travis-ci.org/l-e-X/grisu-noe.svg?branch=master)](https://travis-ci.org/l-e-X/grisu-noe)
+Grisu NÖ [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url]
 ============
 
 The already existing mobile web-app (http://mobile.leitstelle122.at/) of WASTL - shortened for "<strong>Wa</strong>rn- und Alarm<strong>st</strong>ufen<strong>l</strong>iste" in German - is used to display several realtime information of currently running fire brigade incidents in Lower Austria. The incident data is kindly provided by the voluntary fire department "Freiwillige Feuerwehr Krems". WASTL is a project by several public sector entities:
@@ -53,4 +53,10 @@ Please consider to write unit and integration tests for your code. We use [Travi
 Licencing
 ---------
 
-Grisu NÖ is licenced under the [MIT License (MIT)](http://opensource.org/licenses/MIT).
+Grisu NÖ is licenced under the [MIT License (MIT)](LICENSE).
+
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: LICENSE
+
+[travis-url]: https://travis-ci.org/l-e-X/grisu-noe
+[travis-image]: https://travis-ci.org/l-e-X/grisu-noe.svg?branch=master
