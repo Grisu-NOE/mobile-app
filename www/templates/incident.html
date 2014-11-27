@@ -18,7 +18,11 @@
                 </h2>
             </div>
             <div class="item item-text-wrap">
-                <h3>{{incident.o}}<br>{{incident.o2}}</h3>
+                <h3>
+                    {{incident.o}}
+                    <br ng-if="incident.o != ''">
+                    {{incident.o2}}
+                </h3>
                 <p>{{incident.d}} {{incident.t}}</p>
             </div>
         </div>

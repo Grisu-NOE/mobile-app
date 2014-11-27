@@ -16,7 +16,10 @@
                     <span ng-if="incident.m != ''">{{incident.m}}</span>
                     <span ng-if="incident.m == ''" class="no-alarm-image">Kein Meldebild</span>
                 </h2>
-                <p>{{incident.o}}, {{incident.o2}} {{incident.d}} {{incident.t}}</p>
+                <p>
+                    {{incident.o}}<span ng-if="incident.o != '' && incident.o2 != ''">,</span>
+                    {{incident.o2}} {{incident.d}} {{incident.t}}
+                </p>
             </ion-item>
         </ion-list>
         <div class="card" ng-show="incidents.length === 0">
