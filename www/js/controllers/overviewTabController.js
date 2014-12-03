@@ -58,6 +58,8 @@ angular.module('grisu-noe').controller('overviewTabController', function($scope,
             $scope.appVersion = 'N/A';
         }
 
+        $scope.date = new Date();
+
         $scope.aboutDialog.show();
     };
 
