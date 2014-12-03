@@ -2,7 +2,7 @@ angular.isUndefinedOrNull = function(val) {
     return angular.isUndefined(val) || val === null;
 };
 
-angular.module('grisu-noe', ['ionic', 'ngCordova'])
+angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
 
 .config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider) {
     // Override the Android platform default to add "tabs-striped" class to "ion-tabs" elements.
@@ -27,7 +27,7 @@ angular.module('grisu-noe', ['ionic', 'ngCordova'])
     // ionic doesn't support nested states/views very well yet.
     // so we are faking nested states with conventions
     $stateProvider.state('tabs.overview-incidents', {
-        url: '/overview-incidents/:id',
+        url: '/overview-incidents/:districtName/:id',
         views: {
             'overview-tab': {
                 templateUrl: 'templates/incidents.html',
@@ -37,7 +37,7 @@ angular.module('grisu-noe', ['ionic', 'ngCordova'])
     });
 
     $stateProvider.state('tabs.overview-incident', {
-        url: '/overview-incident/:id',
+        url: '/overview-incident/:districtId/:incidentId',
         views: {
             'overview-tab': {
                 templateUrl: 'templates/incident.html',
@@ -67,7 +67,7 @@ angular.module('grisu-noe', ['ionic', 'ngCordova'])
     });
 
     $stateProvider.state('tabs.districts-incident', {
-        url: '/district-incident/:id',
+        url: '/district-incident/:districtId/:incidentId',
         views: {
             'districts-tab': {
                 templateUrl: 'templates/incident.html',

@@ -9,6 +9,7 @@
     <ion-content has-bouncing="true" padding="true">
         <ion-refresher on-refresh="doRefresh()">
         </ion-refresher>
+
         <div class="card" ng-if="incident">
             <div class="item item-divider">
                 <h2>
@@ -17,6 +18,7 @@
                     <span ng-if="incident.m == ''" class="no-alarm-image">Kein Meldebild</span>
                 </h2>
             </div>
+
             <div class="item item-text-wrap">
                 <h3>
                     {{incident.o}}
@@ -41,6 +43,16 @@
                     </ng-pluralize>
                 </p>
             </div>
+
+            <div class="item text-center" ng-if="isMapRefreshing">
+                <i class="ion-looping"></i>
+            </div>
+            <a class="item item-icon-left"
+               ng-if="isMapAvailable && !isMapRefreshing"
+               ng-click="openMapDialog()">
+                <i class="icon ion-map"></i>
+                Einsatzort
+            </a>
         </div>
 
         <ion-list class="list-small">

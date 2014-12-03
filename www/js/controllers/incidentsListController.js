@@ -26,10 +26,15 @@ angular.module('grisu-noe').controller('incidentsListController',
     $scope.doRefresh();
 
     $scope.goToIncident = function(incidentId) {
+        var params = {
+            incidentId: incidentId,
+            districtId: $stateParams.id
+        };
+
         if ($window.location.hash.indexOf('overview-incidents') > -1) {
-            $state.go('tabs.overview-incident', { id: incidentId });
+            $state.go('tabs.overview-incident', params);
         } else if ($window.location.hash.indexOf('district-incidents') > -1) {
-            $state.go('tabs.districts-incident', { id: incidentId });
+            $state.go('tabs.districts-incident', params);
         } else {
             console.error('Wrong window location hash set', $window.location.hash);
         }
