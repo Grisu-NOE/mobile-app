@@ -113,5 +113,12 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
             console.debug('Resuming app. Broadcasting event.');
             $rootScope.$broadcast('cordova.resume');
         }, false);
+		
+        /**
+         * Opens a native web browser with given url supported by the running OS
+         */
+        $rootScope.openBrowser = function(url) {
+            $window.open(url, '_system');
+        };
     });
 });

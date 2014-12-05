@@ -13,14 +13,14 @@
         </div>
 
         <div class="list">
-            <div class="item item-dark">Version: {{ appVersion }}</div>
-            <div class="item item-dark">© {{ date | date: 'yyyy' }} Alex Gassner</div>
-            <a class="item item-dark item-icon-right" href="https://github.com/l-e-X/grisu-noe">
+            <div class="item item-dark item-dark-modal-full">Version: {{ appVersion }}</div>
+            <div class="item item-dark item-dark-modal-full">© {{ date | date: 'yyyy' }} Alex Gassner</div>
+            <a class="item item-dark item-dark-modal-full item-icon-right" ng-click="openBrowser('https://github.com/l-e-X/grisu-noe')">
                 <i class="icon ion-ios7-arrow-right"></i>
                 <h2 class="stable">Online</h2>
                 <p>https://github.com/l-e-X/grisu-noe</p>
             </a>
-            <a class="item item-dark item-icon-right" href="mailto:l-e-X@users.noreply.github.com">
+            <a class="item item-dark item-dark-modal-full item-icon-right" href="mailto:l-e-X@users.noreply.github.com">
                 <i class="icon ion-ios7-arrow-right"></i>
                 <h2 class="stable">Kontakt / Fragen</h2>
                 <p>l-e-X@users.noreply.github.com</p>
@@ -32,7 +32,7 @@
             Abgesehen davon steht die Applikation in keinerlei Zusammenhang mit WASTL.
         </p>
 
-        <p class="padding-left padding-right">
+        <p class="padding-left padding-right padding-bottom">
             Keine Gewähr auf Richtigkeit und Vollständigkeit der Daten.
             Insbesondere die Positionsangaben der virtuellen Karten sind oft ungenau
             und auf keinen Fall für einen Einsatz zu verwenden.

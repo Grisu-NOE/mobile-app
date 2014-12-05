@@ -6,7 +6,9 @@
     <description>A modern mobile app for firefighters in Lower Austria.</description>
     <author email="office@alex-gassner.at" href="https://github.com/l-e-X/grisu-noe">l-e-X</author>
     <content src="index.html"/>
+	
     <access origin="*"/>
+    <access origin="mailto:*" launch-external="yes"/>
 
     <preference name="webviewbounce" value="false"/>
     <preference name="UIWebViewBounce" value="false"/>

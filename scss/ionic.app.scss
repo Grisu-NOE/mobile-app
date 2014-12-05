@@ -112,6 +112,17 @@ $high-warn-color: #CD0200 !default;
                 color: $light;
             }
         }
+        
+        &.activated {
+            background-color: #171717;
+            border-color: $dark;
+        }
+        
+        // hack: no left and right border for modal dark lists
+        &.item-dark-modal-full {
+            border-left: none;
+            border-right: none;
+        }
     }
 
     .item {
