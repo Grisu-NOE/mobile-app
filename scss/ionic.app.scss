@@ -19,6 +19,7 @@ $map-stroke-color: #1d1d1d !default;
 $low-warn-color: #ffff00 !default;
 $medium-warn-color: #FF6600 !default;
 $high-warn-color: #CD0200 !default;
+$item-active-bg-color: #171717 !default;
 
 .ionic-body, body {
     color: $main-font-color;
@@ -105,7 +106,7 @@ $high-warn-color: #CD0200 !default;
 
             &:active,
             &.activated {
-                background-color: #171717;
+                background-color: $item-active-bg-color;
             }
 
             h2 {
@@ -113,8 +114,12 @@ $high-warn-color: #CD0200 !default;
             }
         }
         
+        &.item-select select {
+            background-color: $main-bg-color;
+        }
+        
         &.activated {
-            background-color: #171717;
+            background-color: $item-active-bg-color;
             border-color: $dark;
         }
         

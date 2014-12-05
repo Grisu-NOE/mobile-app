@@ -3,7 +3,7 @@
         <button ng-click="openAboutDialog()" class="button icon button-white button-clear ion-more"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <button class="button icon button-white button-clear ion-gear-a"></button>
+        <button ng-click="openSettingsDialog()" class="button icon button-white button-clear ion-gear-a"></button>
     </ion-nav-buttons>
 
     <ion-content has-bouncing="true">
@@ -11,13 +11,13 @@
         </ion-refresher>
         <div class="list list-inset list-small">
             <div class="item item-dark">
-                Aktuelle Einsätze: {{incidentCount}}
+                Aktuelle Einsätze: {{mainData.incidentCount}}
             </div>
             <div class="item item-dark">
-                Ausgerückte Feuerwehren: {{departmentCount}}
+                Ausgerückte Feuerwehren: {{mainData.departmentCount}}
             </div>
             <div class="item item-dark">
-                Aktive Bezirke: {{districtCount}}
+                Aktive Bezirke: {{mainData.districtCount}}
             </div>
         </div>
 

@@ -1,10 +1,9 @@
-angular.module('grisu-noe').controller('overviewTabController', function($scope, dataService, util, $ionicModal, $state, $window) {
+angular.module('grisu-noe').controller('overviewTabController',
+    function($scope, dataService, util, $ionicModal, $state, $window, storageService) {
 
     $scope.doRefresh = function(loadFromCache) {
         util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
-            $scope.departmentCount = data.departmentCount;
-            $scope.incidentCount = data.incidentCount;
-            $scope.districtCount = data.districtCount;
+            $scope.mainData = data;
 
             var svg = document.getElementsByClassName('lower-austria-map');
             var warnStatesString = dataService.getConfig().warnStates.join(' ');
@@ -46,10 +45,6 @@ angular.module('grisu-noe').controller('overviewTabController', function($scope,
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function(modal) {
-        $scope.aboutDialog = modal;
-    });
-
-    $scope.openAboutDialog = function() {
         if ($window.cordova) {
             cordova.getAppVersion().then(function(version) {
                 $scope.appVersion = version;
@@ -59,7 +54,10 @@ angular.module('grisu-noe').controller('overviewTabController', function($scope,
         }
 
         $scope.date = new Date();
+        $scope.aboutDialog = modal;
+    });
 
+    $scope.openAboutDialog = function() {
         $scope.aboutDialog.show();
     };
 
@@ -67,8 +65,38 @@ angular.module('grisu-noe').controller('overviewTabController', function($scope,
         $scope.aboutDialog.hide();
     };
 
-    // cleanup the dialog when we're done with it!
     $scope.$on('$destroy', function() {
         $scope.aboutDialog.remove();
+    });
+    
+    $ionicModal.fromTemplateUrl('templates/settings.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.settings = storageService.getObject('settings');
+        if (!$scope.settings.myDistrict) {
+            $scope.settings.myDistrict = {
+                k: 'LWZ'
+            };
+        }
+        
+        $scope.$watch('settings', function(newValue, oldValue) {
+            console.debug('Settings changed', oldValue, newValue);
+            storageService.setObject('settings', newValue);
+        }, true);
+        
+        $scope.settingsDialog = modal;
+    });
+    
+    $scope.openSettingsDialog = function() {
+        $scope.settingsDialog.show();
+    };
+
+    $scope.closeSettingsDialog = function() {
+        $scope.settingsDialog.hide();
+    };
+
+    $scope.$on('$destroy', function() {
+        $scope.settingsDialog.remove();
     });
 });

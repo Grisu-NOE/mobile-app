@@ -1,0 +1,45 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-dark">
+        <h1 class="title">Einstellungen</h1>
+        <div class="buttons">
+            <button ng-click="closeSettingsDialog()" class="button ion-close button-clear"></button>
+        </div>
+    </ion-header-bar>
+
+    <ion-content has-bouncing="true">
+        <div class="list">
+            <div>
+                <label class="item item-dark item-input item-select item-dark-modal-full">
+                    <div class="input-label">
+                        Mein Bezirk
+                    </div>
+                    <select ng-model="settings.myDistrict"
+                            ng-options="district.t for district in mainData.Bezirke track by district.k">
+                    </select>
+                </label>
+            </div>
+            <div class="item item-dark item-toggle item-dark-modal-full">
+                Direkt in Bezirk springen
+                <label class="toggle toggle-assertive">
+                    <input type="checkbox" ng-model="settings.jumpToDistrict">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </div>
+            <div class="item item-dark item-toggle item-dark-modal-full">
+                Erweiterte Einsatzdaten
+                <label class="toggle toggle-assertive">
+                    <input type="checkbox" ng-model="settings.showExtendedIncidentData">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </div>
+        </div>
+        
+        <div ng-show="settings.showExtendedIncidentData" class="padding">
+            Hello, world
+        </div>
+    </ion-content>
+</ion-modal-view>
