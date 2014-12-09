@@ -4,7 +4,7 @@
         xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Grisu</name>
     <description>A modern mobile app for firefighters in Lower Austria.</description>
-    <author email="office@alex-gassner.at" href="https://github.com/l-e-X/grisu-noe">l-e-X</author>
+    <author email="l-e-X@users.noreply.github.com" href="https://github.com/l-e-X/grisu-noe">l-e-X</author>
     <content src="index.html"/>
 	
     <access origin="*"/>
