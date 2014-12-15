@@ -4,6 +4,8 @@ angular.module('grisu-noe').controller('incidentController',
     $scope.isMapAvailable = false;
     $scope.isMapRefreshing = false;
 
+    $scope.layers = geoService.getStandardLayers();
+
     $scope.updateMapToLocation = function() {
         $scope.isMapRefreshing = true;
 

@@ -45,6 +45,33 @@ angular.module('grisu-noe').factory('geoService', function($http, $q) {
             });
 
             return deferred.promise;
+        },
+
+        getStandardLayers: function() {
+            return {
+                baselayers: {
+                    osm: {
+                        name: 'OpenStreetMap',
+                            type: 'xyz',
+                            url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            layerOptions: {
+                            subdomains: ['a', 'b', 'c'],
+                                continuousWorld: true
+                        }
+                    }
+                },
+                overlays: {
+                    fire: {
+                        name: 'OpenFireMap',
+                            type: 'xyz',
+                            visible: true,
+                            url: 'http://openfiremap.org/hytiles/{z}/{x}/{y}.png',
+                            layerOptions: {
+                            continuousWorld: true
+                        }
+                    }
+                }
+            }
         }
     };
 });

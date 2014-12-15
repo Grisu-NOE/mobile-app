@@ -13,7 +13,8 @@ angular.module('grisu-noe').controller('waterTabController',
         center: {
             autoDiscover: true,
             zoom: 15
-        }
+        },
+        layers: geoService.getStandardLayers()
     });
 
     $scope.centerMap = function(latLng) {
