@@ -76,6 +76,16 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
         }
     });
 
+    $stateProvider.state('tabs.water', {
+        url: '/water',
+        views: {
+            'water-tab': {
+                templateUrl: 'templates/water.html',
+                controller: 'waterTabController'
+            }
+        }
+    });
+
     $stateProvider.state('tabs.statistics', {
         url: '/statistics',
         views: {
