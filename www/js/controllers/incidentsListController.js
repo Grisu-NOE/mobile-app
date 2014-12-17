@@ -5,13 +5,9 @@ angular.module('grisu-noe').controller('incidentsListController',
         util.genericRefresh($scope, dataService.getMainData(true), function(data) {
             angular.forEach(data.Bezirke, function(district) {
                 if (district.k == $stateParams.id) {
-                    $ionicNavBarDelegate.setTitle(district.t);
+                    $ionicNavBarDelegate.title(district.t);
                 }
             });
-
-            if (!$ionicNavBarDelegate.getTitle().length) {
-                $ionicNavBarDelegate.setTitle('Einsätze von Bezirk');
-            }
         });
 
         util.genericRefresh($scope, dataService.getActiveIncidents($stateParams.id), function(data) {
@@ -23,7 +19,9 @@ angular.module('grisu-noe').controller('incidentsListController',
         $scope.doRefresh();
     });
 
-    $scope.doRefresh();
+    $scope.$on('$ionicView.enter', function() {
+        $scope.doRefresh();
+    });
 
     $scope.goToIncident = function(incidentId) {
         var params = {

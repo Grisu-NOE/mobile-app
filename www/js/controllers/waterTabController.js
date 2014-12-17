@@ -5,10 +5,6 @@ angular.module('grisu-noe').controller('waterTabController',
     var hydrants = [];
     var isErrorShown = false;
 
-    $ionicLoading.show({
-        template: '<i class="icon ion-loading-c"></i> Bestimme aktuelle Position'
-    });
-
     angular.extend($scope, {
         center: {
             autoDiscover: true,
@@ -146,6 +142,8 @@ angular.module('grisu-noe').controller('waterTabController',
                 });
             }, function() {
                 util.showErrorDialog('Hydranten von der Umgebung konnten nicht geladen werden.');
+            }).finally(function() {
+                util.hideLoading();
             });
         });
     };
@@ -155,14 +153,17 @@ angular.module('grisu-noe').controller('waterTabController',
         $scope.updateMarkerAndHydrants();
     });
 
+    $scope.$on('$ionicView.loaded', function() {
+        $ionicLoading.show({
+            template: '<i class="icon ion-loading-c"></i> Bestimme aktuelle Position'
+        });
+    });
+
     $scope.$on('leafletDirectiveMap.locationfound', function() {
-        util.hideLoading();
         $scope.updateMarkerAndHydrants();
     });
 
     $scope.$on('leafletDirectiveMap.locationerror', function() {
-        util.hideLoading();
-
         // Wolfsgraben
         $scope.center.lat = 48.163350;
         $scope.center.lng = 16.121937;

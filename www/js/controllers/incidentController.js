@@ -68,7 +68,9 @@ angular.module('grisu-noe').controller('incidentController',
         $scope.doRefresh();
     });
 
-    $scope.doRefresh();
+    $scope.$on('$ionicView.enter', function() {
+        $scope.doRefresh();
+    });
 
     $scope.toggleDispo = function(dispo) {
         if ($scope.isDispoShown(dispo)) {

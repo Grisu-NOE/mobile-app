@@ -20,7 +20,9 @@ angular.module('grisu-noe').controller('statisticsTabController',
         $scope.doRefresh(false);
     });
 
-    $scope.doRefresh(true);
+    $scope.$on('$ionicView.enter', function() {
+        $scope.doRefresh(true);
+    });
 
     $scope.setTabActive = function(tabNo) {
         var activeTab = -1;

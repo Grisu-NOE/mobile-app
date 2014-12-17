@@ -4,9 +4,19 @@ angular.isUndefinedOrNull = function(val) {
 
 angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
 
-.config(function($ionicTabsConfig, $stateProvider, $urlRouterProvider) {
-    // Override the Android platform default to add "tabs-striped" class to "ion-tabs" elements.
-    $ionicTabsConfig.type = '';
+.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
+    $ionicConfigProvider.views.transition('ios');
+
+    $ionicConfigProvider.tabs.style('standard');
+    $ionicConfigProvider.tabs.position('bottom');
+
+    $ionicConfigProvider.backButton.icon('ion-arrow-left-c');
+    $ionicConfigProvider.backButton.text('');
+    $ionicConfigProvider.backButton.previousTitleText(false);
+
+    $ionicConfigProvider.navBar.alignTitle('center');
+    $ionicConfigProvider.navBar.positionPrimaryButtons('left');
+    $ionicConfigProvider.navBar.positionSecondaryButtons('right');
 
     $stateProvider.state('tabs', {
         url: '/tab',

@@ -27,7 +27,9 @@ angular.module('grisu-noe').controller('overviewTabController',
         $scope.doRefresh(false);
     });
 
-    $scope.doRefresh(true);
+    $scope.$on('$ionicView.enter', function() {
+        $scope.doRefresh(true);
+    });
 
     $scope.onMapClicked = function(event) {
         var district = event.target.classList[0];
