@@ -43,6 +43,7 @@ angular.module('grisu-noe').controller('overviewTabController',
         }
     };
 
+        $scope.$on('$ionicView.enter', function() {
     $ionicModal.fromTemplateUrl('templates/about.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -58,6 +59,7 @@ angular.module('grisu-noe').controller('overviewTabController',
         $scope.date = new Date();
         $scope.aboutDialog = modal;
     });
+            });
 
     $scope.openAboutDialog = function() {
         $scope.aboutDialog.show();
