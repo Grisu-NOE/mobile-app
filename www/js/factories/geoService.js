@@ -52,23 +52,16 @@ angular.module('grisu-noe').factory('geoService', function($http, $q) {
                 baselayers: {
                     osm: {
                         name: 'OpenStreetMap',
-                            type: 'xyz',
-                            url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            layerOptions: {
-                            subdomains: ['a', 'b', 'c'],
-                                continuousWorld: true
-                        }
+                        type: 'xyz',
+                        url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                     }
                 },
                 overlays: {
                     fire: {
                         name: 'OpenFireMap',
-                            type: 'xyz',
-                            visible: true,
-                            url: 'http://openfiremap.org/hytiles/{z}/{x}/{y}.png',
-                            layerOptions: {
-                            continuousWorld: true
-                        }
+                        type: 'xyz',
+                        visible: true,
+                        url: 'http://openfiremap.org/hytiles/{z}/{x}/{y}.png'
                     }
                 }
             }

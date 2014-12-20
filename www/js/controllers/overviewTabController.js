@@ -43,23 +43,34 @@ angular.module('grisu-noe').controller('overviewTabController',
         }
     };
 
-        $scope.$on('$ionicView.enter', function() {
-    $ionicModal.fromTemplateUrl('templates/about.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-    }).then(function(modal) {
-        if ($window.cordova) {
-            cordova.getAppVersion().then(function(version) {
-                $scope.appVersion = version;
-            });
-        } else {
-            $scope.appVersion = 'N/A';
-        }
+    $scope.$on('$ionicView.loaded', function() {
+        $ionicModal.fromTemplateUrl('templates/about.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.date = new Date();
+            $scope.aboutDialog = modal;
+        });
 
-        $scope.date = new Date();
-        $scope.aboutDialog = modal;
+        $ionicModal.fromTemplateUrl('templates/settings.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.settings = storageService.getObject('settings');
+            if (!$scope.settings.myDistrict) {
+                $scope.settings.myDistrict = {
+                    k: 'LWZ'
+                };
+            }
+
+            $scope.$watch('settings', function(newValue, oldValue) {
+                console.debug('Settings changed', oldValue, newValue);
+                storageService.setObject('settings', newValue);
+            }, true);
+
+            $scope.settingsDialog = modal;
+        });
     });
-            });
 
     $scope.openAboutDialog = function() {
         $scope.aboutDialog.show();
@@ -71,25 +82,6 @@ angular.module('grisu-noe').controller('overviewTabController',
 
     $scope.$on('$destroy', function() {
         $scope.aboutDialog.remove();
-    });
-    
-    $ionicModal.fromTemplateUrl('templates/settings.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-    }).then(function(modal) {
-        $scope.settings = storageService.getObject('settings');
-        if (!$scope.settings.myDistrict) {
-            $scope.settings.myDistrict = {
-                k: 'LWZ'
-            };
-        }
-        
-        $scope.$watch('settings', function(newValue, oldValue) {
-            console.debug('Settings changed', oldValue, newValue);
-            storageService.setObject('settings', newValue);
-        }, true);
-        
-        $scope.settingsDialog = modal;
     });
     
     $scope.openSettingsDialog = function() {

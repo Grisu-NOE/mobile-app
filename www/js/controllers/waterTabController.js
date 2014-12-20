@@ -165,8 +165,10 @@ angular.module('grisu-noe').controller('waterTabController',
 
     $scope.$on('leafletDirectiveMap.locationerror', function() {
         // Wolfsgraben
-        $scope.center.lat = 48.163350;
-        $scope.center.lng = 16.121937;
+        var latLng = L.latLng(48.16387421351802, 16.12121343612671);
+        leafletData.getMap().then(function(map) {
+            map.setView(latLng, $scope.center.zoom);
+        });
 
         $scope.updateMarkerAndHydrants();
         if (!isErrorShown) {

@@ -17,7 +17,6 @@ var requiredCordovaPlugins = [
     'org.apache.cordova.device',
     'com.ionic.keyboard',
     'org.apache.cordova.statusbar',
-    'https://github.com/whiteoctober/cordova-plugin-app-version.git',
     'org.apache.cordova.splashscreen',
     'org.apache.cordova.inappbrowser',
     'org.apache.cordova.geolocation'
