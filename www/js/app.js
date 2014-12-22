@@ -140,5 +140,8 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
         $rootScope.openBrowser = function(url) {
             $window.open(url, '_system');
         };
+
+        /** indicator for initial view change (my district) */
+        $rootScope.alreadyJumpedToDistrict = false;
     });
 });

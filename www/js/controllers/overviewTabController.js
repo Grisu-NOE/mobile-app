@@ -1,5 +1,5 @@
 angular.module('grisu-noe').controller('overviewTabController',
-    function($scope, dataService, util, $ionicModal, $state, $window, storageService) {
+    function($scope, $rootScope, dataService, util, $ionicModal, $state, $window, storageService) {
 
     $scope.doRefresh = function(loadFromCache) {
         util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
@@ -44,6 +44,18 @@ angular.module('grisu-noe').controller('overviewTabController',
     };
 
     $scope.$on('$ionicView.loaded', function() {
+        $scope.settings = storageService.getObject('settings');
+
+        if ($scope.settings.jumpToDistrict === true &&
+            $scope.settings.myDistrict.k !== 'LWZ' &&
+            $rootScope.alreadyJumpedToDistrict !== true) {
+
+            $rootScope.alreadyJumpedToDistrict = true;
+            $state.go('tabs.overview-incidents', {
+                id: $scope.settings.myDistrict.k
+            });
+        }
+
         $ionicModal.fromTemplateUrl('templates/about.html', {
             scope: $scope,
             animation: 'slide-in-up'
@@ -56,7 +68,6 @@ angular.module('grisu-noe').controller('overviewTabController',
             scope: $scope,
             animation: 'slide-in-up'
         }).then(function(modal) {
-            $scope.settings = storageService.getObject('settings');
             if (!$scope.settings.myDistrict) {
                 $scope.settings.myDistrict = {
                     k: 'LWZ'
@@ -72,6 +83,25 @@ angular.module('grisu-noe').controller('overviewTabController',
         });
     });
 
+    $scope.onExtendedIncidentDataChanged = function() {
+        updateToken();
+    };
+
+    function updateToken() {
+        if (!$scope.settings.showExtendedIncidentData) {
+            return;
+        }
+
+        util.genericRefresh($scope, dataService.getInfoScreenData(false), function(data) {
+            if (data.CurrentState == 'token' || data.CurrentState == 'waiting') {
+                $scope.token = data.Token;
+                $scope.waitForToken = true;
+            } else {
+                $scope.waitForToken = false;
+            }
+        });
+    }
+
     $scope.openAboutDialog = function() {
         $scope.aboutDialog.show();
     };
@@ -85,6 +115,7 @@ angular.module('grisu-noe').controller('overviewTabController',
     });
     
     $scope.openSettingsDialog = function() {
+        updateToken();
         $scope.settingsDialog.show();
     };
 

@@ -157,6 +157,35 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
             });
 
             return deferred.promise;
+        },
+
+        getInfoScreenData: function(useDemoData) {
+            var deferred = $q.defer();
+            var url = config.infoScreenBaseUrl;
+            var options = {
+                timeout: config.httpTimeout
+            };
+
+            if (useDemoData) {
+                url += 'demo.ashx';
+                angular.extend(options, {
+                    params: {
+                        demo: 3
+                    }
+                });
+            } else {
+                url += 'Einsatz.ashx';
+            }
+
+            $http.get(url, options).success(function(data) {
+                console.info('Extended info screen data loaded from server', data);
+                deferred.resolve(data);
+            }).error(function(data, code) {
+                deferred.reject(code, data);
+                console.error('Error loading extended info screen data". Error code', code);
+            });
+
+            return deferred.promise;
         }
     };
 });

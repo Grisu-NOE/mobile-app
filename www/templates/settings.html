@@ -30,16 +30,31 @@
             <div class="item item-dark item-toggle item-dark-modal-full">
                 Erweiterte Einsatzdaten
                 <label class="toggle toggle-assertive">
-                    <input type="checkbox" ng-model="settings.showExtendedIncidentData">
+                    <input type="checkbox"
+                           ng-model="settings.showExtendedIncidentData"
+                           ng-change="onExtendedIncidentDataChanged()">
                     <div class="track">
                         <div class="handle"></div>
                     </div>
                 </label>
             </div>
         </div>
-        
-        <div ng-show="settings.showExtendedIncidentData" class="padding">
-            Hello, world
+
+        <div class="card" ng-show="settings.showExtendedIncidentData">
+            <div class="item item-text-wrap">
+                <h2 ng-if="waitForToken">Code: {{ token }}</h2>
+                <h2 ng-if="!waitForToken">Erweiterte Einsatzdaten werden verwendet!</h2>
+            </div>
+        </div>
+        <div ng-show="settings.showExtendedIncidentData" class="padding-left padding-right">
+            <p ng-if="waitForToken">
+                Falls du Feuerwehrmann bist und deine Feuerwehr den WASTL-Infoscreen der FF Krems verwendet,
+                kannst du mit Grisu NÖ erweiterte Einsatzdaten (genauer Einsatzort, Routenplan, Bemerkungen etc.)
+                der Einsätze deiner Feuerwehr anzeigen lassen. Dazu benötigst du lediglich eine Freischaltung des
+                obenstehenden Codes. Am besten wendest du dich mit dem Code an deinen Kameraden, der für den
+                WASTL-Infoscreen in deiner Feuerwehr zuständig ist. Nach erfolgter Freischaltung werden in Grisu NÖ
+                erweiterte Einsatzdaten mit einem Stern gekennzeichnet.
+            </p>
         </div>
     </ion-content>
 </ion-modal-view>
