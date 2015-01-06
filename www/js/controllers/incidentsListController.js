@@ -1,5 +1,7 @@
 angular.module('grisu-noe').controller('incidentsListController',
-    function($scope, $state, $stateParams, dataService, $ionicNavBarDelegate, util, $window) {
+    function($scope, $state, $stateParams, dataService, $ionicNavBarDelegate, util, $window, storageService) {
+
+    var extendedIncidentIds = [];
 
     $scope.doRefresh = function() {
         util.genericRefresh($scope, dataService.getMainData(true), function(data) {
@@ -11,8 +13,25 @@ angular.module('grisu-noe').controller('incidentsListController',
         });
 
         util.genericRefresh($scope, dataService.getActiveIncidents($stateParams.id), function(data) {
-            $scope.incidents = data.Einsatz;
+            if (storageService.getObject('settings').showExtendedIncidentData === false) {
+                $scope.incidents = data.Einsatz;
+                return;
+            }
+
+            util.genericRefresh($scope, dataService.getInfoScreenData(true), function(extData) {
+                if (extData.CurrentState === 'data') {
+                    angular.forEach(extData.EinsatzData, function(extIncident) {
+                        extendedIncidentIds.push(extIncident.EinsatzID);
+                    });
+                }
+
+                $scope.incidents = data.Einsatz;
+            });
         });
+    };
+
+    $scope.showStarIcon = function(incidentId) {
+        return extendedIncidentIds.indexOf(incidentId) !== -1;
     };
 
     $scope.$on('cordova.resume', function() {

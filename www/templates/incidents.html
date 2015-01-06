@@ -10,7 +10,11 @@
         <ion-refresher on-refresh="doRefresh()">
         </ion-refresher>
         <ion-list>
-            <ion-item class="item-dark" ng-repeat="incident in incidents" href="" ng-click="goToIncident(incident.i)">
+            <ion-item class="item-dark"
+                      ng-repeat="incident in incidents"
+                      href=""
+                      ng-click="goToIncident(incident.i)"
+                      ng-class="{ 'item-icon-right': showStarIcon(incident.n) }">
                 <h2>
                     <span ng-if="incident.a" class="incident-type {{incident.a}}">{{incident.a}}</span>
                     <span ng-if="incident.m != ''">{{incident.m}}</span>
@@ -20,6 +24,7 @@
                     {{incident.o}}<span ng-if="incident.o != '' && incident.o2 != ''">,</span>
                     {{incident.o2}} {{incident.d}} {{incident.t}}
                 </p>
+                <i ng-if="showStarIcon(incident.n)" class="icon ion-star energized"></i>
             </ion-item>
         </ion-list>
         <div class="card" ng-show="incidents.length === 0">
