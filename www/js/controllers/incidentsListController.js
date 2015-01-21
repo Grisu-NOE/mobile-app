@@ -10,11 +10,14 @@ angular.module('grisu-noe').controller('incidentsListController',
                     $ionicNavBarDelegate.title(district.t);
                 }
             });
-        });
+        }, { hideRefreshers: false });
 
         util.genericRefresh($scope, dataService.getActiveIncidents($stateParams.id), function(data) {
             if (storageService.getObject('settings').showExtendedIncidentData === false) {
                 $scope.incidents = data.Einsatz;
+
+                // hide loading indicators manually
+                util.hideLoadingInScope($scope);
                 return;
             }
 
@@ -27,10 +30,10 @@ angular.module('grisu-noe').controller('incidentsListController',
 
                 $scope.incidents = data.Einsatz;
             });
-        });
+        }, { hideRefreshers: false });
     };
 
-    $scope.showStarIcon = function(incidentId) {
+    $scope.isExtendedIncident = function(incidentId) {
         return extendedIncidentIds.indexOf(incidentId) !== -1;
     };
 
@@ -42,16 +45,31 @@ angular.module('grisu-noe').controller('incidentsListController',
         $scope.doRefresh();
     });
 
-    $scope.goToIncident = function(incidentId) {
+    $scope.goToIncident = function(incident) {
         var params = {
-            incidentId: incidentId,
+            incidentId: incident.i,
             districtId: $stateParams.id
         };
 
+        if ($scope.isExtendedIncident(incident.n)) {
+            angular.extend(params, {
+                extendedIncidentId: incident.n,
+                isHistoricIncident: false
+            })
+        }
+
         if ($window.location.hash.indexOf('overview-incidents') > -1) {
-            $state.go('tabs.overview-incident', params);
+            if ($scope.isExtendedIncident(incident.n)) {
+                $state.go('tabs.overview-extended-incident', params);
+            } else {
+                $state.go('tabs.overview-incident', params);
+            }
         } else if ($window.location.hash.indexOf('district-incidents') > -1) {
-            $state.go('tabs.districts-incident', params);
+            if ($scope.isExtendedIncident(incident.n)) {
+                $state.go('tabs.districts-extended-incident', params);
+            } else {
+                $state.go('tabs.districts-incident', params);
+            }
         } else {
             console.error('Wrong window location hash set', $window.location.hash);
         }

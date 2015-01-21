@@ -81,6 +81,13 @@ angular.module('grisu-noe').controller('overviewTabController',
 
             $scope.settingsDialog = modal;
         });
+
+        $ionicModal.fromTemplateUrl('templates/history.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.historyDialog = modal;
+        });
     });
 
     $scope.onExtendedIncidentDataChanged = function() {
@@ -102,6 +109,27 @@ angular.module('grisu-noe').controller('overviewTabController',
         });
     }
 
+    function updateHistory() {
+        util.genericRefresh($scope, dataService.getInfoScreenHistory(), function(data) {
+            if (data.CurrentState == 'data') {
+                $scope.historyError = false;
+                $scope.historyData = data.EinsatzData;
+            } else {
+                $scope.historyError = true;
+            }
+        });
+    }
+
+    $scope.goToHistoryIncident = function(incident) {
+        $scope.closeHistoryDialog();
+
+        $state.go('tabs.overview-extended-incident', {
+            districtId: 0, // dummy
+            extendedIncidentId: incident.EinsatzID,
+            isHistoricIncident: true
+        });
+    };
+
     $scope.openAboutDialog = function() {
         $scope.aboutDialog.show();
     };
@@ -109,10 +137,6 @@ angular.module('grisu-noe').controller('overviewTabController',
     $scope.closeAboutDialog = function() {
         $scope.aboutDialog.hide();
     };
-
-    $scope.$on('$destroy', function() {
-        $scope.aboutDialog.remove();
-    });
     
     $scope.openSettingsDialog = function() {
         updateToken();
@@ -123,7 +147,22 @@ angular.module('grisu-noe').controller('overviewTabController',
         $scope.settingsDialog.hide();
     };
 
+    $scope.openHistoryDialog = function() {
+        updateHistory();
+        $scope.historyDialog.show();
+    };
+
+    $scope.closeHistoryDialog = function() {
+        $scope.historyDialog.hide();
+    };
+
     $scope.$on('$destroy', function() {
+        $scope.aboutDialog.remove();
         $scope.settingsDialog.remove();
+        $scope.historyDialog.remove();
     });
+
+    $scope.formatDate = function(dateStr) {
+        return util.formatWastlDate(dateStr);
+    }
 });

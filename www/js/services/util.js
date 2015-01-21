@@ -17,7 +17,7 @@ angular.module('grisu-noe').service('util', function($ionicPopup, $ionicLoading)
                 message += 'Möglicherweise besteht keine Internetverbindung.';
                 break;
             default:
-                message += 'Fehlercode ' + code;
+                message += 'Fehlercode ' + httpCode;
                 break;
         }
 
@@ -35,19 +35,65 @@ angular.module('grisu-noe').service('util', function($ionicPopup, $ionicLoading)
         $ionicLoading.hide();
     };
 
-    this.genericRefresh = function(scope, dataPromise, callback) {
+    this.hideLoadingInScope = function(scope) {
+        scope.isRefreshing = false;
+        scope.$broadcast('scroll.refreshComplete');
+        this.hideLoading();
+    };
+
+    this.genericRefresh = function(scope, dataPromise, callback, options) {
         var self = this;
         scope.isRefreshing = true;
         this.showLoadingDelayed();
+
+        var hideLoading = true;
+        if ((typeof options === 'object') &&
+            options.hasOwnProperty('hideRefreshers') &&
+            options.hideRefreshers === false) {
+            hideLoading = false;
+        }
 
         dataPromise.then(function(data) {
             callback(data);
         }, function(errCode) {
             self.showLoadingErrorDialog(errCode);
+            if (!hideLoading) {
+                self.hideLoadingInScope(scope);
+            }
         }).finally(function() {
-            scope.isRefreshing = false;
-            scope.$broadcast('scroll.refreshComplete');
-            self.hideLoading();
+            if (hideLoading) {
+                self.hideLoadingInScope(scope);
+            }
         });
+    };
+
+    this.calculateBygoneTime = function(dateTimeStr, pattern) {
+        var begin = moment(dateTimeStr, pattern).utc();
+
+        if (!begin.isValid()) {
+            console.error('Parsing of bygone time failed!');
+            return null;
+        }
+
+        var millis = moment().utc().diff(begin);
+
+        if (millis < 1000) {
+            console.debug('Value of milliseconds is too small', millis);
+            return null;
+        }
+
+        var duration = moment.duration(millis);
+
+        return {
+            hours: Math.floor(duration.asHours()),
+            minutes: moment.utc(millis).format('m')
+        };
+    };
+
+    this.formatWastlDate = function(dateStr) {
+        if (angular.isUndefinedOrNull(dateStr)) {
+            return null;
+        }
+        return moment(dateStr.substring(0, 19).replace('T', ' '), 'YYYY-MM-DD HH:mm:ss').format('DD.MM.YYYY HH:mm:ss');
     };
 });

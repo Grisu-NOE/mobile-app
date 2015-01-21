@@ -56,6 +56,16 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
         }
     });
 
+    $stateProvider.state('tabs.overview-extended-incident', {
+        url: '/overview-extended-incident/:districtId/:extendedIncidentId/:isHistoricIncident',
+        views: {
+            'overview-tab': {
+                templateUrl: 'templates/extended-incident.html',
+                controller: 'extendedIncidentController'
+            }
+        }
+    });
+
     $stateProvider.state('tabs.districts', {
         url: '/districts',
         views: {
@@ -82,6 +92,16 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
             'districts-tab': {
                 templateUrl: 'templates/incident.html',
                 controller: 'incidentController'
+            }
+        }
+    });
+
+    $stateProvider.state('tabs.districts-extended-incident', {
+        url: '/district-extended-incident/:districtId/:extendedIncidentId/:isHistoricIncident',
+        views: {
+            'districts-tab': {
+                templateUrl: 'templates/extended-incident.html',
+                controller: 'extendedIncidentController'
             }
         }
     });

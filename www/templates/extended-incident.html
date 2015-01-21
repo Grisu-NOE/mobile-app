@@ -1,0 +1,102 @@
+<ion-view view-title="{{ incident.EinsatzID }}">
+    <ion-nav-buttons side="secondary">
+        <button ng-click="doRefresh()"
+                ng-class="{'ion-looping': isRefreshing}"
+                class="button icon button-white button-clear ion-loop">
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content has-bouncing="true" padding="true">
+        <ion-refresher on-refresh="doRefresh()">
+        </ion-refresher>
+
+        <div class="card" ng-if="incident">
+            <div class="item item-divider">
+                <h2>
+                    <span ng-if="incident.Alarmstufe" class="incident-type {{incident.Alarmstufe}}">{{incident.Alarmstufe}}</span>
+                    <span ng-if="incident.Meldebild != ''">{{incident.Meldebild}}</span>
+                    <span ng-if="incident.Meldebild == ''" class="no-alarm-image">Kein Meldebild</span>
+                </h2>
+            </div>
+
+            <div class="item item-text-wrap">
+                <h3 ng-bind-html="address"></h3>
+                <p>{{incidentDate}}</p>
+
+                <p ng-if="bygone != null && !isHistoricIncident()">
+                    <span ng-if="bygone.hours != 0 || bygone.minutes != 0">Im Einsatz seit</span>
+                    <ng-pluralize count="bygone.hours" when="{
+                        '0': '',
+                        'one': '1 Stunde',
+                        'other': '{} Stunden'
+                    }">
+                    </ng-pluralize>
+                    <span ng-if="bygone.hours != 0 && bygone.minutes != 0">und</span>
+                    <ng-pluralize count="bygone.minutes" when="{
+                        '0': '',
+                        'one': '1 Minute',
+                        'other': '{} Minuten'
+                    }">
+                    </ng-pluralize>
+                </p>
+
+                <p>{{incident.Bemerkung}}</p>
+
+                <div class="button-bar padding-top" ng-if="!isHistoricIncident()">
+                    <a class="button button-balanced">Komme</a>
+                    <a class="button button-assertive">Komme nicht</a>
+                </div>
+            </div>
+
+            <div class="item text-center" ng-if="isMapRefreshing">
+                <i class="ion-looping"></i>
+            </div>
+            <a class="item item-divider item-icon-left" ng-if="isMapAvailable && !isMapRefreshing" ng-click="openMapDialog()">
+                <i class="icon ion-map"></i>
+                Einsatzort
+            </a>
+
+            <div class="item item-divider item-icon-left" ng-if="!isHistoricIncident()">
+                <i class="icon ion-ios7-people"></i>
+                <span class="balanced">Anzahl</span> / <span class="assertive">Anzahl</span>
+            </div>
+
+            <div class="item item-divider item-icon-left" ng-if="incident.Melder != ''">
+                <i class="icon ion-ios7-person"></i>
+                {{incident.Melder}}
+            </div>
+
+            <a href="tel:{{incident.MelderTelefon}}" class="item item-divider item-icon-left" ng-if="incident.MelderTelefon != ''">
+                <i class="icon ion-ios7-telephone"></i>
+                {{incident.MelderTelefon}}
+            </a>
+        </div>
+
+        <ion-list class="list-small">
+            <div ng-repeat="dispo in incident.Dispositionen">
+                <ion-item class="item-dark item-accordion-header"
+                          ng-click="toggleDispo(dispo)"
+                          ng-class="{active: isDispoShown(dispo)}">
+                    <i class="icon" ng-class="isDispoShown(dispo) ? 'ion-minus' : 'ion-plus'"></i>
+                    &nbsp;
+                    {{dispo.Name}}
+                </ion-item>
+                <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.hasOwnProperty('DispoTime')">
+                    Disposition: {{formatDate(dispo.DispoTime)}}
+                </ion-item>
+                <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.hasOwnProperty('AlarmTime')">
+                    Alarmierung: {{formatDate(dispo.AlarmTime)}}
+                </ion-item>
+                <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.hasOwnProperty('IsEigenalarmiert') && dispo.IsEigenalarmiert === true">
+                    Alarmierung: Eigenalarmiert
+                </ion-item>
+                <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.hasOwnProperty('AusTime')">
+                    Ausgerückt: {{formatDate(dispo.AusTime)}}
+                </ion-item>
+                <ion-item class="item-accordion" ng-show="isDispoShown(dispo) && dispo.hasOwnProperty('EinTime')">
+                    Eingerückt: {{formatDate(dispo.EinTime)}}
+                </ion-item>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-view>

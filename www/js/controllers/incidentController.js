@@ -8,6 +8,7 @@ angular.module('grisu-noe').controller('incidentController',
 
     $scope.updateMapToLocation = function() {
         $scope.isMapRefreshing = true;
+        console.debug('Update of map with geocoding string: ' + $scope.geocodeAddress);
 
         geoService.geocodeAddress($scope.incident.o + ' Niederösterreich').then(function(data) {
             if (data.length == 0) {
@@ -55,7 +56,7 @@ angular.module('grisu-noe').controller('incidentController',
     $scope.doRefresh = function() {
         util.genericRefresh($scope, dataService.getIncidentData($stateParams.incidentId), function(data) {
             $scope.incident = data;
-            $scope.bygone = $scope.calculateBygoneTime(data.d + ' ' + data.t);
+            $scope.bygone = util.calculateBygoneTime(data.d + ' ' + data.t, 'DD.MM.YYYY HH:mm:ss');
 
             // trigger only on first refresh or map isn't available
             if (!$scope.isMapAvailable) {
@@ -86,24 +87,7 @@ angular.module('grisu-noe').controller('incidentController',
         }
 
         // don't compare object equality, compare name equality because of refresh
-        return $scope.shownDispo.n === dispo.n;
-    };
-
-    $scope.calculateBygoneTime = function(dateTimeStr) {
-        var begin = moment(dateTimeStr, 'DD.MM.YYYY HH:mm:ss').utc();
-
-        if (!begin.isValid()) {
-            console.error('Parsing of bygone time failed!');
-            return null;
-        }
-
-        var millis = moment().utc().diff(begin);
-        var duration = moment.duration(millis);
-
-        return {
-            hours: Math.floor(duration.asHours()),
-            minutes: moment.utc(millis).format('m')
-        };
+        return angular.toJson($scope.shownDispo, false) === angular.toJson(dispo, false);
     };
 
     $ionicModal.fromTemplateUrl('templates/incident-map.html', {

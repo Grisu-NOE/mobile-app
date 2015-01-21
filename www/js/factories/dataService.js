@@ -120,7 +120,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
         getActiveIncidents: function(districtId) {
             var deferred = $q.defer();
 
-            $http.get(config.wastlMobileBaseUrl + 'getEinsatzAktiv.ashx', {
+            $http.get('delete_me.json', {
                 timeout: config.httpTimeout,
                 params: {
                     id: 'bezirk_' + districtId
@@ -182,7 +182,21 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
                 deferred.resolve(data);
             }).error(function(data, code) {
                 deferred.reject(code, data);
-                console.error('Error loading extended info screen data". Error code', code);
+                console.error('Error loading extended info screen data. Error code', code);
+            });
+
+            return deferred.promise;
+        },
+
+        getInfoScreenHistory: function() {
+            var deferred = $q.defer();
+
+            $http.get(config.infoScreenBaseUrl + 'historic.ashx', { timeout: config.httpTimeout }).success(function(data) {
+                console.info('Historic info screen data loaded from server', data);
+                deferred.resolve(data);
+            }).error(function(data, code) {
+                deferred.reject(code, data);
+                console.error('Error loading historic info screen data. Error code', code);
             });
 
             return deferred.promise;

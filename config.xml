@@ -9,6 +9,7 @@
 	
     <access origin="*"/>
     <access origin="mailto:*" launch-external="yes"/>
+    <access origin="tel:*" launch-external="yes"/>
 
     <preference name="webviewbounce" value="false"/>
     <preference name="UIWebViewBounce" value="false"/>

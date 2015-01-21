@@ -9,6 +9,7 @@
     <ion-content has-bouncing="true">
         <ion-refresher on-refresh="doRefresh(false)">
         </ion-refresher>
+
         <div class="list list-inset list-small">
             <div class="item item-dark">
                 Aktuelle Einsätze: {{mainData.incidentCount}}
@@ -20,6 +21,13 @@
                 Aktive Bezirke: {{mainData.districtCount}}
             </div>
         </div>
+
+        <button class="button button-full button-small button-dark"
+                ng-click="openHistoryDialog()"
+                ng-if="settings.showExtendedIncidentData">
+            <i class="ion-ios7-lightbulb"></i>
+            Meine Einsatzhistorie
+        </button>
 
         <svg class="lower-austria-map" viewBox="0 0 1050 970">
             <g transform="matrix(1.7317682,0,0,1.7317682,-36.457818,-10.990982)">
