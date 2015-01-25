@@ -2,12 +2,13 @@
     <ion-nav-buttons side="secondary">
         <button ng-click="doRefresh()"
                 ng-class="{'ion-looping': isRefreshing}"
+                ng-if="!isHistoricIncident()"
                 class="button icon button-white button-clear ion-loop">
         </button>
     </ion-nav-buttons>
 
     <ion-content has-bouncing="true" padding="true">
-        <ion-refresher on-refresh="doRefresh()">
+        <ion-refresher on-refresh="doRefresh()" ng-if="!isHistoricIncident()">
         </ion-refresher>
 
         <div class="card" ng-if="incident">
