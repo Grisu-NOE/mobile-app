@@ -1,5 +1,5 @@
 angular.module('grisu-noe').controller('overviewTabController',
-    function($scope, $rootScope, dataService, util, $ionicModal, $state, $window, storageService) {
+    function($scope, $rootScope, dataService, util, $ionicModal, $state, $window, storageService, $cordovaClipboard, $cordovaToast) {
 
     $scope.doRefresh = function(loadFromCache) {
         util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
@@ -127,6 +127,16 @@ angular.module('grisu-noe').controller('overviewTabController',
             districtId: 0, // dummy
             extendedIncidentId: incident.EinsatzID,
             isHistoricIncident: true
+        });
+    };
+
+    $scope.copyTokenToClipboard = function() {
+        if (!$window.cordova) {
+            return;
+        }
+
+        $cordovaClipboard.copy($scope.token).then(function() {
+            $cordovaToast.showShortBottom('Token wurde in die Zwischenablage kopiert');
         });
     };
 

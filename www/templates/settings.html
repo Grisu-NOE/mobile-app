@@ -42,7 +42,7 @@
 
         <div class="card" ng-show="settings.showExtendedIncidentData">
             <div class="item item-text-wrap">
-                <h2 ng-if="waitForToken">Code: {{ token }}</h2>
+                <h2 ng-if="waitForToken" ng-click="copyTokenToClipboard()">Code: {{ token }}</h2>
                 <h2 ng-if="!waitForToken">Erweiterte Einsatzdaten werden verwendet!</h2>
             </div>
         </div>

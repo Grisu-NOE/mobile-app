@@ -19,7 +19,9 @@ var requiredCordovaPlugins = [
     'org.apache.cordova.statusbar',
     'org.apache.cordova.splashscreen',
     'org.apache.cordova.inappbrowser',
-    'org.apache.cordova.geolocation'
+    'org.apache.cordova.geolocation',
+    'https://github.com/VersoSolutions/CordovaClipboard',
+    'https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git'
 ];
 
 var isSassWatchOn = false;
