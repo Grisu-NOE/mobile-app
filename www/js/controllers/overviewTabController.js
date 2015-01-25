@@ -117,6 +117,8 @@ angular.module('grisu-noe').controller('overviewTabController',
             } else {
                 $scope.historyError = true;
             }
+        }, {
+            showErrorDialog: false
         });
     }
 

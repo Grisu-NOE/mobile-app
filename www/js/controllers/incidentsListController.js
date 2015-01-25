@@ -10,7 +10,10 @@ angular.module('grisu-noe').controller('incidentsListController',
                     $ionicNavBarDelegate.title(district.t);
                 }
             });
-        }, { hideRefreshers: false });
+        }, {
+            hideRefreshers: false,
+            showErrorDialog: false
+        });
 
         util.genericRefresh($scope, dataService.getActiveIncidents($stateParams.id), function(data) {
             if (storageService.getObject('settings').showExtendedIncidentData === false) {
@@ -29,6 +32,8 @@ angular.module('grisu-noe').controller('incidentsListController',
                 }
 
                 $scope.incidents = data.Einsatz;
+            }, {
+                showErrorDialog: false
             });
         }, { hideRefreshers: false });
     };

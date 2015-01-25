@@ -53,10 +53,20 @@ angular.module('grisu-noe').service('util', function($ionicPopup, $ionicLoading)
             hideLoading = false;
         }
 
+        var showErrorDialog = true;
+        if ((typeof options === 'object') &&
+            options.hasOwnProperty('showErrorDialog') &&
+            options.showErrorDialog === false) {
+            showErrorDialog = false;
+        }
+
         dataPromise.then(function(data) {
             callback(data);
         }, function(errCode) {
-            self.showLoadingErrorDialog(errCode);
+            if (showErrorDialog) {
+                self.showLoadingErrorDialog(errCode);
+            }
+
             if (!hideLoading) {
                 self.hideLoadingInScope(scope);
             }
