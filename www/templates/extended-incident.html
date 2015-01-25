@@ -42,9 +42,9 @@
 
                 <p>{{incident.Bemerkung}}</p>
 
-                <div class="button-bar padding-top" ng-if="!isHistoricIncident()">
-                    <a class="button button-balanced">Komme</a>
-                    <a class="button button-assertive">Komme nicht</a>
+                <div class="button-bar padding-top" ng-if="!isHistoricIncident() && votingData.alreadyVoted === false">
+                    <a class="button button-balanced" ng-click="onVotingButtonClick('yes')">Komme</a>
+                    <a class="button button-assertive"ng-click="onVotingButtonClick('no')">Komme nicht</a>
                 </div>
             </div>
 
@@ -58,7 +58,8 @@
 
             <div class="item item-divider item-icon-left" ng-if="!isHistoricIncident()">
                 <i class="icon ion-ios7-people"></i>
-                <span class="balanced">Anzahl</span> / <span class="assertive">Anzahl</span>
+                <span class="balanced">{{votingData.countYes || 0}}</span> /
+                <span class="assertive">{{votingData.countNo || 0}}</span>
             </div>
 
             <div class="item item-divider item-icon-left" ng-if="incident.Melder != ''">

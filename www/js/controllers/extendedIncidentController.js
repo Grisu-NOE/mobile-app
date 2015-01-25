@@ -1,5 +1,5 @@
 angular.module('grisu-noe').controller('extendedIncidentController',
-    function($scope, $stateParams, dataService, util, geoService, leafletData, $ionicModal) {
+    function($scope, $stateParams, dataService, util, geoService, leafletData, $ionicModal, $cordovaDevice, $window) {
 
     $scope.isMapAvailable = false;
     $scope.isMapRefreshing = false;
@@ -155,6 +155,33 @@ angular.module('grisu-noe').controller('extendedIncidentController',
                 util.showErrorDialog('Sie sind nicht für erweiterte Einsatzdaten berechtigt. Status: ' + extData.CurrentState);
             }
         });
+
+        if (!$scope.isHistoricIncident()) {
+            dataService.getVotingData($stateParams.extendedIncidentId, getDeviceId()).then(function(data) {
+                $scope.votingData = data;
+            });
+        }
+    };
+
+    $scope.onVotingButtonClick = function(answer) {
+        if (answer !== 'yes' && answer !== 'no') {
+            console.error('Wrong answer given. Only "yes" and "no" are allowed.');
+            return;
+        }
+
+        dataService.postVoting($stateParams.extendedIncidentId, answer, getDeviceId()).then(function() {
+            $scope.doRefresh();
+        }, function() {
+            util.showErrorDialog('Fehler: Die Einsatz-Rückmeldung war nicht erfolgreich!');
+        });
+    };
+
+    var getDeviceId = function() {
+        $deviceId = 'dev';
+        if ($window.cordova) {
+            $deviceId = $cordovaDevice.getUUID();
+        }
+        return $deviceId;
     };
 
     $scope.toggleDispo = function(dispo) {

@@ -28,6 +28,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
         warnStates: ['none', 'low', 'medium', 'high'],
         infoScreenBaseUrl: 'https://infoscreen.florian10.info/OWS/Infoscreen/',
         wastlMobileBaseUrl: 'https://infoscreen.florian10.info/OWS/wastlMobile/',
+        votingUrl: 'http://grisu.ff-wolfsgraben.at/',
         httpTimeout: 30000 // 30 sec. max req. time
     };
 
@@ -197,6 +198,42 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
             }).error(function(data, code) {
                 deferred.reject(code, data);
                 console.error('Error loading historic info screen data. Error code', code);
+            });
+
+            return deferred.promise;
+        },
+
+        getVotingData: function(incidentId, deviceId) {
+            var deferred = $q.defer();
+
+            $http.get(config.votingUrl + 'answers/' + incidentId + '/' + deviceId, {
+                timeout: config.httpTimeout
+            }).success(function(data) {
+                console.info('Voting data loaded from server', data);
+                deferred.resolve(data);
+            }).error(function(data, code) {
+                deferred.reject(code, data);
+                console.error('Error loading voting data. Error code', code);
+            });
+
+            return deferred.promise;
+        },
+
+        postVoting: function(incidentId, answer, deviceId) {
+            var deferred = $q.defer();
+
+            $http.post(config.votingUrl + 'answers', {
+                incidentId: incidentId,
+                answer: answer,
+                deviceId: deviceId
+            }, {
+                timeout: config.httpTimeout
+            }).success(function(data) {
+                console.info('Successfully posted voting');
+                deferred.resolve(data);
+            }).error(function(data, code) {
+                deferred.reject(code, data);
+                console.error('Error with posting voting', code, data.status);
             });
 
             return deferred.promise;
