@@ -1,11 +1,4 @@
-<ion-modal-view>
-    <ion-header-bar class="bar-dark">
-        <h1 class="title">Einsatzhistorie</h1>
-        <div class="buttons">
-            <button ng-click="closeHistoryDialog()" class="button ion-close button-clear"></button>
-        </div>
-    </ion-header-bar>
-
+<ion-view view-title="Einsatzhistorie">
     <ion-content has-bouncing="true">
         <div class="card" ng-if="historyData.length === 0">
             <div class="item item-text-wrap">Zurzeit sind keine vergangenen Einsätze vorhanden.</div>
@@ -33,4 +26,4 @@
             </ion-item>
         </ion-list>
     </ion-content>
-</ion-modal-view>
+</ion-view>

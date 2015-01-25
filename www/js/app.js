@@ -46,6 +46,16 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
         }
     });
 
+    $stateProvider.state('tabs.overview-history', {
+        url: '/overview-history',
+        views: {
+            'overview-tab': {
+                templateUrl: 'templates/history.html',
+                controller: 'historyController'
+            }
+        }
+    });
+
     $stateProvider.state('tabs.overview-incident', {
         url: '/overview-incident/:districtId/:incidentId',
         views: {
