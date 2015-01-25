@@ -130,7 +130,7 @@ angular.module('grisu-noe').controller('extendedIncidentController',
     };
 
     $scope.doRefresh = function() {
-        var promise = dataService.getInfoScreenData(true);
+        var promise = dataService.getInfoScreenData(false);
         if ($scope.isHistoricIncident()) {
             promise = dataService.getInfoScreenHistory();
         }

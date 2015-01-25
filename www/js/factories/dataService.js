@@ -121,7 +121,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
         getActiveIncidents: function(districtId) {
             var deferred = $q.defer();
 
-            $http.get('delete_me.json', {
+            $http.get(config.wastlMobileBaseUrl + 'getEinsatzAktiv.ashx', {
                 timeout: config.httpTimeout,
                 params: {
                     id: 'bezirk_' + districtId
