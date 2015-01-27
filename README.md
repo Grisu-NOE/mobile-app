@@ -10,7 +10,7 @@ This project aims to build a modern mobile web-app based on the [Ionic framework
 Contributing
 ------------
 
-You want to contribute? Great! Thanks for being awesome! At the moment, we have a big internal todo list to get the first version to work, so please see the project related [issues](https://github.com/l-e-X/grisu-noe/issues) before you start coding. Pull requests are always welcome!
+You want to contribute? Great! Thanks for being awesome! Please see the project related [issues](https://github.com/l-e-X/grisu-noe/issues) before you start coding. Pull requests are always welcome!
 
 ### Coding guidelines
 
