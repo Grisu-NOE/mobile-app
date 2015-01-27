@@ -1,5 +1,5 @@
 angular.module('grisu-noe').controller('extendedIncidentController',
-    function($scope, $stateParams, dataService, util, geoService, leafletData, $ionicModal, $cordovaDevice, $window) {
+    function($scope, $stateParams, dataService, util, geoService, leafletData, $ionicModal, $cordovaDevice, $window, $cordovaToast) {
 
     $scope.isMapAvailable = false;
     $scope.isMapRefreshing = false;
@@ -171,8 +171,9 @@ angular.module('grisu-noe').controller('extendedIncidentController',
 
         dataService.postVoting($stateParams.extendedIncidentId, answer, getDeviceId()).then(function() {
             $scope.doRefresh();
+            $cordovaToast.showShortBottom('Du hast erfolgreich abgestimmt');
         }, function() {
-            util.showErrorDialog('Fehler: Die Einsatz-Rückmeldung war nicht erfolgreich!');
+            $cordovaToast.showShortBottom('Fehler: Die Einsatz-Rückmeldung war nicht erfolgreich!');
         });
     };
 
