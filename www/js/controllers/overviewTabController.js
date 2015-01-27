@@ -108,7 +108,7 @@ angular.module('grisu-noe').controller('overviewTabController',
         }
 
         $cordovaClipboard.copy($scope.token).then(function() {
-            $cordovaToast.showShortBottom('Token wurde in die Zwischenablage kopiert');
+            $cordovaToast.showShortBottom('Code wurde in die Zwischenablage kopiert');
         });
     };
 

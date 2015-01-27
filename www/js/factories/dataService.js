@@ -29,7 +29,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
         infoScreenBaseUrl: 'https://infoscreen.florian10.info/OWS/Infoscreen/',
         wastlMobileBaseUrl: 'https://infoscreen.florian10.info/OWS/wastlMobile/',
         votingUrl: 'http://grisu.ff-wolfsgraben.at/',
-        httpTimeout: 30000 // 30 sec. max req. time
+        httpTimeout: 60000 // 60 sec. max req. time
     };
 
     var cache = {

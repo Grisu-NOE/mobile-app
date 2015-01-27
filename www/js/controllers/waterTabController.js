@@ -141,7 +141,7 @@ angular.module('grisu-noe').controller('waterTabController',
                     map.addLayer(hydrantMarker);
                 });
             }, function() {
-                util.showErrorDialog('Hydranten von der Umgebung konnten nicht geladen werden.');
+                util.showErrorDialog('Hydranten der Umgebung konnten nicht geladen werden.');
             }).finally(function() {
                 util.hideLoading();
             });
