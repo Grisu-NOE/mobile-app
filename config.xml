@@ -27,7 +27,7 @@
     <icon src="res/android/drawable-xhdpi/ic_launcher.png" />
 
     <platform name="android">
-        <preference name="android-minSdkVersion" value="19" />
+        <preference name="android-minSdkVersion" value="14" />
 
         <splash src="res/android/drawable-ldpi/splash-land.9.png" density="land-ldpi"/>
         <splash src="res/android/drawable-mdpi/splash-land.9.png" density="land-mdpi"/>

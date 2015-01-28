@@ -139,14 +139,14 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
     $urlRouterProvider.otherwise('/tab/overview');
 })
 
-.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen) {
+.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen, $cordovaDevice) {
     $ionicPlatform.ready(function () {
 
         if ($window.cordova) {
             $timeout(function() {
                 console.debug("hiding splash screen");
                 $cordovaSplashscreen.hide();
-            }, 2000);
+            }, 1500);
         }
 
         // Hide the accessory bar by default (remove this to show the accessory bar
@@ -164,14 +164,21 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
             $rootScope.$broadcast('cordova.resume');
         }, false);
 		
-        /**
-         * Opens a native web browser with given url supported by the running OS
-         */
+        /** opens a native web browser with given url supported by the running OS */
         $rootScope.openBrowser = function(url) {
             $window.open(url, '_system');
         };
 
         /** indicator for initial view change (my district) */
         $rootScope.alreadyJumpedToDistrict = false;
+
+        /** detect Android version and disable map if < 4.4 KitKat (SVG support) */
+        $rootScope.showMap = true;
+        if ($window.cordova && $cordovaDevice.getPlatform() === 'Android') {
+            var version = parseFloat($cordovaDevice.getVersion().substr(0, 3));
+            if (version < 4.4) {
+                $rootScope.showMap = false;
+            }
+        }
     });
 });
