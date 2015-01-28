@@ -1,4 +1,4 @@
-angular.module('grisu-noe').service('util', function($ionicPopup, $ionicLoading) {
+angular.module('grisu-noe').service('util', function($ionicPopup, $ionicLoading, $cordovaToast) {
     this.showErrorDialog = function(message) {
         $ionicPopup.alert({
             title: message,
@@ -21,7 +21,7 @@ angular.module('grisu-noe').service('util', function($ionicPopup, $ionicLoading)
                 break;
         }
 
-        this.showErrorDialog(message);
+        $cordovaToast.showShortBottom(message);
     };
 
     this.showLoadingDelayed = function() {

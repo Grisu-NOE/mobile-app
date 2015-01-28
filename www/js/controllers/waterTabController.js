@@ -1,5 +1,5 @@
 angular.module('grisu-noe').controller('waterTabController',
-    function($scope, $ionicLoading, util, geoService, leafletData) {
+    function($scope, $ionicLoading, util, geoService, leafletData, $cordovaToast) {
 
     var marker = null;
     var hydrants = [];
@@ -141,7 +141,7 @@ angular.module('grisu-noe').controller('waterTabController',
                     map.addLayer(hydrantMarker);
                 });
             }, function() {
-                util.showErrorDialog('Hydranten der Umgebung konnten nicht geladen werden.');
+                $cordovaToast.showShortBottom('Wasserentnahmestellen der Umgebung konnten nicht geladen werden.');
             }).finally(function() {
                 util.hideLoading();
             });
