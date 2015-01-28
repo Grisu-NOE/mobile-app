@@ -24,7 +24,7 @@ angular.module('grisu-noe').controller('incidentsListController',
                 return;
             }
 
-            util.genericRefresh($scope, dataService.getInfoScreenData(true), function(extData) {
+            util.genericRefresh($scope, dataService.getInfoScreenData(false), function(extData) {
                 if (extData.CurrentState === 'data') {
                     angular.forEach(extData.EinsatzData, function(extIncident) {
                         extendedIncidentIds.push(extIncident.EinsatzID);

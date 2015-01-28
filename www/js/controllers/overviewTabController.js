@@ -92,7 +92,7 @@ angular.module('grisu-noe').controller('overviewTabController',
             return;
         }
 
-        util.genericRefresh($scope, dataService.getInfoScreenData(true), function(data) {
+        util.genericRefresh($scope, dataService.getInfoScreenData(false), function(data) {
             if (data.CurrentState == 'token' || data.CurrentState == 'waiting') {
                 $scope.token = data.Token;
                 $scope.waitForToken = true;
