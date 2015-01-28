@@ -21,7 +21,7 @@ angular.module('grisu-noe').service('util', function($ionicPopup, $ionicLoading,
                 break;
         }
 
-        $cordovaToast.showShortBottom(message);
+        $cordovaToast.showShortCenter(message);
     };
 
     this.showLoadingDelayed = function() {
