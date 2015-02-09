@@ -1,6 +1,8 @@
 Grisu NÖ [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url]
 ============
 
+[![Apple App Store][app-store-image]][app-store-url] [![Google Play Store][play-store-image]][play-store-url]
+
 The already existing mobile web-app (http://mobile.leitstelle122.at/) of WASTL - shortened for "<strong>Wa</strong>rn- und Alarm<strong>st</strong>ufen<strong>l</strong>iste" in German - is used to display several realtime information of currently running fire brigade incidents in Lower Austria. The incident data is kindly provided by the voluntary fire department "Freiwillige Feuerwehr Krems". WASTL is a project by several public sector entities:
 
 > Die Warn- und Alarmstufenliste ist ein gemeinsames Projekt des NÖ Landesfeuerwehrverbandes, der NÖ Landesregierung, des Bundesrechenzentrums, des Bezirksfeuerwehrkommandos Krems, des Magistrates der Stadt Krems sowie der Freiwilligen Feuerwehr Krems.
@@ -60,3 +62,9 @@ Grisu NÖ is licenced under the [MIT License (MIT)](LICENSE).
 
 [travis-url]: https://travis-ci.org/l-e-X/grisu-noe
 [travis-image]: https://travis-ci.org/l-e-X/grisu-noe.svg?branch=master
+
+[app-store-url]: https://itunes.apple.com/at/app/grisu-no-feuerwehr-wastl/id961696829?mt=8&uo=4
+[app-store-image]: https://linkmaker.itunes.apple.com/htmlResources/assets/en_us/images/web/linkmaker/badge_appstore-lrg.png
+
+[play-store-url]: https://play.google.com/store/apps/details?id=at.lex.grisu.noe
+[play-store-image]: https://developer.android.com/images/brand/en_generic_rgb_wo_45.png
