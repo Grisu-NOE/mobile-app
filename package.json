@@ -1,6 +1,6 @@
 {
   "name": "grisu-noe",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A modern mobile app for firefighters in Lower Austria.",
   "devDependencies": {
     "karma": "^0.12.23",
