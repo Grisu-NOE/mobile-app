@@ -30,6 +30,7 @@ Please consider to write unit and integration tests for your code. We use [Travi
 - `npm install -g cordova ionic gulp`
 - Go to project root folder
 - Install required node dependencies: `npm install`
+  - When an "python not found" error occurs try [this](http://stackoverflow.com/questions/21365714/nodejs-error-installing-with-npm)
 - Run Gulp dependency installation: `gulp install`
   - If you have problems to execute the Gulp task, try to execute `git config url."https://".insteadOf git://` before
 - Add platforms
