@@ -36,6 +36,7 @@ Please consider to write unit and integration tests for your code. We use [Travi
 - Add platforms
   - `ionic platform add ios` (only works on Mac OSX)
   - `ionic platform add android` (you need to install the [Android SDK](https://developer.android.com/sdk/) before)
+- Optional: Install bower command line utility: `npm install -g bower`
 - ENJOY!
 
 ### Useful commands and hints
