@@ -1,17 +1,17 @@
 <ion-view view-title="{{ incident.EinsatzID }}">
     <ion-nav-buttons side="secondary">
-        <button ng-click="doRefresh()"
-                ng-class="{'ion-looping': isRefreshing}"
-                ng-if="!isHistoricIncident()"
-                class="button icon button-white button-clear ion-loop">
-        </button>
+        <button ng-click="doRefresh()" ng-if="!isHistoricIncident()" class="button icon button-white button-clear ion-loop"></button>
     </ion-nav-buttons>
 
     <ion-content has-bouncing="true" padding="true">
-        <ion-refresher on-refresh="doRefresh()" ng-if="!isHistoricIncident()">
+        <ion-refresher on-refresh="doRefresh()"
+                       ng-if="!isHistoricIncident()"
+                       pulling-icon="ion-chevron-down"
+                       spinner="lines">
+
         </ion-refresher>
 
-        <div class="card" ng-if="incident">
+        <div class="card incident" ng-if="incident">
             <div class="item item-divider">
                 <h2>
                     <span ng-if="incident.Alarmstufe" class="incident-type {{incident.Alarmstufe}}">{{incident.Alarmstufe}}</span>
@@ -58,18 +58,18 @@
             </a>
 
             <div class="item item-divider item-icon-left" ng-if="!isHistoricIncident()">
-                <i class="icon ion-ios7-people"></i>
+                <i class="icon ion-ios-people"></i>
                 <span class="balanced">{{votingData.countYes || 0}}</span> /
                 <span class="assertive">{{votingData.countNo || 0}}</span>
             </div>
 
             <div class="item item-divider item-icon-left" ng-if="incident.Melder != ''">
-                <i class="icon ion-ios7-person"></i>
+                <i class="icon ion-ios-person"></i>
                 {{incident.Melder}}
             </div>
 
             <a href="tel:{{incident.MelderTelefon}}" class="item item-divider item-icon-left" ng-if="incident.MelderTelefon != ''">
-                <i class="icon ion-ios7-telephone"></i>
+                <i class="icon ion-ios-telephone"></i>
                 {{incident.MelderTelefon}}
             </a>
         </div>

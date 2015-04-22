@@ -37,12 +37,12 @@ angular.module('grisu-noe').controller('statisticsTabController',
             $scope.tabs[activeTab].isActive = false;
             $scope.tabs[tabNo].isActive = true;
 
+            $ionicScrollDelegate.scrollTop(true);
+
             // hack to render chart correctly
             $timeout(function() {
                 $scope.createCharts($scope.mainData);
             }, 1);
-
-            $ionicScrollDelegate.scrollTop(true);
         }
     };
 
@@ -57,7 +57,7 @@ angular.module('grisu-noe').controller('statisticsTabController',
             { key: 'B4', c1: 0, c2: 0, c3: 0},
             { key: 'S1', c1: 0, c2: 0, c3: 0},
             { key: 'S2', c1: 0, c2: 0, c3: 0},
-            { key: 'S3', c1: 0, c2: 0, c3: 0},
+            { key: 'S3', c1: 0, c2: 0, c3: 0}
         ];
 
         function createArray(key) {

@@ -34,8 +34,8 @@ Please consider to write unit and integration tests for your code. We use [Travi
 - Run Gulp dependency installation: `gulp install`
   - If you have problems to execute the Gulp task, try to execute `git config url."https://".insteadOf git://` before
 - Add platforms
-  - `ionic platform add ios` (only works on Mac OSX)
-  - `ionic platform add android` (you need to install the [Android SDK](https://developer.android.com/sdk/) before)
+  - `ionic platform --noresources --nosave add ios` (works only on Mac OSX)
+  - `ionic platform --noresources --nosave add android` (you need to install the [Android SDK](https://developer.android.com/sdk/) before)
 - Optional: Install bower command line utility: `npm install -g bower`
 - ENJOY!
 

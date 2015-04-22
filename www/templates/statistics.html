@@ -1,9 +1,6 @@
 <ion-view view-title="Statistiken" cache-view="false">
     <ion-nav-buttons side="secondary">
-        <button ng-click="doRefresh(false)"
-                ng-class="{'ion-looping': isRefreshing}"
-                class="button icon button-white button-clear ion-loop">
-        </button>
+        <button ng-click="doRefresh(false)" class="button icon button-white button-clear ion-loop"></button>
     </ion-nav-buttons>
 
     <div class="tabs tabs-top tabs-icon-left">
@@ -19,8 +16,7 @@
     </div>
 
     <ion-content has-bouncing="true" class="has-subheader subheader-top-fix">
-        <ion-refresher on-refresh="doRefresh(false)">
-        </ion-refresher>
+        <ion-refresher on-refresh="doRefresh(false)" pulling-icon="ion-chevron-down" spinner="lines"></ion-refresher>
 
         <div class="subtab-content statistics-container"
              ng-show="tabs[0].isActive"

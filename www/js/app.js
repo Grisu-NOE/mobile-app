@@ -146,13 +146,7 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
             $timeout(function() {
                 console.debug("hiding splash screen");
                 $cordovaSplashscreen.hide();
-            }, 1500);
-        }
-
-        // Hide the accessory bar by default (remove this to show the accessory bar
-        // above the keyboard for form inputs)
-        if ($window.cordova) {
-            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+            }, 1000);
         }
 
         if ($window.StatusBar) {

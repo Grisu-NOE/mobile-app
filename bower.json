@@ -2,10 +2,10 @@
     "name": "grisu-noe",
     "private": "true",
     "dependencies": {
-        "ionic": "driftyco/ionic-bower#1.0.0-beta.14",
+        "ionic": "driftyco/ionic-bower#1.0.0-rc.4",
         "chartjs": "1.0.1-beta.4",
-        "moment": "2.8.4",
-        "ng-cordova": "driftyco/ng-cordova#0.1.11-alpha",
+        "moment": "2.10.2",
+        "ng-cordova": "driftyco/ng-cordova#0.1.14-alpha",
         "angular-leaflet-directive": "0.7.10",
         "Leaflet.awesome-markers": "2.0.2"
     }

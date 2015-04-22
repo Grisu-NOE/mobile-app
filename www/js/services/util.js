@@ -26,7 +26,7 @@ angular.module('grisu-noe').service('util', function($ionicPopup, $ionicLoading,
 
     this.showLoadingDelayed = function() {
         $ionicLoading.show({
-            template: '<i class="icon ion-loading-c"></i> Lade Daten...',
+            template: '<ion-spinner class="spinner-light" icon="lines"></ion-spinner><div>Lade Daten...</div>',
             delay: 1000
         });
     };

@@ -15,7 +15,6 @@ var paths = {
 var requiredCordovaPlugins = [
     'org.apache.cordova.console',
     'org.apache.cordova.device',
-    'com.ionic.keyboard',
     'org.apache.cordova.statusbar',
     'org.apache.cordova.splashscreen',
     'org.apache.cordova.inappbrowser',

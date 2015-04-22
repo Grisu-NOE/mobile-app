@@ -9,7 +9,7 @@ $royal: #8a6de9 !default;
 $dark: #444 !default;
 
 $ionicons-font-path: "../lib/ionic/fonts" !default;
-@import "www/lib/ionic/scss/ionic";
+@import "../www/lib/ionic/scss/ionic";
 
 $main-bg-color: #272727 !default;
 $main-font-color: #666 !default;
@@ -273,5 +273,11 @@ span.no-alarm-image {
     // don't display a link to OSM or other layers
     .leaflet-bottom {
         display: none;
+    }
+}
+
+.card.incident {
+    a.item {
+        color: $button-color;
     }
 }

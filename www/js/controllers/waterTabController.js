@@ -155,7 +155,7 @@ angular.module('grisu-noe').controller('waterTabController',
 
     $scope.$on('$ionicView.loaded', function() {
         $ionicLoading.show({
-            template: '<i class="icon ion-loading-c"></i> Bestimme aktuelle Position'
+            template: '<ion-spinner class="spinner-light" icon="ripple"></ion-spinner><div>Bestimme aktuelle Position...</div>'
         });
     });
 

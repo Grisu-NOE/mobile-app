@@ -1,14 +1,11 @@
 <ion-view>
     <ion-nav-buttons side="secondary">
-        <button ng-click="doRefresh()"
-                ng-class="{'ion-looping': isRefreshing}"
-                class="button icon button-white button-clear ion-loop">
-        </button>
+        <button ng-click="doRefresh()" class="button icon button-white button-clear ion-loop"></button>
     </ion-nav-buttons>
 
     <ion-content has-bouncing="true">
-        <ion-refresher on-refresh="doRefresh()">
-        </ion-refresher>
+        <ion-refresher on-refresh="doRefresh()" pulling-icon="ion-chevron-down" spinner="lines"></ion-refresher>
+
         <ion-list>
             <ion-item class="item-dark"
                       ng-repeat="incident in incidents"

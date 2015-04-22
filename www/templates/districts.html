@@ -1,9 +1,6 @@
 <ion-view view-title="Aktuelle Einsätze">
     <ion-nav-buttons side="secondary">
-        <button ng-click="doRefresh(false)"
-                ng-class="{'ion-looping': isRefreshing}"
-                class="button icon button-white button-clear ion-loop">
-        </button>
+        <button ng-click="doRefresh(false)" class="button icon button-white button-clear ion-loop"></button>
     </ion-nav-buttons>
 
     <ion-header-bar class="bar-dark bar-subheader item-input-inset">
@@ -15,8 +12,8 @@
     </ion-header-bar>
 
     <ion-content has-bouncing="true">
-        <ion-refresher on-refresh="doRefresh(false)">
-        </ion-refresher>
+        <ion-refresher on-refresh="doRefresh(false)" pulling-icon="ion-chevron-down" spinner="lines"></ion-refresher>
+
         <ion-list>
             <ion-item class="item-dark"
                       ng-repeat="district in districts | filter : search"

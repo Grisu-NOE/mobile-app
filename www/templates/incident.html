@@ -1,16 +1,12 @@
 <ion-view view-title="{{ incident.n }}">
     <ion-nav-buttons side="secondary">
-        <button ng-click="doRefresh()"
-                ng-class="{'ion-looping': isRefreshing}"
-                class="button icon button-white button-clear ion-loop">
-        </button>
+        <button ng-click="doRefresh()" class="button icon button-white button-clear ion-loop"></button>
     </ion-nav-buttons>
 
     <ion-content has-bouncing="true" padding="true">
-        <ion-refresher on-refresh="doRefresh()">
-        </ion-refresher>
+        <ion-refresher on-refresh="doRefresh()" pulling-icon="ion-chevron-down" spinner="lines"></ion-refresher>
 
-        <div class="card" ng-if="incident">
+        <div class="card incident" ng-if="incident">
             <div class="item item-divider">
                 <h2>
                     <span ng-if="incident.a" class="incident-type {{incident.a}}">{{incident.a}}</span>
