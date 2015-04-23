@@ -8,9 +8,10 @@ angular.module('grisu-noe').controller('incidentController',
 
     $scope.updateMapToLocation = function() {
         $scope.isMapRefreshing = true;
-        console.debug('Update of map with geocoding string: ' + $scope.geocodeAddress);
+        var geoCodeAddress = $scope.incident.p + ' ' + $scope.incident.o + ' Niederösterreich';
+        console.debug('Update of map with geocoding string: ' + geoCodeAddress);
 
-        geoService.geocodeAddress($scope.incident.o + ' Niederösterreich').then(function(data) {
+        geoService.geocodeAddress(geoCodeAddress).then(function(data) {
             if (data.length == 0) {
                 // no results found
                 return;
