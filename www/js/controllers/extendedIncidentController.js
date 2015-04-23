@@ -171,9 +171,13 @@ angular.module('grisu-noe').controller('extendedIncidentController',
 
         dataService.postVoting($stateParams.extendedIncidentId, answer, getDeviceId()).then(function() {
             $scope.doRefresh();
-            $cordovaToast.showShortBottom('Du hast erfolgreich abgestimmt');
+            if ($window.cordova) {
+                $cordovaToast.showShortBottom('Du hast erfolgreich abgestimmt');
+            }
         }, function() {
-            $cordovaToast.showShortBottom('Fehler: Die Einsatz-Rückmeldung war nicht erfolgreich!');
+            if($window.cordova) {
+                $cordovaToast.showShortBottom('Fehler: Die Einsatz-Rückmeldung war nicht erfolgreich!');
+            }
         });
     };
 
