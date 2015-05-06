@@ -28,8 +28,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
         warnStates: ['none', 'low', 'medium', 'high'],
         infoScreenBaseUrl: 'https://infoscreen.florian10.info/OWS/Infoscreen/',
         wastlMobileBaseUrl: 'https://infoscreen.florian10.info/OWS/wastlMobile/',
-        votingUrl: 'http://grisu.ff-wolfsgraben.at/',
-        httpTimeout: 60000 // 60 sec. max req. time
+        httpTimeout: 60000 // 60 seconds maximum request time
     };
 
     var cache = {
@@ -87,11 +86,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
         console.debug('Time difference in seconds', timeDifference);
 
         // max. age of cache is one minute
-        if (cacheTimestamp === null || timeDifference >= 60) {
-            return false;
-        }
-
-        return true;
+        return !(cacheTimestamp === null || timeDifference >= 60);
     }
 
     return {
@@ -203,30 +198,16 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
             return deferred.promise;
         },
 
-        getVotingData: function(incidentId, deviceId) {
+        postVoting: function(incidentNumber, answer) {
             var deferred = $q.defer();
 
-            $http.get(config.votingUrl + 'answers/' + incidentId + '/' + deviceId, {
-                timeout: config.httpTimeout
-            }).success(function(data) {
-                console.info('Voting data loaded from server', data);
-                deferred.resolve(data);
-            }).error(function(data, code) {
-                deferred.reject(code, data);
-                console.error('Error loading voting data. Error code', code);
-            });
-
-            return deferred.promise;
-        },
-
-        postVoting: function(incidentId, answer, deviceId) {
-            var deferred = $q.defer();
-
-            $http.post(config.votingUrl + 'answers', {
-                incidentId: incidentId,
-                answer: answer,
-                deviceId: deviceId
-            }, {
+            $http({
+                method: 'POST',
+                url: config.infoScreenBaseUrl + 'rsvp.ashx',
+                data: 'einsatz=' + incidentNumber + '&answer=' + answer,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
                 timeout: config.httpTimeout
             }).success(function(data) {
                 console.info('Successfully posted voting');

@@ -1,5 +1,5 @@
 angular.module('grisu-noe').controller('extendedIncidentController',
-    function($scope, $stateParams, dataService, util, geoService, leafletData, $ionicModal, $cordovaDevice, $window, $cordovaToast) {
+    function($scope, $stateParams, dataService, util, geoService, leafletData, $ionicModal, $window, $cordovaToast) {
 
     $scope.isMapAvailable = false;
     $scope.isMapRefreshing = false;
@@ -155,12 +155,6 @@ angular.module('grisu-noe').controller('extendedIncidentController',
                 util.showErrorDialog('Sie sind nicht für erweiterte Einsatzdaten berechtigt. Status: ' + extData.CurrentState);
             }
         });
-
-        if (!$scope.isHistoricIncident()) {
-            dataService.getVotingData($stateParams.extendedIncidentId, getDeviceId()).then(function(data) {
-                $scope.votingData = data;
-            });
-        }
     };
 
     $scope.onVotingButtonClick = function(answer) {
@@ -169,7 +163,7 @@ angular.module('grisu-noe').controller('extendedIncidentController',
             return;
         }
 
-        dataService.postVoting($stateParams.extendedIncidentId, answer, getDeviceId()).then(function() {
+        dataService.postVoting($scope.incident.EinsatzNummer, answer).then(function() {
             $scope.doRefresh();
             if ($window.cordova) {
                 $cordovaToast.showShortBottom('Du hast erfolgreich abgestimmt');
@@ -179,14 +173,6 @@ angular.module('grisu-noe').controller('extendedIncidentController',
                 $cordovaToast.showShortBottom('Fehler: Die Einsatz-Rückmeldung war nicht erfolgreich!');
             }
         });
-    };
-
-    var getDeviceId = function() {
-        $deviceId = 'dev';
-        if ($window.cordova) {
-            $deviceId = $cordovaDevice.getUUID();
-        }
-        return $deviceId;
     };
 
     $scope.toggleDispo = function(dispo) {

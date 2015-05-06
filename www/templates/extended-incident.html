@@ -43,14 +43,14 @@
 
                 <p>{{incident.Bemerkung}}</p>
 
-                <div class="button-bar padding-top" ng-if="!isHistoricIncident() && votingData.alreadyVoted === false">
+                <div class="button-bar padding-top" ng-if="!isHistoricIncident() && !incident.Rsvp.hasOwnProperty('AlreadyVotedAnswer')">
                     <a class="button button-balanced" ng-click="onVotingButtonClick('yes')">Komme</a>
                     <a class="button button-assertive"ng-click="onVotingButtonClick('no')">Komme nicht</a>
                 </div>
             </div>
 
             <div class="item item-divider text-center" ng-if="isMapRefreshing">
-                <i class="ion-looping"></i>
+                <ion-spinner icon="lines"></ion-spinner>
             </div>
             <a class="item item-divider item-icon-left" ng-if="isMapAvailable && !isMapRefreshing" ng-click="openMapDialog()">
                 <i class="icon ion-map"></i>
@@ -59,8 +59,8 @@
 
             <div class="item item-divider item-icon-left" ng-if="!isHistoricIncident()">
                 <i class="icon ion-ios-people"></i>
-                <span class="balanced">{{votingData.countYes || 0}}</span> /
-                <span class="assertive">{{votingData.countNo || 0}}</span>
+                <span class="balanced">{{incident.Rsvp.Yes || 0}}</span> /
+                <span class="assertive">{{incident.Rsvp.No || 0}}</span>
             </div>
 
             <div class="item item-divider item-icon-left" ng-if="incident.Melder != ''">
