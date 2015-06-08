@@ -53,9 +53,8 @@ angular.module('grisu-noe').factory('geoService', function($http, $q) {
                     basemap: {
                         name: 'basemap.at',
                         type: 'xyz',
-                        url: '//maps{s}.wien.gv.at/basemap/bmaphidpi/normal/google3857/{z}/{y}/{x}.jpeg',
+                        url: 'http://maps{s}.wien.gv.at/basemap/bmaphidpi/normal/google3857/{z}/{y}/{x}.jpeg',
                         layerOptions: {
-                            HTTPS: true,
                             subdomains: ['', '1', '2', '3', '4']
                         }
                     },
