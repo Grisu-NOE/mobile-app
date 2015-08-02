@@ -1,4 +1,5 @@
-Grisu NÖ [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url]
+Grisu NÖ Mobile [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url] [![Join the chat][chat-image]][chat-url]
+
 ============
 
 [![Apple App Store][app-store-image]][app-store-url] [![Google Play Store][play-store-image]][play-store-url]
@@ -12,7 +13,7 @@ This project aims to build a modern mobile web-app based on the [Ionic framework
 Contributing
 ------------
 
-You want to contribute? Great! Thanks for being awesome! Please see the project related [issues](https://github.com/l-e-X/grisu-noe/issues) before you start coding. Pull requests are always welcome!
+You want to contribute? Great! Thanks for being awesome! Please see the project related [issues](https://github.com/Grisu-NOE/mobile-app/issues) before you start coding. Pull requests are always welcome!
 
 ### Coding guidelines
 
@@ -22,7 +23,7 @@ You want to contribute? Great! Thanks for being awesome! Please see the project 
 
 ### Testing
 
-Please consider to write unit and integration tests for your code. We use [Travis CI](https://travis-ci.org/l-e-X/grisu-noe) as continuous integration system where all tests will get executed after each git push.
+Please consider to write unit and integration tests for your code. We use [Travis CI](https://travis-ci.org/Grisu-NOE/mobile-app) as continuous integration system where all tests will get executed after each git push.
 
 ### Setup of development environment
 
@@ -63,8 +64,11 @@ Grisu NÖ is licenced under the [MIT License (MIT)](LICENSE).
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
 [license-url]: LICENSE
 
-[travis-url]: https://travis-ci.org/l-e-X/grisu-noe
-[travis-image]: https://travis-ci.org/l-e-X/grisu-noe.svg?branch=master
+[travis-url]: https://travis-ci.org/Grisu-NOE/mobile-app
+[travis-image]: https://travis-ci.org/Grisu-NOE/mobile-app.svg?branch=master
+
+[chat-image]: https://badges.gitter.im/Join%20Chat.svg
+[chat-url]: https://gitter.im/Grisu-NOE/mobile-app?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 [app-store-url]: https://itunes.apple.com/at/app/grisu-no-feuerwehr-wastl/id961696829?mt=8&uo=4
 [app-store-image]: https://linkmaker.itunes.apple.com/htmlResources/assets/en_us/images/web/linkmaker/badge_appstore-lrg.png
