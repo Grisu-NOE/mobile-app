@@ -65,7 +65,7 @@ gulp.task('install-bower-components', function(done) {
 gulp.task('install-cordova-plugins', function(done) {
     for (var i = 0; i < requiredCordovaPlugins.length; i++) {
         var plugin = requiredCordovaPlugins[i];
-        if (sh.exec('ionic plugin add ' + plugin).code !== 0) {
+        if (sh.exec('ionic plugin add --nosave ' + plugin).code !== 0) {
             printErrorMessageAndExit('Error: Couldn\'t install Cordova plugin ' + plugin);
         }
     }
