@@ -13,12 +13,12 @@ var paths = {
 };
 
 var requiredCordovaPlugins = [
-    'org.apache.cordova.console',
-    'org.apache.cordova.device',
-    'org.apache.cordova.statusbar',
-    'org.apache.cordova.splashscreen',
-    'org.apache.cordova.inappbrowser',
-    'org.apache.cordova.geolocation',
+    'cordova-plugin-console',
+    'cordova-plugin-device',
+    'cordova-plugin-statusbar',
+    'cordova-plugin-splashscreen',
+    'cordova-plugin-inappbrowser',
+    'cordova-plugin-geolocation',
     'https://github.com/VersoSolutions/CordovaClipboard',
     'https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git'
 ];
