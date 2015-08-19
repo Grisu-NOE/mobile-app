@@ -157,11 +157,6 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
             console.debug('Resuming app. Broadcasting event.');
             $rootScope.$broadcast('cordova.resume');
         }, false);
-		
-        /** opens a native web browser with given url supported by the running OS */
-        $rootScope.openBrowser = function(url) {
-            $window.open(url, '_system');
-        };
 
         /** indicator for initial view change (my district) */
         $rootScope.alreadyJumpedToDistrict = false;

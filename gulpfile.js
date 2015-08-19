@@ -13,11 +13,11 @@ var paths = {
 };
 
 var requiredCordovaPlugins = [
+    'cordova-plugin-whitelist',
     'cordova-plugin-console',
     'cordova-plugin-device',
     'cordova-plugin-statusbar',
     'cordova-plugin-splashscreen',
-    'cordova-plugin-inappbrowser',
     'cordova-plugin-geolocation',
     'https://github.com/VersoSolutions/CordovaClipboard',
     'https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git'
