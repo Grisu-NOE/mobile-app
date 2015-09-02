@@ -1,18 +1,152 @@
-angular.module('grisu-noe').controller('statisticsTabController',
-    function(util, dataService, $scope, $timeout, $ionicScrollDelegate) {
-
+angular.module('grisu-noe').controller('statisticsTabController', function(util, dataService, $scope, $ionicScrollDelegate) {
     $scope.tabs = [
         { isActive: true },
         { isActive: false },
         { isActive: false }
     ];
 
-    var chartInstances = [];
+    $scope.chartOptions = {
+        responsive: true,
+        scaleGridLineColor: 'rgba(255,255,255,.09)',
+        animation: false
+    };
+
+    $scope.pieChartLabels = ['T', 'B', 'S'];
+    $scope.pieChartColors = ['#4a87ee', '#ef4e3a', '#66cc33'];
+
+    var chartData = [];
+    var initChartData = function() {
+        chartData = [
+            { key: 'T1', c1: 0, c2: 0, c3: 0},
+            { key: 'T2', c1: 0, c2: 0, c3: 0},
+            { key: 'T3', c1: 0, c2: 0, c3: 0},
+            { key: 'B1', c1: 0, c2: 0, c3: 0},
+            { key: 'B2', c1: 0, c2: 0, c3: 0},
+            { key: 'B3', c1: 0, c2: 0, c3: 0},
+            { key: 'B4', c1: 0, c2: 0, c3: 0},
+            { key: 'S1', c1: 0, c2: 0, c3: 0},
+            { key: 'S2', c1: 0, c2: 0, c3: 0},
+            { key: 'S3', c1: 0, c2: 0, c3: 0}
+        ];
+    };
+
+    var createArray = function(key) {
+        var result = [];
+        for (var i = 0; i < chartData.length; i++) {
+            if (chartData[i].hasOwnProperty(key)) {
+                result.push(chartData[i][key]);
+            }
+        }
+        return result;
+    };
+
+    var populateData = function(key, historyData) {
+        angular.forEach(historyData, function(entry) {
+            for (var i = 0; i < chartData.length; i++) {
+                if (chartData[i].key == entry.a) {
+                    chartData[i][key] += entry.s;
+                }
+            }
+        });
+    };
+
+    var computeChartData = function(data) {
+        initChartData();
+        $scope.barChartLabels = createArray('key');
+
+        populateData('c1', data.h1.v);
+        populateData('c2', data.h2.v);
+        populateData('c3', data.h3.v);
+
+        $scope.chartDataBar1 = [ createArray('c1') ];
+        $scope.chartDataBar2 = [ createArray('c2') ];
+        $scope.chartDataBar3 = [ createArray('c3') ];
+
+        $scope.chartDataPie1 = sumPieChartData('c1');
+        $scope.chartDataPie2 = sumPieChartData('c2');
+        $scope.chartDataPie3 = sumPieChartData('c3');
+    };
+
+    var sumPieChartData = function(matrixKey) {
+        var result = [0, 0, 0];
+
+        for (var i = 0; i < chartData.length; i++) {
+            switch (chartData[i].key.substr(0, 1)) {
+                case 'T':
+                    result[0] += chartData[i][matrixKey];
+                    break;
+                case 'B':
+                    result[1] += chartData[i][matrixKey];
+                    break;
+                default: // S
+                    result[2] += chartData[i][matrixKey];
+                    break;
+            }
+        }
+
+        return result;
+    };
+
+    var colorBarChart = function(chart) {
+        for (var i = 0; i < chartData.length; i++) {
+            var color;
+            var highlightColor;
+            var firstChar = chartData[i].key.substr(0, 1);
+
+            switch (firstChar) {
+                case 'T':
+                    color = '#4a87ee';
+                    highlightColor = '#4a99ee';
+                    break;
+                case 'B':
+                    color = '#ef4e3a';
+                    highlightColor = '#ed6657';
+                    break;
+                default: // S
+                    color = '#66cc33';
+                    highlightColor = '#80e050';
+                    break;
+            }
+
+            chart.datasets[0].bars[i].fillColor = color;
+            chart.datasets[0].bars[i].highlightFill = highlightColor;
+            chart.datasets[0].bars[i].strokeColor = 'white';
+            chart.datasets[0].bars[i].highlightStroke = 'white';
+
+            chart.update();
+        }
+    };
+
+    var colorPieChart = function(chart) {
+        angular.forEach(chart.segments, function(segment, key) {
+            switch (key) {
+                case 0:
+                    segment.highlightColor = '#4a99ee';
+                    break;
+                case 1:
+                    segment.highlightColor = '#ed6657';
+                    break;
+                default: // S
+                    segment.highlightColor = '#80e050';
+                    break;
+            }
+        });
+
+        chart.update();
+    };
+
+    $scope.$on('create', function(event, chart) {
+        if (chart.chart.canvas.className.indexOf('chart-bar') > -1) {
+            colorBarChart(chart);
+        } else {
+            colorPieChart(chart);
+        }
+    });
 
     $scope.doRefresh = function(loadFromCache) {
         util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
             $scope.mainData = data;
-            $scope.createCharts(data);
+            computeChartData(data);
         });
     };
 
@@ -38,163 +172,6 @@ angular.module('grisu-noe').controller('statisticsTabController',
             $scope.tabs[tabNo].isActive = true;
 
             $ionicScrollDelegate.scrollTop(true);
-
-            // hack to render chart correctly
-            $timeout(function() {
-                $scope.createCharts($scope.mainData);
-            }, 1);
         }
-    };
-
-    $scope.createCharts = function(data) {
-        var chartData = [
-            { key: 'T1', c1: 0, c2: 0, c3: 0},
-            { key: 'T2', c1: 0, c2: 0, c3: 0},
-            { key: 'T3', c1: 0, c2: 0, c3: 0},
-            { key: 'B1', c1: 0, c2: 0, c3: 0},
-            { key: 'B2', c1: 0, c2: 0, c3: 0},
-            { key: 'B3', c1: 0, c2: 0, c3: 0},
-            { key: 'B4', c1: 0, c2: 0, c3: 0},
-            { key: 'S1', c1: 0, c2: 0, c3: 0},
-            { key: 'S2', c1: 0, c2: 0, c3: 0},
-            { key: 'S3', c1: 0, c2: 0, c3: 0}
-        ];
-
-        function createArray(key) {
-            var result = [];
-            for (var i = 0; i < chartData.length; i++) {
-                if (chartData[i].hasOwnProperty(key)) {
-                    result.push(chartData[i][key]);
-                }
-            }
-            return result;
-        }
-
-        function populateData(key, historyData) {
-            angular.forEach(historyData, function(entry) {
-                for (var i = 0; i < chartData.length; i++) {
-                    if (chartData[i].key == entry.a) {
-                        chartData[i][key] += entry.s;
-                    }
-                }
-            });
-        }
-
-        function isElementHidden(element) {
-            return (element.offsetParent === null);
-        }
-
-        function tryBuildBarChart(cssId, matrixKey) {
-            var element = document.getElementById(cssId);
-            if (isElementHidden(element)) {
-                return null;
-            }
-
-            var data = {
-                labels: createArray('key'),
-                datasets: [{
-                    fillColor: 'rgba(220,220,220,0.5)',
-                    strokeColor: 'white',
-                    highlightFill: 'rgba(220,220,220,0.75)',
-                    highlightStroke: 'white',
-                    data: createArray(matrixKey)
-                }]
-            };
-
-            var ctx = element.getContext('2d');
-            var barChart = new Chart(ctx).Bar(data, {
-                responsive: true,
-                scaleGridLineColor : 'rgba(255,255,255,.09)',
-                animation: false
-            });
-
-            // hack to specify different colors for bars of a dataset
-            for (var i = 0; i < 10; i++) {
-                var color;
-                var highlightColor;
-
-                if (i < 3) {
-                    color = '#4a87ee';
-                    highlightColor = '#4a99ee';
-                } else if (i < 7) {
-                    color = '#ef4e3a';
-                    highlightColor = '#ed6657';
-                } else {
-                    color = '#66cc33';
-                    highlightColor = '#80e050';
-                }
-
-                barChart.datasets[0].bars[i].fillColor = color;
-                barChart.datasets[0].bars[i].highlightFill = highlightColor;
-            }
-
-            barChart.update();
-
-            return barChart;
-        }
-
-        function tryBuildPieChart(cssId, matrixKey) {
-            var element = document.getElementById(cssId);
-            if (isElementHidden(element)) {
-                return null;
-            }
-
-            var t = 0;
-            var b = 0;
-            var s = 0;
-
-            for (var i = 0; i < chartData.length; i++) {
-                if (chartData[i].key.substr(0, 1) == 'T') {
-                    t += chartData[i][matrixKey];
-                } else if (chartData[i].key.substr(0, 1) == 'B') {
-                    b += chartData[i][matrixKey];
-                } else {
-                    s += chartData[i][matrixKey];
-                }
-            }
-
-            var data = [{
-                value: t,
-                color: '#4a87ee',
-                highlight: '#4a99ee',
-                label: 'T'
-            }, {
-                value: b,
-                color: '#ef4e3a',
-                highlight: '#ed6657',
-                label: 'B'
-            }, {
-                value: s,
-                color: '#66cc33',
-                highlight: '#80e050',
-                label: 'S'
-            }];
-
-            var ctx = element.getContext('2d');
-            return new Chart(ctx).Pie(data, {
-                responsive: true,
-                // android is too slow for animation ;(
-                animation: false
-            });
-        }
-
-        populateData('c1', data.h1.v);
-        populateData('c2', data.h2.v);
-        populateData('c3', data.h3.v);
-
-        // cleanup of existing instances to prevent memory leaks
-        angular.forEach(chartInstances, function(instance) {
-            if (instance !== null) {
-                instance.destroy();
-            }
-        });
-        chartInstances = [];
-
-        chartInstances.push(tryBuildBarChart('barchart1', 'c1'));
-        chartInstances.push(tryBuildPieChart('piechart1', 'c1'));
-        chartInstances.push(tryBuildBarChart('barchart2', 'c2'));
-        chartInstances.push(tryBuildPieChart('piechart2', 'c2'));
-        chartInstances.push(tryBuildBarChart('barchart3', 'c3'));
-        chartInstances.push(tryBuildPieChart('piechart3', 'c3'));
     };
 });

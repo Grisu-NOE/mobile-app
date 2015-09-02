@@ -2,7 +2,7 @@ angular.isUndefinedOrNull = function(val) {
     return angular.isUndefined(val) || val === null;
 };
 
-angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive'])
+angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive', 'chart.js'])
 
 .config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
     $ionicConfigProvider.views.transition('ios');

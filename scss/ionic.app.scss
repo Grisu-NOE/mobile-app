@@ -21,14 +21,14 @@ $medium-warn-color: #FF6600 !default;
 $high-warn-color: #CD0200 !default;
 $item-active-bg-color: #171717 !default;
 
-a {
+.scroll-content a {
     color: #bababa;
     text-decoration: underline;
-}
 
-a:hover,
-a:focus {
-    color: $stable;
+    &:hover,
+    &:focus {
+        color: $stable;
+    }
 }
 
 .ionic-body, body {
