@@ -18,4 +18,8 @@ angular.module('grisu-noe').controller('districtsTabController',
     $scope.clearSearch = function() {
         $scope.search = '';
     };
+
+    $scope.scrollTop = function() {
+        $ionicScrollDelegate.scrollTop();
+    }
 });
