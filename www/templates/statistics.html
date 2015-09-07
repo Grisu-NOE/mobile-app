@@ -19,7 +19,7 @@
         <ion-refresher on-refresh="doRefresh(false)" pulling-icon="ion-chevron-down" spinner="lines"></ion-refresher>
 
         <div class="subtab-content statistics-container"
-             ng-show="tabs[0].isActive"
+             ng-if="tabs[0].isActive"
              on-swipe-left="setTabActive(1)">
 
             <canvas class="chart chart-bar chart-padding"
@@ -49,7 +49,7 @@
         </div>
 
         <div class="subtab-content statistics-container"
-             ng-show="tabs[1].isActive"
+             ng-if="tabs[1].isActive"
              on-swipe-right="setTabActive(0)"
              on-swipe-left="setTabActive(2)">
 
@@ -80,7 +80,7 @@
         </div>
 
         <div class="subtab-content statistics-container"
-             ng-show="tabs[2].isActive"
+             ng-if="tabs[2].isActive"
              on-swipe-right="setTabActive(1)">
 
             <canvas class="chart chart-bar chart-padding"

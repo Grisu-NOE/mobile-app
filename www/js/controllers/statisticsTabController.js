@@ -1,4 +1,6 @@
-angular.module('grisu-noe').controller('statisticsTabController', function(util, dataService, $scope, $ionicScrollDelegate) {
+angular.module('grisu-noe').controller('statisticsTabController',
+    function(util, dataService, $scope, $ionicScrollDelegate) {
+
     $scope.tabs = [
         { isActive: true },
         { isActive: false },
@@ -50,13 +52,13 @@ angular.module('grisu-noe').controller('statisticsTabController', function(util,
         });
     };
 
-    var computeChartData = function(data) {
+    var computeChartData = function() {
         initChartData();
         $scope.barChartLabels = createArray('key');
 
-        populateData('c1', data.h1.v);
-        populateData('c2', data.h2.v);
-        populateData('c3', data.h3.v);
+        populateData('c1', $scope.mainData.h1.v);
+        populateData('c2', $scope.mainData.h2.v);
+        populateData('c3', $scope.mainData.h3.v);
 
         $scope.chartDataBar1 = [ createArray('c1') ];
         $scope.chartDataBar2 = [ createArray('c2') ];
@@ -136,7 +138,9 @@ angular.module('grisu-noe').controller('statisticsTabController', function(util,
     };
 
     $scope.$on('create', function(event, chart) {
-        if (chart.chart.canvas.className.indexOf('chart-bar') > -1) {
+        var element = chart.chart.canvas;
+
+        if (element.className.indexOf('chart-bar') > -1) {
             colorBarChart(chart);
         } else {
             colorPieChart(chart);
@@ -146,7 +150,7 @@ angular.module('grisu-noe').controller('statisticsTabController', function(util,
     $scope.doRefresh = function(loadFromCache) {
         util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
             $scope.mainData = data;
-            computeChartData(data);
+            computeChartData();
         });
     };
 
