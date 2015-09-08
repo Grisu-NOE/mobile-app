@@ -42,7 +42,7 @@ Please consider to write unit and integration tests for your code. We use [Travi
 
 ### Useful commands and hints
 - Show app log in console when debugging app on Android device with USB
-  - `adb logcat -s CordovaLog:D`
+  - `adb logcat -s CordovaLog:D` or `adb logcat -s chromium:D`
 - Start Google Chrome with disabled web security to retrieve data from remote servers
   - see http://stackoverflow.com/a/6083677/1296333
 - Watch SASS changes and compile / move it immediately
