@@ -10,15 +10,15 @@ angular.module('grisu-noe').controller('extendedIncidentController',
         $scope.isMapRefreshing = true;
         console.debug('Update of map with geocoding string: ' + $scope.geocodeAddress);
 
-        geoService.geocodeAddress($scope.geocodeAddress + ', Niederösterreich').then(function(data) {
-            if (data.length == 0) {
+        geoService.geocodeAddress($scope.geocodeAddress).then(function(data) {
+            if (data.results.length == 0) {
                 // no results found
                 return;
             }
-            var validEntry = data[0];
+            var validEntry = data.results[0];
 
             leafletData.getMap().then(function(map) {
-                map.setView(new L.LatLng(validEntry.lat, validEntry.lon), 16);
+                map.setView(new L.LatLng(validEntry.geometry.location.lat, validEntry.geometry.location.lng), 16);
 
                 var redIcon = L.AwesomeMarkers.icon({
                     prefix: 'ion',
@@ -27,8 +27,8 @@ angular.module('grisu-noe').controller('extendedIncidentController',
                     iconColor: 'white'
                 });
 
-                var marker = L.marker([validEntry.lat, validEntry.lon], { icon: redIcon });
-                marker.bindPopup(validEntry.display_name, {
+                var marker = L.marker([validEntry.geometry.location.lat, validEntry.geometry.location.lng], { icon: redIcon });
+                marker.bindPopup(validEntry.formatted_address, {
                     closeButton: false
                 });
 
@@ -55,32 +55,32 @@ angular.module('grisu-noe').controller('extendedIncidentController',
 
         var filter = {
             street: [ ' WN', '-BN', '-WN', ' (BL)', ' (GD)', ' (GF)', ' (HL)', ' (HO)', '(KO)',
-                      ' (LF)', ' (ME)', ' (TU)', ' (WT)', ' (WUK)', ' (WUP)', ' (WUS)', ' (ZT)' ],
+                ' (LF)', ' (ME)', ' (TU)', ' (WT)', ' (WUK)', ' (WUP)', ' (WUS)', ' (ZT)' ],
             sector: [ 'BasisAbschnitt' ]
         };
 
-        if (extIncident.hasOwnProperty('Strasse') && extIncident.Strasse != '') {
+        if (extIncident.hasOwnProperty('Strasse') && extIncident.Strasse.trim() != '') {
             var street = extIncident.Strasse;
             angular.forEach(filter.street, function(value) {
-               street = street.replace(value, '');
+                street = street.replace(value, '');
             });
 
-            if (street != '') {
+            if (street.trim() != '') {
                 address += street;
                 geocodeAddress += street;
             }
         }
 
-        if (extIncident.hasOwnProperty('Nummer1') && extIncident.Nummer1 != '') {
+        if (extIncident.hasOwnProperty('Nummer1') && extIncident.Nummer1.trim() != '') {
             address += ' ' + extIncident.Nummer1.replace('.000', '');
             geocodeAddress += ' ' + extIncident.Nummer1.replace('.000', '');
         }
 
-        if (extIncident.hasOwnProperty('Nummer2') && extIncident.Nummer2 != '') {
+        if (extIncident.hasOwnProperty('Nummer2') && extIncident.Nummer2.trim() != '') {
             address += '/' + extIncident.Nummer2;
         }
 
-        if (extIncident.hasOwnProperty('Nummer3') && extIncident.Nummer3 != '') {
+        if (extIncident.hasOwnProperty('Nummer3') && extIncident.Nummer3.trim() != '') {
             address += '/' + extIncident.Nummer3;
         }
 
@@ -92,33 +92,33 @@ angular.module('grisu-noe').controller('extendedIncidentController',
             geocodeAddress += ', ';
         }
 
-        if (extIncident.hasOwnProperty('Plz') && extIncident.Plz != '') {
+        if (extIncident.hasOwnProperty('Plz') && extIncident.Plz.trim() != '') {
             address += extIncident.Plz + ' ';
             geocodeAddress += extIncident.Plz + ' ';
         }
 
-        if (extIncident.hasOwnProperty('Ort') && extIncident.Ort != '') {
+        if (extIncident.hasOwnProperty('Ort') && extIncident.Ort.trim() != '') {
             address += extIncident.Ort;
             geocodeAddress += extIncident.Ort;
         }
 
-        if (extIncident.hasOwnProperty('Objekt') && extIncident.Objekt != '') {
+        if (extIncident.hasOwnProperty('Objekt') && extIncident.Objekt.trim() != '' && extIncident.Objekt != '.') {
             address = extIncident.Objekt + '<br>' + address;
         }
 
-        if (extIncident.hasOwnProperty('Abschnitt') && extIncident.Abschnitt != '') {
+        if (extIncident.hasOwnProperty('Abschnitt') && extIncident.Abschnitt.trim() != '') {
             var sector = extIncident.Abschnitt;
             angular.forEach(filter.sector, function(value) {
                 sector = sector.replace(value, '');
             });
 
-            if (sector != '') {
+            if (sector.trim() != '') {
                 address += '<br>' + 'Abschnitt ' + sector;
             }
         }
 
         $scope.address = address;
-        $scope.geocodeAddress = geocodeAddress;
+        $scope.geocodeAddress = geocodeAddress + ', Niederösterreich';
     };
 
     $scope.formatDate = function(dateStr) {

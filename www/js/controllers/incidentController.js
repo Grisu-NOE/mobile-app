@@ -8,30 +8,19 @@ angular.module('grisu-noe').controller('incidentController',
 
     $scope.updateMapToLocation = function() {
         $scope.isMapRefreshing = true;
-        var geoCodeAddress = $scope.incident.p + ' ' + $scope.incident.o + ' Niederösterreich';
+        var geoCodeAddress = $scope.incident.p + ' ' + $scope.incident.o + ', Niederösterreich';
         console.debug('Update of map with geocoding string: ' + geoCodeAddress);
 
         geoService.geocodeAddress(geoCodeAddress).then(function(data) {
-            if (data.length == 0) {
+            if (data.results.length == 0) {
                 // no results found
                 return;
             }
 
-            var validEntry = null;
-            angular.forEach(data, function(val, index) {
-                if (val.type == 'village' || val.type == 'city' || val.type == 'town' ||
-                    val.type == 'hamlet' || val.type == 'borough' || val.class == 'mountain_pass' ||
-                    val.type == 'administrative') {
-                    validEntry = data[index];
-                }
-            });
-
-            if (validEntry === null) {
-                return;
-            }
+            var validEntry = data.results[0];
 
             leafletData.getMap().then(function(map) {
-                map.setView(new L.LatLng(validEntry.lat, validEntry.lon), 14);
+                map.setView(new L.LatLng(validEntry.geometry.location.lat, validEntry.geometry.location.lng), 14);
 
                 var redIcon = L.AwesomeMarkers.icon({
                     prefix: 'ion',
@@ -40,8 +29,8 @@ angular.module('grisu-noe').controller('incidentController',
                     iconColor: 'white'
                 });
 
-                var marker = L.marker([validEntry.lat, validEntry.lon], { icon: redIcon });
-                marker.bindPopup(validEntry.display_name, {
+                var marker = L.marker([validEntry.geometry.location.lat, validEntry.geometry.location.lng], { icon: redIcon });
+                marker.bindPopup(validEntry.formatted_address, {
                     closeButton: false
                 });
 

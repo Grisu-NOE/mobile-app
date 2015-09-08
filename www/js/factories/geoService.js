@@ -1,5 +1,5 @@
 angular.module('grisu-noe').factory('geoService', function($http, $q) {
-    var osmGeocodeAddr = 'http://nominatim.openstreetmap.org/search';
+    var geocodeAddr = 'https://maps.googleapis.com/maps/api/geocode/json';
     var wastlHydrantsAddr = 'https://secure.florian10.info/ows/infoscreen/geo/umkreis.ashx';
     var httpTimeout = 30000;
 
@@ -7,17 +7,13 @@ angular.module('grisu-noe').factory('geoService', function($http, $q) {
         geocodeAddress: function(address) {
             var deferred = $q.defer();
 
-            $http.get(osmGeocodeAddr, {
+            $http.get(geocodeAddr, {
                 timeout: httpTimeout,
                 params: {
-                    format: 'json',
-                    'accept-language': 'de',
-                    limit: 5,
-                    countrycodes: 'at',
-                    q: address
+                    address: address
                 }
             }).success(function(data) {
-                console.info('Geocoding data loaded from OSM server', data);
+                console.info('Geocoding data loaded from Google server', data);
                 deferred.resolve(data);
             }).error(function(data, code) {
                 deferred.reject(code, data);
