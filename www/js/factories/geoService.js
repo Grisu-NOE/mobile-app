@@ -1,4 +1,4 @@
-angular.module('grisu-noe').factory('geoService', function($http, $q) {
+angular.module('grisu-noe').factory('geoService', function($http, $q, $window, $cordovaGeolocation) {
     var geocodeAddr = 'https://maps.googleapis.com/maps/api/geocode/json';
     var wastlHydrantsAddr = 'https://secure.florian10.info/ows/infoscreen/geo/umkreis.ashx';
     var httpTimeout = 30000;
@@ -38,6 +38,37 @@ angular.module('grisu-noe').factory('geoService', function($http, $q) {
             }).error(function(data, code) {
                 deferred.reject(code, data);
                 console.error('Error loading hydrants for position  "' + lat + ', ' + lng + '". Error code', code);
+            });
+
+            return deferred.promise;
+        },
+
+        getCurrentPosition: function() {
+            var deferred = $q.defer();
+
+            //Wolfsgraben
+            var position = {
+                lat: 48.16387421351802,
+                lng: 16.12121343612671
+            };
+
+            if (!$window.cordova) {
+                console.debug("faking geolocation using Wolfsgraben as starting point");
+                deferred.resolve(position);
+                return deferred.promise;
+            }
+
+            console.debug("calculating coordinates with Cordova's geolocation plugin");
+            var posOptions = {timeout: 10000, enableHighAccuracy: false};
+
+            $cordovaGeolocation.getCurrentPosition(posOptions).then(function(result) {
+                position.lat = result.coords.latitude;
+                position.lng = result.coords.longitude;
+                deferred.resolve(position);
+                console.debug("calculated current position: " + position.lat + ", " + position.lng);
+            }, function(error) {
+                deferred.reject(error);
+                console.error("error calculating current position: " + angular.toJson(error, true));
             });
 
             return deferred.promise;

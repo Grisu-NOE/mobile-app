@@ -3,6 +3,7 @@ angular.module('grisu-noe').controller('incidentController',
 
     $scope.isMapAvailable = false;
     $scope.isMapRefreshing = false;
+    $scope.isRouteAvailable = false;
 
     $scope.layers = geoService.getStandardLayers();
 
@@ -19,8 +20,17 @@ angular.module('grisu-noe').controller('incidentController',
 
             var validEntry = data.results[0];
 
+            $scope.destLat = validEntry.geometry.location.lat;
+            $scope.destLng = validEntry.geometry.location.lng;
+
+            geoService.getCurrentPosition().then(function(position) {
+                $scope.isRouteAvailable = true;
+                $scope.originLat = position.lat;
+                $scope.originLng = position.lng;
+            });
+
             leafletData.getMap().then(function(map) {
-                map.setView(new L.LatLng(validEntry.geometry.location.lat, validEntry.geometry.location.lng), 14);
+                map.setView(new L.LatLng($scope.destLat, $scope.destLng), 14);
 
                 var redIcon = L.AwesomeMarkers.icon({
                     prefix: 'ion',
@@ -29,7 +39,7 @@ angular.module('grisu-noe').controller('incidentController',
                     iconColor: 'white'
                 });
 
-                var marker = L.marker([validEntry.geometry.location.lat, validEntry.geometry.location.lng], { icon: redIcon });
+                var marker = L.marker([$scope.destLat, $scope.destLng], { icon: redIcon });
                 marker.bindPopup(validEntry.formatted_address, {
                     closeButton: false
                 });
