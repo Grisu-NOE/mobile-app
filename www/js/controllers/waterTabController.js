@@ -92,14 +92,22 @@ angular.module('grisu-noe').controller('waterTabController',
             addLayers(map);
 
             geoService.findHydrantsForPosition(map.getCenter().lat, map.getCenter().lng).then(function(data) {
+                // cleanup
                 for (var i = 0; i < hydrants.length; i++) {
                     map.removeLayer(hydrants[i]);
                 }
                 hydrants = [];
 
-                angular.forEach(data.points, function(hydrant) {
+                // add markers
+                for (i = 0; i < data.points.length; i++) {
+                    var hydrant = data.points[i];
                     var hydIcon;
                     var hydType;
+
+                    // check for undefined, null or empty string
+                    if (!hydrant.typ) {
+                        continue;
+                    }
 
                     switch (hydrant.typ) {
                         case 'BA':
@@ -195,7 +203,7 @@ angular.module('grisu-noe').controller('waterTabController',
 
                     hydrants.push(hydrantMarker);
                     map.addLayer(hydrantMarker);
-                });
+                }
             }, function() {
                 if ($window.cordova) {
                     $cordovaToast.showShortBottom('In der Umgebung gelegene Wasserentnahmestellen konnten nicht geladen werden.');
