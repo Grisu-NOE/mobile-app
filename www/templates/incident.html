@@ -50,13 +50,13 @@
                 Einsatzort
             </a>
 
-            <div class="item item-divider text-center" ng-if="isMapRefreshing">
+            <div class="item item-divider text-center" ng-if="isMapRefreshing || isRouteRefreshing">
                 <ion-spinner icon="lines"></ion-spinner>
             </div>
             <a href="http://maps.google.com?saddr={{originLat}},{{originLng}}&daddr={{destLat}},{{destLng}}"
                target="_blank"
                class="item item-divider item-icon-left"
-               ng-if="isMapAvailable && !isMapRefreshing && isRouteAvailable">
+               ng-if="isMapAvailable && isRouteAvailable && !isMapRefreshing && !isRouteRefreshing">
                 <i class="icon ion-navigate"></i>
                 Routenplan (extern)
             </a>

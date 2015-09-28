@@ -4,6 +4,7 @@ angular.module('grisu-noe').controller('incidentController',
     $scope.isMapAvailable = false;
     $scope.isMapRefreshing = false;
     $scope.isRouteAvailable = false;
+    $scope.isRouteRefreshing = false;
 
     $scope.layers = geoService.getStandardLayers();
 
@@ -23,10 +24,13 @@ angular.module('grisu-noe').controller('incidentController',
             $scope.destLat = validEntry.geometry.location.lat;
             $scope.destLng = validEntry.geometry.location.lng;
 
+            $scope.isRouteRefreshing = true;
             geoService.getCurrentPosition().then(function(position) {
                 $scope.isRouteAvailable = true;
                 $scope.originLat = position.lat;
                 $scope.originLng = position.lng;
+            }).finally(function() {
+               $scope.isRouteRefreshing = false;
             });
 
             leafletData.getMap().then(function(map) {
