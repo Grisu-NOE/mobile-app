@@ -1,12 +1,15 @@
 angular.module('grisu-noe').controller('extendedIncidentController',
-    function($scope, $stateParams, dataService, util, geoService, leafletData, $ionicModal, $window, $cordovaToast) {
+    function($scope, $stateParams, dataService, util, geoService, leafletData, $ionicModal, $window, $cordovaToast, storageService) {
+
+    var circles = geoService.getRadiusCircles();
+    var settings = storageService.getObject('settings');
 
     $scope.isMapAvailable = false;
     $scope.isMapRefreshing = false;
     $scope.isRouteRefreshing = false;
     $scope.isRouteAvailable = false;
 
-    $scope.layers = geoService.getStandardLayers();
+    $scope.layers = geoService.getStandardLayers(settings.showIncidentHydrants);
 
     $scope.updateMapToLocation = function() {
         $scope.isMapRefreshing = true;
@@ -47,6 +50,19 @@ angular.module('grisu-noe').controller('extendedIncidentController',
                 });
 
                 map.addLayer(marker);
+
+                if (settings.showIncidentDistance) {
+                    angular.forEach(circles, function(circle) {
+                        geoService.addCircleToMap(map, circle);
+                    });
+                    geoService.addDistanceLegendToMap(map, circles);
+                }
+
+                if (settings.showIncidentHydrants) {
+                    geoService.findHydrantsForPosition(map.getCenter().lat, map.getCenter().lng).then(function(data) {
+                        geoService.addHydrantsToMap(data, map);
+                    });
+                }
 
                 $scope.isMapAvailable = true;
             });

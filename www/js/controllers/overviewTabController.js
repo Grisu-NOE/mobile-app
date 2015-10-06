@@ -74,6 +74,14 @@ angular.module('grisu-noe').controller('overviewTabController',
                 };
             }
 
+            if (angular.isUndefinedOrNull($scope.settings.showIncidentDistance)) {
+                $scope.settings.showIncidentDistance = true;
+            }
+
+            if (angular.isUndefinedOrNull($scope.settings.showIncidentHydrants)) {
+                $scope.settings.showIncidentHydrants = true;
+            }
+
             $scope.$watch('settings', function(newValue, oldValue) {
                 console.debug('Settings changed', oldValue, newValue);
                 storageService.setObject('settings', newValue);
