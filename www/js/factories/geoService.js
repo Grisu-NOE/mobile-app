@@ -89,6 +89,22 @@ angular.module('grisu-noe').factory('geoService', function($http, $q, $window, $
                         name: 'OpenStreetMap',
                         type: 'xyz',
                         url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    },
+                    hybrid: {
+                        name: 'Satellit',
+                        type: 'xyz',
+                        url: 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+                        layerOptions: {
+                            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                        }
+                    },
+                    terrain: {
+                        name: 'Gel&auml;nde',
+                        type: 'xyz',
+                        url: 'http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
+                        layerOptions: {
+                            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                        }
                     }
                 },
                 overlays: {
