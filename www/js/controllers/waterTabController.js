@@ -1,5 +1,5 @@
 angular.module('grisu-noe').controller('waterTabController',
-    function($scope, $ionicLoading, util, geoService, leafletData, $cordovaToast, $window) {
+    function($scope, $ionicLoading, util, geoService, leafletData, $cordovaToast, $window, $ionicModal) {
 
     var layers = [];
     var hydrants = [];
@@ -81,13 +81,13 @@ angular.module('grisu-noe').controller('waterTabController',
         legend.addTo(map);
     };
 
-    $scope.centerMap = function(latLng) {
+    var centerMap = function(latLng) {
         leafletData.getMap().then(function(map) {
             map.panTo(latLng);
         });
     };
 
-    $scope.updateLayersAndHydrants = function() {
+    var updateLayersAndHydrants = function() {
         leafletData.getMap().then(function(map) {
             addLayers(map);
 
@@ -215,18 +215,25 @@ angular.module('grisu-noe').controller('waterTabController',
     };
 
     $scope.$on('leafletDirectiveMap.click', function(event, eventObj) {
-        $scope.centerMap(eventObj.leafletEvent.latlng);
-        $scope.updateLayersAndHydrants();
+        centerMap(eventObj.leafletEvent.latlng);
+        updateLayersAndHydrants();
     });
 
     $scope.$on('$ionicView.loaded', function() {
         $ionicLoading.show({
             template: '<ion-spinner class="spinner-light" icon="ripple"></ion-spinner><div>Bestimme aktuelle Position...</div>'
         });
+
+        $ionicModal.fromTemplateUrl('templates/hydrantsHelp.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.helpDialog = modal;
+        });
     });
 
     $scope.$on('leafletDirectiveMap.locationfound', function() {
-        $scope.updateLayersAndHydrants();
+        updateLayersAndHydrants();
     });
 
     $scope.$on('leafletDirectiveMap.load', function() {
@@ -242,11 +249,23 @@ angular.module('grisu-noe').controller('waterTabController',
             map.setView(latLng, $scope.center.zoom);
         });
 
-        $scope.updateLayersAndHydrants();
+        updateLayersAndHydrants();
         if (!isErrorShown) {
             util.showErrorDialog('Konnte aktuelle Position nicht automatisch bestimmen. ' +
                 'Bitte gewünschte Position manuell wählen.');
             isErrorShown = true;
         }
+    });
+
+    $scope.openHelpDialog = function() {
+        $scope.helpDialog.show();
+    };
+
+    $scope.closeHelpDialog = function() {
+        $scope.helpDialog.hide();
+    };
+
+    $scope.$on('$destroy', function() {
+        $scope.helpDialog.remove();
     });
 });
