@@ -25,7 +25,13 @@
             </ion-item>
         </ion-list>
         <div class="card" ng-show="incidents.length === 0">
-            <div class="item item-text-wrap">Zurzeit sind keine Einsätze vorhanden.</div>
+            <div class="item item-text-wrap">
+                <h2 ng-if="!bazOnline">
+                    <i class="ion-power offline"></i>
+                    Alarmzentrale offline!
+                </h2>
+                <p>Zurzeit sind keine Einsätze vorhanden.</p>
+            </div>
         </div>
     </ion-content>
 </ion-view>

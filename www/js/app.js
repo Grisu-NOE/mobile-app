@@ -2,9 +2,9 @@ angular.isUndefinedOrNull = function(val) {
     return angular.isUndefined(val) || val === null;
 };
 
-angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive', 'chart.js'])
+angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive', 'chart.js', 'xml'])
 
-.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
+.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
     $ionicConfigProvider.views.transition('ios');
 
     $ionicConfigProvider.tabs.style('standard');
@@ -17,6 +17,9 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive', 'chart.j
     $ionicConfigProvider.navBar.alignTitle('center');
     $ionicConfigProvider.navBar.positionPrimaryButtons('left');
     $ionicConfigProvider.navBar.positionSecondaryButtons('right');
+
+    // interceptor for XML responses
+    $httpProvider.interceptors.push('xmlHttpInterceptor');
 
     $stateProvider.state('tabs', {
         url: '/tab',
@@ -139,7 +142,7 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive', 'chart.j
     $urlRouterProvider.otherwise('/tab/overview');
 })
 
-.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen, $cordovaDevice) {
+.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen, $cordovaDevice, dataService) {
     $ionicPlatform.ready(function () {
 
         if ($window.cordova) {
@@ -169,5 +172,8 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive', 'chart.j
                 $rootScope.showMap = false;
             }
         }
+
+        // preload BAZ info into cache
+        dataService.getBazInfo(false);
     });
 });

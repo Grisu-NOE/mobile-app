@@ -18,7 +18,11 @@
             <ion-item class="item-dark"
                       ng-repeat="district in districts | filter : search"
                       ui-sref="tabs.districts-incidents({id: district.k})">
-                <h2>{{district.t}}</h2>
+                <h2>
+                    <i ng-if="bazInfo['d_' + district.k]" class="ion-power online"></i>
+                    <i ng-if="!bazInfo['d_' + district.k]" class="ion-power offline"></i>
+                    {{district.t}}
+                </h2>
                 <div ng-if="district.e || district.f"
                      ng-class="{
                          'warn-none': district.z == 0,

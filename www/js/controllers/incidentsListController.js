@@ -8,6 +8,10 @@ angular.module('grisu-noe').controller('incidentsListController',
             angular.forEach(data.Bezirke, function(district) {
                 if (district.k == $stateParams.id) {
                     $ionicNavBarDelegate.title(district.t);
+
+                    dataService.getBazInfo(false).then(function(info) {
+                        $scope.bazOnline = info['d_' + district.k];
+                    });
                 }
             });
         }, {

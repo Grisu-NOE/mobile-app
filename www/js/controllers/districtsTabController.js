@@ -4,6 +4,10 @@ angular.module('grisu-noe').controller('districtsTabController',
     $scope.doRefresh = function(loadFromCache) {
         util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
             $scope.districts = data.Bezirke;
+
+            util.genericRefresh($scope, dataService.getBazInfo(loadFromCache), function(info) {
+                $scope.bazInfo = info;
+            });
         });
     };
 

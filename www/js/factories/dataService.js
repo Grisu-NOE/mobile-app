@@ -28,15 +28,17 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
         warnStates: ['none', 'low', 'medium', 'high'],
         infoScreenBaseUrl: 'https://infoscreen.florian10.info/OWS/Infoscreen/',
         wastlMobileBaseUrl: 'https://infoscreen.florian10.info/OWS/wastlMobile/',
+        bazInfoUrl: 'http://atlas.feuerwehr-krems.at/CodePages/Wastl/GetDaten/GetWastlMainS3.asp?Time',
         httpTimeout: 60000 // 60 seconds maximum request time
     };
 
     var cache = {
         mainData: null,
-        mainDataCreated: null
+        mainDataCreated: null,
+        bazInfo: null
     };
 
-    function processMainData(data) {
+    var processMainData = function(data) {
         var extension = {
             departmentCount: 0,
             incidentCount: 0,
@@ -65,16 +67,28 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
 
         console.debug('Extended WASTL data with', extension);
         return angular.extend(data, extension);
-    }
+    };
 
-    function createCurrentTimestamp() {
+    var processBazInfo = function(data) {
+        var result = {};
+
+        angular.forEach(data.root.aBAZID, function(baz) {
+            var district = baz.cBezirk.toString() === '' ? 'LWZ' : baz.cBezirk.toString();
+            result['d_' + district] = baz.nBAZStatus.toString() === 'ledgreen.gif';
+        });
+
+        console.debug('Processed BAZ info', result);
+        return result;
+    };
+
+    var createCurrentTimestamp = function() {
         return parseInt(Date.now() / 1000);
-    }
+    };
 
     /**
      * Checks if cache is valid and if cache creation time isn't too old.
      */
-    function isCacheAlive(cacheData, cacheTimestamp) {
+    var isCacheAlive = function(cacheData, cacheTimestamp) {
         if (cacheData === null) {
             return false;
         }
@@ -87,7 +101,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
 
         // max. age of cache is one minute
         return !(cacheTimestamp === null || timeDifference >= 60);
-    }
+    };
 
     return {
         getMainData: function(loadFromCache) {
@@ -193,6 +207,27 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
             }).error(function(data, code) {
                 deferred.reject(code, data);
                 console.error('Error loading historic info screen data. Error code', code);
+            });
+
+            return deferred.promise;
+        },
+
+        getBazInfo: function(loadFromCache) {
+            var deferred = $q.defer();
+
+            if (loadFromCache) {
+                console.info('BAZ info loaded from cache', cache.bazInfo);
+                deferred.resolve(cache.bazInfo);
+                return deferred.promise;
+            }
+
+            $http.get(config.bazInfoUrl, { timeout: config.httpTimeout }).success(function(data) {
+                console.info('BAZ info loaded from server', data);
+                cache.bazInfo = processBazInfo(data);
+                deferred.resolve(cache.bazInfo);
+            }).error(function(data, code) {
+                deferred.reject(code, data);
+                console.error('Error loading BAZ info. Error code', code);
             });
 
             return deferred.promise;

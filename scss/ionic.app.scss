@@ -312,3 +312,11 @@ span.no-alarm-image {
 .text-stable {
     color: $stable;
 }
+
+.ion-power.online {
+    color: $balanced;
+}
+
+.ion-power.offline {
+    color: $assertive;
+}
