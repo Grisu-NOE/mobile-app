@@ -1,9 +1,9 @@
-sudo: false # container based infrastructure
+sudo: false # use container based infrastructure
 
 language: node_js
 
 node_js:
-  - "0.12"
+  - 0.12
 
 before_install:
   - npm install -g cordova ionic gulp
@@ -20,8 +20,10 @@ env:
 addons:
   coverity_scan:
     project:
-      name: "Grisu-NOE/mobile-app"
+      name: Grisu-NOE/mobile-app
+      version: 1.1.0
+      description: Build submitted by Travis CI
     notification_email: office@alex-gassner.at
     build_command_prepend: ""
-    build_command:   ""
+    build_command: gulp install
     branch_pattern: master
