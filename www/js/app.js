@@ -147,7 +147,7 @@ angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive', 'chart.j
 
         if ($window.cordova) {
             $timeout(function() {
-                console.debug("hiding splash screen");
+                console.debug('hide splash screen');
                 $cordovaSplashscreen.hide();
             }, 1000);
         }

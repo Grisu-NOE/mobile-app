@@ -16,7 +16,7 @@ angular.module('grisu-noe').controller('extendedIncidentController',
         console.debug('Update of map with geocoding string: ' + $scope.geocodeAddress);
 
         geoService.geocodeAddress($scope.geocodeAddress).then(function(data) {
-            if (data.results.length == 0) {
+            if (data.results.length === 0) {
                 // no results found
                 return;
             }
@@ -89,60 +89,60 @@ angular.module('grisu-noe').controller('extendedIncidentController',
             sector: [ 'BasisAbschnitt' ]
         };
 
-        if (extIncident.hasOwnProperty('Strasse') && extIncident.Strasse.trim() != '') {
+        if (extIncident.hasOwnProperty('Strasse') && extIncident.Strasse.trim() !== '') {
             var street = extIncident.Strasse;
             angular.forEach(filter.street, function(value) {
                 street = street.replace(value, '');
             });
 
-            if (street.trim() != '') {
+            if (street.trim() !== '') {
                 address += street;
                 geocodeAddress += street;
             }
         }
 
-        if (extIncident.hasOwnProperty('Nummer1') && extIncident.Nummer1.trim() != '') {
+        if (extIncident.hasOwnProperty('Nummer1') && extIncident.Nummer1.trim() !== '') {
             address += ' ' + extIncident.Nummer1.replace('.000', '');
             geocodeAddress += ' ' + extIncident.Nummer1.replace('.000', '');
         }
 
-        if (extIncident.hasOwnProperty('Nummer2') && extIncident.Nummer2.trim() != '') {
+        if (extIncident.hasOwnProperty('Nummer2') && extIncident.Nummer2.trim() !== '') {
             address += '/' + extIncident.Nummer2;
         }
 
-        if (extIncident.hasOwnProperty('Nummer3') && extIncident.Nummer3.trim() != '') {
+        if (extIncident.hasOwnProperty('Nummer3') && extIncident.Nummer3.trim() !== '') {
             address += '/' + extIncident.Nummer3;
         }
 
-        if (address != '') {
+        if (address !== '') {
             address += '<br>';
         }
 
-        if (geocodeAddress != '') {
+        if (geocodeAddress !== '') {
             geocodeAddress += ', ';
         }
 
-        if (extIncident.hasOwnProperty('Plz') && extIncident.Plz.trim() != '') {
+        if (extIncident.hasOwnProperty('Plz') && extIncident.Plz.trim() !== '') {
             address += extIncident.Plz + ' ';
             geocodeAddress += extIncident.Plz + ' ';
         }
 
-        if (extIncident.hasOwnProperty('Ort') && extIncident.Ort.trim() != '') {
+        if (extIncident.hasOwnProperty('Ort') && extIncident.Ort.trim() !== '') {
             address += extIncident.Ort;
             geocodeAddress += extIncident.Ort;
         }
 
-        if (extIncident.hasOwnProperty('Objekt') && extIncident.Objekt.trim() != '' && extIncident.Objekt != '.') {
+        if (extIncident.hasOwnProperty('Objekt') && extIncident.Objekt.trim() !== '' && extIncident.Objekt !== '.') {
             address = extIncident.Objekt + '<br>' + address;
         }
 
-        if (extIncident.hasOwnProperty('Abschnitt') && extIncident.Abschnitt.trim() != '') {
+        if (extIncident.hasOwnProperty('Abschnitt') && extIncident.Abschnitt.trim() !== '') {
             var sector = extIncident.Abschnitt;
             angular.forEach(filter.sector, function(value) {
                 sector = sector.replace(value, '');
             });
 
-            if (sector.trim() != '') {
+            if (sector.trim() !== '') {
                 address += '<br>' + 'Abschnitt ' + sector;
             }
         }
@@ -178,7 +178,7 @@ angular.module('grisu-noe').controller('extendedIncidentController',
                     }
                 });
 
-                if (!(typeof $scope.incident === 'object')) {
+                if (typeof $scope.incident !== 'object') {
                     util.showErrorDialog('Einsatz wurde nicht gefunden. Eventuell ist er nicht mehr aktiv.');
                 }
             } else {

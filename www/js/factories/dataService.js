@@ -51,7 +51,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
             extension.incidentCount += district.e;
 
             // k = identifier of district, LWZ = 'Landeswarnzentrale', is not on map
-            if (district.k == '') {
+            if (district.k === '') {
                 district.k = 'LWZ';
             }
 

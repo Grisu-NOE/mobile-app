@@ -25,5 +25,5 @@ angular.module('grisu-noe').controller('districtsTabController',
 
     $scope.scrollTop = function() {
         $ionicScrollDelegate.scrollTop();
-    }
+    };
 });

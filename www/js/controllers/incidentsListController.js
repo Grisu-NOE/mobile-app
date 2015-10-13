@@ -64,7 +64,7 @@ angular.module('grisu-noe').controller('incidentsListController',
             angular.extend(params, {
                 extendedIncidentId: incident.n,
                 isHistoricIncident: false
-            })
+            });
         }
 
         if ($window.location.hash.indexOf('overview-incidents') > -1) {

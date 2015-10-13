@@ -17,7 +17,7 @@ angular.module('grisu-noe').controller('incidentController',
         console.debug('Update of map with geocoding string: ' + geoCodeAddress);
 
         geoService.geocodeAddress(geoCodeAddress).then(function(data) {
-            if (data.results.length == 0) {
+            if (data.results.length === 0) {
                 // no results found
                 return;
             }

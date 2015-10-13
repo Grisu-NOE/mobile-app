@@ -28,5 +28,5 @@ angular.module('grisu-noe').controller('historyController', function($scope, dat
 
     $scope.formatDate = function(dateStr) {
         return util.formatWastlDate(dateStr);
-    }
+    };
 });

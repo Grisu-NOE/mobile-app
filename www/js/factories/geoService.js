@@ -53,22 +53,22 @@ angular.module('grisu-noe').factory('geoService', function($http, $q, $window, $
             };
 
             if (!$window.cordova) {
-                console.debug("faking geolocation using Wolfsgraben as starting point");
+                console.debug('faking geolocation using Wolfsgraben as starting point');
                 deferred.resolve(position);
                 return deferred.promise;
             }
 
-            console.debug("calculating coordinates with Cordova's geolocation plugin");
+            console.debug('calculating coordinates with Cordova\'s geolocation plugin');
             var posOptions = {timeout: 10000, enableHighAccuracy: false};
 
             $cordovaGeolocation.getCurrentPosition(posOptions).then(function(result) {
                 position.lat = result.coords.latitude;
                 position.lng = result.coords.longitude;
                 deferred.resolve(position);
-                console.debug("calculated current position: " + position.lat + ", " + position.lng);
+                console.debug('calculated current position: ' + position.lat + ', ' + position.lng);
             }, function(error) {
                 deferred.reject(error);
-                console.error("error calculating current position: " + angular.toJson(error, true));
+                console.error('error calculating current position: ' + angular.toJson(error, true));
             });
 
             return deferred.promise;
@@ -119,7 +119,7 @@ angular.module('grisu-noe').factory('geoService', function($http, $q, $window, $
                         url: 'http://openfiremap.org/hytiles/{z}/{x}/{y}.png'
                     }
                 }
-            }
+            };
         },
 
         addHydrantsToMap: function(data, map, hydrants) {
@@ -159,7 +159,7 @@ angular.module('grisu-noe').factory('geoService', function($http, $q, $window, $
                             iconAnchor: [16, 9],
                             popupAnchor: [0, 0]
                         });
-                        hydType = 'Löschteich';
+                        hydType = 'LÃ¶schteich';
                         break;
                     case 'LWBH':
                         hydIcon = L.icon({
@@ -168,7 +168,7 @@ angular.module('grisu-noe').factory('geoService', function($http, $q, $window, $
                             iconAnchor: [16, 9],
                             popupAnchor: [0, 0]
                         });
-                        hydType = 'Löschwasserbehälter';
+                        hydType = 'LÃ¶schwasserbehÃ¤lter';
                         break;
                     case 'PU':
                         hydIcon = L.icon({

@@ -15,5 +15,5 @@ angular.module('grisu-noe').factory('storageService', function($window) {
         getObject: function(key) {
             return JSON.parse($window.localStorage[key] || '{}');
         }
-    }
+    };
 });
