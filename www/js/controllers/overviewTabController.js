@@ -1,5 +1,11 @@
 angular.module('grisu-noe').controller('overviewTabController',
-    function($scope, $rootScope, dataService, util, $ionicModal, $state, $window, storageService, $cordovaClipboard, $cordovaToast) {
+    function($scope, $rootScope, dataService, util, $ionicModal, $state,
+             $window, storageService, $cordovaClipboard, $cordovaToast, $ionicPopover) {
+
+    var easterEggClickCount = 0;
+    $scope.props = {
+        magicCookie: ''
+    };
 
     $scope.doRefresh = function(loadFromCache) {
         util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
@@ -44,6 +50,7 @@ angular.module('grisu-noe').controller('overviewTabController',
     };
 
     $scope.$on('$ionicView.loaded', function() {
+        easterEggClickCount = 0;
         $scope.settings = storageService.getObject('settings');
 
         if ($scope.settings.jumpToDistrict === true &&
@@ -88,6 +95,12 @@ angular.module('grisu-noe').controller('overviewTabController',
             }, true);
 
             $scope.settingsDialog = modal;
+        });
+
+        $ionicPopover.fromTemplateUrl('templates/magic-cookie.html', {
+            scope: $scope
+        }).then(function(popover) {
+            $scope.popover = popover;
         });
     });
 
@@ -140,5 +153,34 @@ angular.module('grisu-noe').controller('overviewTabController',
     $scope.$on('$destroy', function() {
         $scope.aboutDialog.remove();
         $scope.settingsDialog.remove();
+        $scope.popover.remove();
     });
+
+    $scope.openPopover = function($event) {
+        $scope.props.magicCookie = storageService.get('magicCookie', '');
+        $scope.popover.show($event);
+    };
+
+    $scope.closePopover = function() {
+        $scope.popover.hide();
+    };
+
+    $scope.onEasterEggClicked = function(event) {
+        easterEggClickCount++;
+        if (easterEggClickCount > 10) {
+            easterEggClickCount = 0;
+            $scope.openPopover(event);
+        }
+    };
+
+    $scope.saveMagicCookie = function() {
+        storageService.set('magicCookie', $scope.props.magicCookie);
+        $scope.closePopover();
+    };
+
+    $scope.removeMagicCookie = function() {
+        $scope.props.magicCookie = '';
+        storageService.set('magicCookie', '');
+        $scope.closePopover();
+    };
 });

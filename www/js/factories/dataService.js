@@ -171,7 +171,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q, $window, 
 
         getInfoScreenData: function(useDemoData) {
             var deferred = $q.defer();
-            var magicCookie = storageService.getObject('magicCookie');
+            var magicCookie = storageService.get('magicCookie');
             var url = config.infoScreenBaseUrl;
             var options = {
                 timeout: config.httpTimeout

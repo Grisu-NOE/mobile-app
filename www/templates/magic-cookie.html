@@ -1,0 +1,18 @@
+<ion-popover-view>
+    <ion-header-bar>
+        <h1 class="title">Magic Cookie</h1>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list list-inset">
+            <label class="item item-input">
+                <input type="text" placeholder="Hier eingeben" ng-model="props.magicCookie">
+            </label>
+            <button class="button button-block button-balanced" ng-click="saveMagicCookie()">
+                Speichern
+            </button>
+            <button class="button button-block button-assertive" ng-click="removeMagicCookie()">
+                Löschen
+            </button>
+        </div>
+    </ion-content>
+</ion-popover-view>
