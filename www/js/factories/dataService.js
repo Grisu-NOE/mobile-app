@@ -1,4 +1,4 @@
-angular.module('grisu-noe').factory('dataService', function($http, $q) {
+angular.module('grisu-noe').factory('dataService', function($http, $q, $window, storageService) {
     var config = {
         districtMapMappings: {
             '01': 'amstetten',
@@ -171,6 +171,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
 
         getInfoScreenData: function(useDemoData) {
             var deferred = $q.defer();
+            var magicCookie = storageService.getObject('magicCookie');
             var url = config.infoScreenBaseUrl;
             var options = {
                 timeout: config.httpTimeout
@@ -187,13 +188,26 @@ angular.module('grisu-noe').factory('dataService', function($http, $q) {
                 url += 'Einsatz.ashx';
             }
 
-            $http.get(url, options).success(function(data) {
-                console.info('Extended info screen data loaded from server', data);
-                deferred.resolve(data);
-            }).error(function(data, code) {
-                deferred.reject(code, data);
-                console.error('Error loading extended info screen data. Error code', code);
-            });
+            if ($window.cordova && !angular.isUndefinedOrNull(magicCookie) && magicCookie.length > 0) {
+                cordovaHTTP.get(url, options.params || {}, {
+                    Cookie: 'xFFK_InfoScrCookie_SessionID=' + magicCookie
+                }, function(response) {
+                    var json = angular.fromJson(response.data);
+                    console.info('Cordova HTTP plugin: Extended info screen data loaded from server', json);
+                    deferred.resolve(json);
+                }, function(response) {
+                    console.error('Cordova HTTP plugin: Error loading extended info screen data. Error code', response.status);
+                    deferred.reject(response.status, response.error);
+                });
+            } else {
+                $http.get(url, options).success(function(data) {
+                    console.info('Extended info screen data loaded from server', data);
+                    deferred.resolve(data);
+                }).error(function (data, code) {
+                    deferred.reject(code, data);
+                    console.error('Error loading extended info screen data. Error code', code);
+                });
+            }
 
             return deferred.promise;
         },

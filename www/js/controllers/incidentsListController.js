@@ -33,6 +33,7 @@ angular.module('grisu-noe').controller('incidentsListController',
                     angular.forEach(extData.EinsatzData, function(extIncident) {
                         extendedIncidentIds.push(extIncident.EinsatzID);
                     });
+                    console.debug('Found extended incident(s): ' + extendedIncidentIds.toString());
                 }
 
                 $scope.incidents = data.Einsatz;
