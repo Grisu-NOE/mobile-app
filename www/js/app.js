@@ -2,7 +2,9 @@ angular.isUndefinedOrNull = function(val) {
     return angular.isUndefined(val) || val === null;
 };
 
-angular.module('grisu-noe', ['ionic', 'ngCordova', 'leaflet-directive', 'chart.js', 'xml'])
+angular.module('grisu-noe',
+    /* REMOVE PATCH ngIOS9UIWebViewPatch WHEN UPDATING IONIC WITH ANGULARJS > 1.4.5 DEPENDENCY! */
+    ['ngIOS9UIWebViewPatch', 'ionic', 'ngCordova', 'leaflet-directive', 'chart.js', 'xml'])
 
 .config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
     $ionicConfigProvider.views.transition('ios');
