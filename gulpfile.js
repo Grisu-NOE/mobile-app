@@ -20,6 +20,7 @@ var requiredCordovaPlugins = [
     'cordova-plugin-statusbar',
     'cordova-plugin-splashscreen',
     'cordova-plugin-geolocation',
+    'cordova-plugin-inappbrowser',
     'https://github.com/VersoSolutions/CordovaClipboard',
     'https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git',
     'https://github.com/Grisu-NOE/cordova-HTTP.git',

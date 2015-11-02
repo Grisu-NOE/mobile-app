@@ -10,16 +10,19 @@
         <h4 class="text-stable">Wie können Wasserentnahmestellen editiert werden?</h4>
         <p>
             Die mit blauen Symbolen gekennzeichneten Wasserentnahmestellen können über den
-            <a href="https://infoscreen.florian10.info/ows/infoscreen/v3/admin/" class="hyperlink">WASTL-Infoscreen Administrationsbereich</a>
+            <a ng-click="openExternalUrl('https://infoscreen.florian10.info/ows/infoscreen/v3/admin/')"
+		class="hyperlink">WASTL-Infoscreen Administrationsbereich</a>
             bearbeitet werden. Sie benötigen dazu einen gültigen
-            <a href="http://www.feuerwehr-krems.at/ShowArtikel.asp?Artikel=8930" class="hyperlink">WASTL-Infoscreen Benutzeraccount</a>,
-            der über die Freiwillige Feuerwehr Krems</a> beantragt werden kann. Bei erfolgter Freischaltung haben Sie Zugriff auf eine
+            <a ng-click="openExternalUrl('http://www.feuerwehr-krems.at/ShowArtikel.asp?Artikel=8930')"
+		class="hyperlink">WASTL-Infoscreen Benutzeraccount</a>,
+            der über die Freiwillige Feuerwehr Krems beantragt werden kann. Bei erfolgter Freischaltung haben Sie Zugriff auf eine
             Web-basierte Oberfläche zur Bearbeitung der Wasserentnahmestellen Ihres Einsatzgebietes.
         </p>
         <p>
             Rot eingezeichnete Markierungen sind Wasserentnahmestellen und Feuerwehren, die von OpenFireMap
             zur Verfügung gestellt werden. Weitere Informationen erhalten Sie dazu im
-            <a href="http://wiki.openstreetmap.org/wiki/DE:OpenFireMap" class="hyperlink">OpenFireMap Wiki</a>.
+            <a ng-click="openExternalUrl('http://wiki.openstreetmap.org/wiki/DE:OpenFireMap')"
+		class="hyperlink">OpenFireMap Wiki</a>.
         </p>
     </ion-content>
 </ion-modal-view>

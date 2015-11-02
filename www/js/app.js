@@ -145,7 +145,12 @@ angular.module('grisu-noe',
 })
 
 .run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen, $cordovaDevice, dataService) {
-    $ionicPlatform.ready(function () {
+    $ionicPlatform.ready(function() {
+                         
+        /** opens an external link with Cordova's inappbrowser plugin */
+        $rootScope.openExternalUrl = function(url) {
+            $window.open(url, '_system');
+        };
 
         if ($window.cordova) {
             $timeout(function() {

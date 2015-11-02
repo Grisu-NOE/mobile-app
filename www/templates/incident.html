@@ -53,7 +53,7 @@
             <div class="item item-divider text-center" ng-if="isMapRefreshing || isRouteRefreshing">
                 <ion-spinner icon="lines"></ion-spinner>
             </div>
-            <a href="http://maps.google.com?saddr={{originLat}},{{originLng}}&daddr={{destLat}},{{destLng}}"
+            <a ng-click="openExternalUrl('http://maps.google.com?saddr=' + originLat + ',' + originLng + '&daddr=' + destLat + ',' + destLng)"
                target="_blank"
                class="item item-divider item-icon-left"
                ng-if="isMapAvailable && isRouteAvailable && !isMapRefreshing && !isRouteRefreshing">
