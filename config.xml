@@ -56,6 +56,7 @@
 
     <platform name="ios">
         <preference name="deployment-target" value="7.1" />
+        <preference name="Orientation" value="all" />
 
         <splash src="resources/ios/splashes/splash_iphone_3_port.png" width="320" height="480"/>
         <splash src="resources/ios/splashes/splash_iphone_3_land.png" width="480" height="320"/>
