@@ -5,14 +5,17 @@
     <ion-content>
         <div class="list list-inset">
             <label class="item item-input">
-                <input type="text" placeholder="Hier eingeben" ng-model="props.magicCookie">
+                <input type="text" placeholder="Hier eingeben" ng-model="magicCookie.value">
             </label>
-            <button class="button button-block button-balanced" ng-click="saveMagicCookie()">
-                Speichern
-            </button>
-            <button class="button button-block button-assertive" ng-click="removeMagicCookie()">
-                Löschen
-            </button>
+            <div class="item item-dark item-toggle item-dark-modal-full">
+                aktiv
+                <label class="toggle toggle-assertive">
+                    <input type="checkbox" ng-model="magicCookie.active">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </div>
         </div>
     </ion-content>
 </ion-popover-view>

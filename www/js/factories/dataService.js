@@ -171,7 +171,7 @@ angular.module('grisu-noe').factory('dataService', function($http, $q, $window, 
 
         getInfoScreenData: function(useDemoData) {
             var deferred = $q.defer();
-            var magicCookie = storageService.get('magicCookie');
+            var magicCookie = storageService.getObject('magicCookie');
             var url = config.infoScreenBaseUrl;
             var options = {
                 timeout: config.httpTimeout
@@ -188,9 +188,9 @@ angular.module('grisu-noe').factory('dataService', function($http, $q, $window, 
                 url += 'Einsatz.ashx';
             }
 
-            if ($window.cordova && !angular.isUndefinedOrNull(magicCookie) && magicCookie.length > 0) {
+            if ($window.cordova && magicCookie && magicCookie.value.length > 0 && magicCookie.active) {
                 cordovaHTTP.get(url, options.params || {}, {
-                    Cookie: 'xFFK_InfoScrCookie_SessionID=' + magicCookie
+                    Cookie: 'xFFK_InfoScrCookie_SessionID=' + magicCookie.value
                 }, function(response) {
                     var json = angular.fromJson(response.data);
                     console.info('Cordova HTTP plugin: Extended info screen data loaded from server', json);

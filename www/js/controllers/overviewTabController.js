@@ -2,10 +2,7 @@ angular.module('grisu-noe').controller('overviewTabController',
     function($scope, $rootScope, dataService, util, $ionicModal, $state,
              $window, storageService, $cordovaClipboard, $cordovaToast, $ionicPopover) {
 
-    var easterEggClickCount = 0;
-    $scope.props = {
-        magicCookie: ''
-    };
+    var easterEggClickCount;
 
     $scope.doRefresh = function(loadFromCache) {
         util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
@@ -52,6 +49,7 @@ angular.module('grisu-noe').controller('overviewTabController',
     $scope.$on('$ionicView.loaded', function() {
         easterEggClickCount = 0;
         $scope.settings = storageService.getObject('settings');
+        $scope.magicCookie = storageService.getObject('magicCookie');
 
         if ($scope.settings.jumpToDistrict === true &&
             $scope.settings.myDistrict.k !== 'LWZ' &&
@@ -100,6 +98,19 @@ angular.module('grisu-noe').controller('overviewTabController',
         $ionicPopover.fromTemplateUrl('templates/magic-cookie.html', {
             scope: $scope
         }).then(function(popover) {
+            // check for empty object
+            if (angular.toJson($scope.magicCookie) === '{}') {
+                $scope.magicCookie = {
+                    value: '',
+                    active: false
+                };
+            }
+
+            $scope.$watch('magicCookie', function(newValue, oldValue) {
+                console.debug('Magic cookie changed', oldValue, newValue);
+                storageService.setObject('magicCookie', newValue);
+            }, true);
+
             $scope.popover = popover;
         });
     });
@@ -157,7 +168,6 @@ angular.module('grisu-noe').controller('overviewTabController',
     });
 
     $scope.openPopover = function($event) {
-        $scope.props.magicCookie = storageService.get('magicCookie', '');
         $scope.popover.show($event);
     };
 
@@ -171,16 +181,5 @@ angular.module('grisu-noe').controller('overviewTabController',
             easterEggClickCount = 0;
             $scope.openPopover(event);
         }
-    };
-
-    $scope.saveMagicCookie = function() {
-        storageService.set('magicCookie', $scope.props.magicCookie);
-        $scope.closePopover();
-    };
-
-    $scope.removeMagicCookie = function() {
-        $scope.props.magicCookie = '';
-        storageService.set('magicCookie', '');
-        $scope.closePopover();
     };
 });
