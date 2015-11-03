@@ -124,6 +124,8 @@ angular.module('grisu-noe').controller('overviewTabController',
             return;
         }
 
+        $scope.loadingTokenInfo = true;
+
         util.genericRefresh($scope, dataService.getInfoScreenData(false), function(data) {
             if (data.CurrentState == 'token' || data.CurrentState == 'waiting') {
                 $scope.token = data.Token;
@@ -131,6 +133,8 @@ angular.module('grisu-noe').controller('overviewTabController',
             } else {
                 $scope.waitForToken = false;
             }
+
+            $scope.loadingTokenInfo = false;
         });
     }
 

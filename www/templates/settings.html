@@ -60,13 +60,17 @@
 
         <div class="card" ng-show="settings.showExtendedIncidentData">
             <div class="item item-text-wrap">
-                <h2 ng-if="waitForToken" ng-click="copyTokenToClipboard()">Code: {{ token }}</h2>
-                <h2 ng-if="!waitForToken">Erweiterte Einsatzdaten werden verwendet!</h2>
+                <h2 ng-if="loadingTokenInfo">Bitte warten...</h2>
+                <h2 ng-if="!loadingTokenInfo && waitForToken" ng-click="copyTokenToClipboard()">Code: {{ token }}</h2>
+                <h2 ng-if="!loadingTokenInfo && !waitForToken">Erweiterte Einsatzdaten werden verwendet!</h2>
             </div>
         </div>
         <div ng-show="settings.showExtendedIncidentData" class="padding-left padding-right">
-            <p ng-if="waitForToken">
-                Falls du Mitglied einer Feuerwehr bist und deine Feuerwehr den WASTL-Infoscreen der FF Krems verwendet,
+            <p ng-if="!loadingTokenInfo && waitForToken">
+                Falls du Mitglied einer Feuerwehr bist und deine Feuerwehr den
+                <a ng-click="openExternalUrl('http://www.feuerwehr-krems.at/ShowArtikel.asp?Artikel=8930')" class="hyperlink">
+                    WASTL-Infoscreen der FF Krems
+                </a> verwendet,
                 kannst du mit Grisu NÖ erweiterte Einsatzdaten (genauer Einsatzort, Rückmeldefunktion, Bemerkungen,
                 Historie etc.) der Einsätze deiner Feuerwehr anzeigen lassen. Dazu benötigst du lediglich eine
                 Freischaltung des obenstehenden Codes. Am besten wendest du dich mit dem Code an deinen Kameraden, der
