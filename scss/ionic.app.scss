@@ -320,3 +320,7 @@ span.no-alarm-image {
 .ion-power.offline {
     color: $assertive;
 }
+
+.bar .buttons-right span.badge {
+    display: inline-block;
+}

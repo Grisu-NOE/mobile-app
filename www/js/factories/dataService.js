@@ -226,6 +226,20 @@ angular.module('grisu-noe').factory('dataService', function($http, $q, $window, 
             return deferred.promise;
         },
 
+        getInfoMessages: function() {
+            var deferred = $q.defer();
+
+            $http.get(config.infoScreenBaseUrl + 'info.ashx', { timeout: config.httpTimeout }).success(function(data) {
+                console.info('Info messages data loaded from server', data);
+                deferred.resolve(data);
+            }).error(function(data, code) {
+                deferred.reject(code, data);
+                console.error('Error loading info messages. Error code', code);
+            });
+
+            return deferred.promise;
+        },
+
         getBazInfo: function(loadFromCache) {
             var deferred = $q.defer();
 

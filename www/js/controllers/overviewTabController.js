@@ -24,6 +24,14 @@ angular.module('grisu-noe').controller('overviewTabController',
                 });
             });
         });
+
+        util.genericRefresh($scope, dataService.getInfoMessages(), function(data) {
+            if (angular.toJson(data.Infos) !== storageService.get('messages', '')) {
+                $scope.hasNewMessages = true;
+            }
+            storageService.setObject('messages', data.Infos);
+            $scope.infoMessages = data.Infos;
+        }, { hideRefreshers: false });
     };
 
     $scope.$on('cordova.resume', function() {
@@ -93,6 +101,13 @@ angular.module('grisu-noe').controller('overviewTabController',
             }, true);
 
             $scope.settingsDialog = modal;
+        });
+
+        $ionicModal.fromTemplateUrl('templates/info-messages.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.infoMessagesDialog = modal;
         });
 
         $ionicPopover.fromTemplateUrl('templates/magic-cookie.html', {
@@ -165,9 +180,18 @@ angular.module('grisu-noe').controller('overviewTabController',
         $scope.settingsDialog.hide();
     };
 
+    $scope.openInfoMessagesDialog = function() {
+        $scope.infoMessagesDialog.show();
+    };
+
+    $scope.closeInfoMessagesDialog = function() {
+        $scope.infoMessagesDialog.hide();
+    };
+
     $scope.$on('$destroy', function() {
         $scope.aboutDialog.remove();
         $scope.settingsDialog.remove();
+        $scope.infoMessagesDialog.remove();
         $scope.popover.remove();
     });
 

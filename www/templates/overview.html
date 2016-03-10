@@ -3,6 +3,9 @@
         <button ng-click="openAboutDialog()" class="button icon button-white button-clear ion-ios-information-outline"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="secondary">
+        <button ng-click="openInfoMessagesDialog()" class="button icon button-white button-clear ion-email">
+            <span ng-if="hasNewMessages" class="badge badge-positive">NEU</span>
+        </button>
         <button ng-click="openSettingsDialog()" class="button icon button-white button-clear ion-gear-a"></button>
     </ion-nav-buttons>
 
