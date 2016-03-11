@@ -1,6 +1,6 @@
 {
   "indent": 4,
-  "latedef": true,
+  "latedef": false,
   "maxlen": 140,
   "newcap": true,
   "quotmark": "single",
