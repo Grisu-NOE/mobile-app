@@ -3,12 +3,11 @@ sudo: false # use container based infrastructure
 language: node_js
 
 node_js:
-  - 0.12
+  - "4.2"
 
 before_install:
   - npm install -g cordova ionic gulp
 
 script:
   - gulp install
-  - gulp test
   - gulp lint
