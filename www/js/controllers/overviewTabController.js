@@ -1,8 +1,9 @@
 angular.module('grisu-noe').controller('overviewTabController',
     function($scope, $rootScope, dataService, util, $ionicModal, $state,
-             $window, storageService, $cordovaClipboard, $cordovaToast, $ionicPopover) {
+             $window, storageService, $cordovaClipboard, $cordovaToast, $ionicPopover, md5) {
 
     var easterEggClickCount;
+    var calculatedHashes;
 
     $scope.doRefresh = function(loadFromCache) {
         util.genericRefresh($scope, dataService.getMainData(loadFromCache), function(data) {
@@ -26,13 +27,25 @@ angular.module('grisu-noe').controller('overviewTabController',
         });
 
         util.genericRefresh($scope, dataService.getInfoMessages(), function(data) {
-            if (angular.toJson(data.Infos) !== storageService.get('messages', '')) {
-                $scope.hasNewMessages = true;
-            }
-            storageService.setObject('messages', data.Infos);
-            $scope.infoMessages = data.Infos;
+            handleInfoMessages(data.Infos);
         }, { hideRefreshers: false });
     };
+
+    function handleInfoMessages(messages) {
+        var storedHashes = storageService.get('messages', []);
+        $scope.hasNewMessages = false;
+        calculatedHashes = [];
+
+        angular.forEach(messages, function(message) {
+            var hash = md5.createHash(message.Title + message.Text);
+            calculatedHashes.push(hash);
+            if (storedHashes.indexOf(hash) === -1) {
+                $scope.hasNewMessages = true;
+            }
+        });
+
+        $scope.infoMessages = messages;
+    }
 
     $scope.$on('cordova.resume', function() {
         $scope.doRefresh(false);
@@ -181,6 +194,8 @@ angular.module('grisu-noe').controller('overviewTabController',
     };
 
     $scope.openInfoMessagesDialog = function() {
+        storageService.setObject('messages', calculatedHashes);
+        $scope.hasNewMessages = false;
         $scope.infoMessagesDialog.show();
     };
 

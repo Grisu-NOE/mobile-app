@@ -8,6 +8,7 @@
         "ng-cordova": "driftyco/ng-cordova#0.1.20-alpha",
         "angular-leaflet-directive": "0.8.6",
         "Leaflet.awesome-markers": "2.0.2",
-        "angular-xml": "2.2.1"
+        "angular-xml": "2.2.1",
+        "angular-md5": "0.1.10"
     }
 }
