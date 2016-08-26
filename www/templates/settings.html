@@ -62,7 +62,7 @@
             <div class="item item-text-wrap">
                 <h2 ng-if="loadingTokenInfo">Bitte warten...</h2>
                 <h2 ng-if="!loadingTokenInfo && waitForToken" ng-click="copyTokenToClipboard()">Code: {{ token }}</h2>
-                <h2 ng-if="!loadingTokenInfo && !waitForToken">Erweiterte Einsatzdaten werden verwendet!</h2>
+                <h2 ng-if="!loadingTokenInfo && !waitForToken">Erweiterte Einsatzdaten {{ homeAddress }} werden verwendet!</h2>
             </div>
         </div>
         <div ng-show="settings.showExtendedIncidentData" class="padding-left padding-right">

@@ -61,6 +61,14 @@ angular.module('grisu-noe').controller('overviewTabController',
 
     $scope.$on('$ionicView.enter', function() {
         $scope.doRefresh(true);
+
+        if (!$scope.settings.showExtendedIncidentData || !angular.isUndefinedOrNull($scope.homeAddress)) {
+            return;
+        }
+
+        dataService.getInfoscreenConfig().then(function(data) {
+            $scope.homeAddress = data.Config.HomeAddress;
+        });
     });
 
     $scope.onMapClicked = function(event) {
