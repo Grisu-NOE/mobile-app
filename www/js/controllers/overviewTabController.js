@@ -26,6 +26,10 @@ angular.module('grisu-noe').controller('overviewTabController',
             });
         });
 
+        if (!$scope.settings.showExtendedIncidentData) {
+            return;
+        }
+
         util.genericRefresh($scope, dataService.getInfoMessages(), function(data) {
             handleInfoMessages(data.Infos);
         }, { hideRefreshers: false });
