@@ -7,7 +7,19 @@
     </ion-header-bar>
 
     <ion-content has-bouncing="true">
-        <p ng-if="infoMessages.length === 0" class="padding">Aktuell keine Nachrichten vorhanden</p>
+        <div class="card" ng-if="messagesError">
+            <div class="item item-text-wrap">
+                Daten nicht verfügbar. Eventuell bist du noch nicht für erweiterte Einsatzdaten freigeschaltet.
+                Siehe hierfür in den App-Einstellungen nach.
+            </div>
+        </div>
+
+        <div class="card" ng-if="infoMessages.length === 0 && !messagesError">
+            <div class="item item-text-wrap">
+                Aktuell keine Nachrichten vorhanden
+            </div>
+        </div>
+
         <ion-list>
             <ion-item class="item-dark item-dark-modal-full" ng-repeat="message in infoMessages">
                 <h2 class="stable">{{message.Title}}</h2>
