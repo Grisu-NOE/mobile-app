@@ -3,7 +3,7 @@
         <button ng-click="doRefresh()" ng-if="!isHistoricIncident()" class="button icon button-white button-clear ion-loop"></button>
     </ion-nav-buttons>
 
-    <ion-content has-bouncing="true" padding="true">
+    <ion-content>
         <ion-refresher on-refresh="doRefresh()"
                        ng-if="!isHistoricIncident()"
                        pulling-icon="ion-chevron-down"

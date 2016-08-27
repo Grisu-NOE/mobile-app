@@ -56,9 +56,21 @@
 <ion-nav-view></ion-nav-view>
 
 <script>
-    document.addEventListener('deviceready', function() {
+    var bootstrap = function() {
         angular.bootstrap(document, ['grisu-noe']);
-    }, false);
+    };
+
+    if (window.cordova) {
+        document.addEventListener('deviceready', function() {
+            bootstrap();
+        }, false);
+    } else {
+        // mock cordovaHTTP
+        angular.module('cordovaHTTP', []).factory('cordovaHTTP', function() {
+            return {};
+        });
+        bootstrap();
+    }
 </script>
 
 </body>
