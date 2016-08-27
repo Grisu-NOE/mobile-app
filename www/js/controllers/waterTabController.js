@@ -80,6 +80,17 @@ angular.module('grisu-noe').controller('waterTabController',
         updateLayersAndHydrants();
     });
 
+    /**
+     * hack to bring the overlays (e.g. OpenFireMap) in front of the base layer when the base layer changes
+     */
+    $scope.$on('leafletDirectiveMap.baselayerchange', function() {
+        leafletData.getLayers().then(function(layer) {
+            angular.forEach(layer.baselayers, function(baseLayer) {
+                baseLayer.setZIndex(-1);
+            }); 
+        });
+    });
+
     $scope.$on('$ionicView.loaded', function() {
         $ionicLoading.show({
             template: '<ion-spinner class="spinner-light" icon="ripple"></ion-spinner><div>Bestimme aktuelle Position...</div>'

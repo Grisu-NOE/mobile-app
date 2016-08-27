@@ -6,7 +6,7 @@
         "angular-chart.js": "0.8.1",
         "moment": "2.12.0",
         "ng-cordova": "driftyco/ng-cordova#0.1.27-alpha",
-        "angular-leaflet-directive": "0.8.6",
+        "angular-leaflet-directive": "0.10.0",
         "Leaflet.awesome-markers": "2.0.2",
         "angular-xml": "2.2.1",
         "angular-md5": "0.1.10"
