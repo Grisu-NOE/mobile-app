@@ -143,7 +143,8 @@ angular.module('grisu-noe',
     $urlRouterProvider.otherwise('/tab/overview');
 })
 
-.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen, $cordovaDevice, dataService, $screenshotService, util) {
+.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen,
+              $cordovaDevice, dataService, $screenshotService, util, leafletData) {
     $ionicPlatform.ready(function() {
                          
         /** opens an external link with Cordova's inappbrowser plugin */
@@ -159,6 +160,15 @@ angular.module('grisu-noe',
                 util.showErrorDialog('Fehler beim Erstellen des Screenshots.');
             });
         };
+
+        /** hack to bring the overlays (e.g. OpenFireMap) in front of the base layer when the base layer changes */
+        $rootScope.$on('leafletDirectiveMap.baselayerchange', function() {
+            leafletData.getLayers().then(function(layer) {
+                angular.forEach(layer.baselayers, function(baseLayer) {
+                    baseLayer.setZIndex(-1);
+                });
+            });
+        });
 
         if ($window.cordova) {
             $timeout(function() {
