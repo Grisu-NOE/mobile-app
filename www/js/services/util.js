@@ -9,6 +9,16 @@ angular.module('grisu-noe').service('util', function($ionicPopup, $ionicLoading,
         });
     };
 
+    this.showSuccessDialog = function(message) {
+        $ionicPopup.alert({
+            title: message,
+            buttons: [{
+                text: 'OK',
+                type: 'button-positive'
+            }]
+        });
+    };
+
     this.showLoadingErrorDialog = function(httpCode) {
         var message = 'Daten konnten nicht geladen werden. ';
 

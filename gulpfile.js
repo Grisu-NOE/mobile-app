@@ -19,7 +19,8 @@ var requiredCordovaPlugins = [
     'https://github.com/VersoSolutions/CordovaClipboard', // only master available
     'https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git#2.5.2',
     'https://github.com/wymsee/cordova-HTTP.git#v1.2.0',
-    'https://github.com/robertklein/cordova-ios-security.git' // only master branch available
+    'https://github.com/robertklein/cordova-ios-security.git', // only master branch available
+    'https://github.com/gitawego/cordova-screenshot.git#v0.1.5'
 ];
 
 gulp.task('sass', function() {
