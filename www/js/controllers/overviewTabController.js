@@ -67,6 +67,9 @@ angular.module('grisu-noe').controller('overviewTabController',
         }
 
         dataService.getInfoscreenConfig().then(function(data) {
+            if (data.CurrentState != 'data') {
+                return;
+            }
             $scope.homeAddress = data.Config.HomeAddress;
         });
     });
