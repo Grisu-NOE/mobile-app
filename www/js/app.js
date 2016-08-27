@@ -3,7 +3,7 @@ angular.isUndefinedOrNull = function(val) {
 };
 
 angular.module('grisu-noe',
-    ['ionic', 'ngCordova', 'leaflet-directive', 'chart.js', 'xml', 'angular-md5'])
+    ['ionic', 'ngCordova', 'leaflet-directive', 'chart.js', 'xml', 'angular-md5', 'cordovaHTTP'])
 
 .config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
     $ionicConfigProvider.views.transition('ios');

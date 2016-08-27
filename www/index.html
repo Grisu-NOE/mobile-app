@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="grisu-noe">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
@@ -54,6 +54,12 @@
 </ion-nav-bar>
 
 <ion-nav-view></ion-nav-view>
+
+<script>
+    document.addEventListener('deviceready', function() {
+        angular.bootstrap(document, ['grisu-noe']);
+    }, false);
+</script>
 
 </body>
 </html>

@@ -9,17 +9,17 @@ var del = require('del');
 var jshint = require('gulp-jshint');
 
 var requiredCordovaPlugins = [
-    'cordova-plugin-whitelist',
-    'cordova-plugin-console',
-    'cordova-plugin-device',
-    'cordova-plugin-statusbar',
-    'cordova-plugin-splashscreen',
-    'cordova-plugin-geolocation',
-    'cordova-plugin-inappbrowser',
-    'https://github.com/VersoSolutions/CordovaClipboard',
-    'https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git',
-    'https://github.com/Grisu-NOE/cordova-HTTP.git',
-    'https://github.com/robertklein/cordova-ios-security.git'
+    'cordova-plugin-whitelist@1.2.2',
+    'cordova-plugin-console@1.0.3',
+    'cordova-plugin-device@1.1.2',
+    'cordova-plugin-statusbar@2.1.3',
+    'cordova-plugin-splashscreen@3.2.2',
+    'cordova-plugin-geolocation@2.2.0',
+    'cordova-plugin-inappbrowser@1.4.0',
+    'https://github.com/VersoSolutions/CordovaClipboard', // only master available
+    'https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git#2.5.2',
+    'https://github.com/wymsee/cordova-HTTP.git#1.2.0',
+    'https://github.com/robertklein/cordova-ios-security.git' // only master branch available
 ];
 
 gulp.task('sass', function() {

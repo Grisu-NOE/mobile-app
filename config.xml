@@ -18,9 +18,11 @@
     <preference name="UIWebViewBounce" value="false"/>
     <preference name="DisallowOverscroll" value="true"/>
     <preference name="BackupWebStorage" value="none"/>
-    <preference name="SplashScreen" value="screen" />
-    <preference name="SplashScreenDelay" value="10000"/>
+
     <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
+    <preference name="FadeSplashScreenDuration" value="300" />
 
     <feature name="StatusBar">
         <param name="ios-package" value="CDVStatusBar" onload="true"/>

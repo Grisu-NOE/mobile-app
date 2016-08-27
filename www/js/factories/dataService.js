@@ -1,4 +1,4 @@
-angular.module('grisu-noe').factory('dataService', function($http, $q, $window, storageService) {
+angular.module('grisu-noe').factory('dataService', function($http, $q, $window, storageService, cordovaHTTP) {
     var config = {
         districtMapMappings: {
             '01': 'amstetten',
