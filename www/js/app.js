@@ -143,12 +143,21 @@ angular.module('grisu-noe',
     $urlRouterProvider.otherwise('/tab/overview');
 })
 
-.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen, $cordovaDevice, dataService) {
+.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen, $cordovaDevice, dataService, $screenshotService, util) {
     $ionicPlatform.ready(function() {
                          
         /** opens an external link with Cordova's inappbrowser plugin */
         $rootScope.openExternalUrl = function(url) {
             $window.open(url, '_system');
+        };
+
+        /** take screenshots of the current view */
+        $rootScope.takeScreenshot = function() {
+            $screenshotService.capture('grisu-noe-' + new Date().getTime()).then(function(filePath) {
+                util.showSuccessDialog('Screenshot erfolgreich gespeichert. Speicherort: ' + filePath);
+            }, function() {
+                util.showErrorDialog('Fehler beim Erstellen des Screenshots.');
+            });
         };
 
         if ($window.cordova) {

@@ -6,7 +6,10 @@
         </div>
     </ion-header-bar>
 
-    <ion-content class="map-view">
+    <ion-content class="map-view" scroll="false">
         <leaflet data-tap-disabled="true" class="map" layers="layers"></leaflet>
+        <button ng-click="takeScreenshot()" class="button icon button-positive ion-camera screenshot-button">
+            Screenshot
+        </button>
     </ion-content>
 </ion-modal-view>

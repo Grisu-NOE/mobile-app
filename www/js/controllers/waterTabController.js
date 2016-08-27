@@ -1,5 +1,5 @@
 angular.module('grisu-noe').controller('waterTabController',
-    function($scope, $ionicLoading, util, geoService, leafletData, $cordovaToast, $window, $ionicModal, $screenshotService) {
+    function($scope, $ionicLoading, util, geoService, leafletData, $cordovaToast, $window, $ionicModal) {
 
     var layers = [];
     var hydrants = [];
@@ -140,12 +140,4 @@ angular.module('grisu-noe').controller('waterTabController',
     $scope.$on('$destroy', function() {
         $scope.helpDialog.remove();
     });
-
-    $scope.takeScreenshot = function() {
-        $screenshotService.capture('grisu-noe-water-' + new Date().getTime()).then(function(filePath) {
-            util.showSuccessDialog('Screenshot erfolgreich gespeichert. Speicherort: ' + filePath);
-        }, function() {
-            util.showErrorDialog('Fehler beim Erstellen des Screenshots.');
-        });
-    }
 });
