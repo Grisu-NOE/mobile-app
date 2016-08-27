@@ -191,12 +191,12 @@ angular.module('grisu-noe').factory('dataService', function($http, $q, $window, 
             if ($window.cordova && magicCookie && magicCookie.value.length > 0 && magicCookie.active) {
                 cordovaHTTP.get(url, options.params || {}, {
                     Cookie: 'xFFK_InfoScrCookie_SessionID=' + magicCookie.value
-                }, function(response) {
+                }).then(function(response) {
                     var json = angular.fromJson(response.data);
                     console.info('Cordova HTTP plugin: Extended info screen data loaded from server', json);
                     deferred.resolve(json);
                 }, function(response) {
-                    console.error('Cordova HTTP plugin: Error loading extended info screen data. Error code', response.status);
+                    console.error('Cordova HTTP plugin error: ' + response.status + ', ' + response.error);
                     deferred.reject(response.status, response.error);
                 });
             } else {
