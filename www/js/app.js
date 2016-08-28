@@ -186,7 +186,7 @@ angular.module('grisu-noe',
         /** Android only: detect version and apply actions */
         if ($window.cordova && $cordovaDevice.getPlatform() === 'Android') {
             var version = parseFloat($cordovaDevice.getVersion().substr(0, 3));
-            console.debug("Android version: " + version);
+            console.debug('Android version: ' + version);
 
             if (version < 4.4) {
                 // disable map if < 4.4 KitKat (SVG support)
