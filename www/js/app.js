@@ -143,8 +143,7 @@ angular.module('grisu-noe',
     $urlRouterProvider.otherwise('/tab/overview');
 })
 
-.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaSplashscreen,
-              $cordovaDevice, dataService, $screenshotService, util, leafletData) {
+.run(function($ionicPlatform, $window, $rootScope, $timeout, $cordovaDevice, dataService, $screenshotService, util, leafletData) {
     $ionicPlatform.ready(function() {
                          
         /** opens an external link with Cordova's inappbrowser plugin */
@@ -170,13 +169,6 @@ angular.module('grisu-noe',
             });
         });
 
-        if ($window.cordova) {
-            $timeout(function() {
-                console.debug('hide splash screen');
-                $cordovaSplashscreen.hide();
-            }, 1000);
-        }
-
         if ($window.StatusBar) {
             $window.StatusBar.styleLightContent();
         }
@@ -189,12 +181,40 @@ angular.module('grisu-noe',
         /** indicator for initial view change (my district) */
         $rootScope.alreadyJumpedToDistrict = false;
 
-        /** detect Android version and disable map if < 4.4 KitKat (SVG support) */
         $rootScope.showMap = true;
+
+        /** Android only: detect version and apply actions */
         if ($window.cordova && $cordovaDevice.getPlatform() === 'Android') {
             var version = parseFloat($cordovaDevice.getVersion().substr(0, 3));
+            console.debug("Android version: " + version);
+
             if (version < 4.4) {
+                // disable map if < 4.4 KitKat (SVG support)
                 $rootScope.showMap = false;
+            }
+
+            if (version >= 6.0) {
+                // ask the user if he want's to enable storage (for Screenshots)
+                var permissions = $window.cordova.plugins.permissions;
+
+                permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, function(status) {
+                    if (status.hasPermission) {
+                        return;
+                    }
+
+                    var errorCallback = function() {
+                        console.warn('Storage permission is not turned on.');
+                    };
+
+                    // timeout to avoid display flickering
+                    setTimeout(function() {
+                        permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, function(status) {
+                            if (!status.hasPermission) {
+                                errorCallback();
+                            }
+                        }, errorCallback);
+                    }, 600);
+                }, null);
             }
         }
 

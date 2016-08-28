@@ -16,6 +16,7 @@ var requiredCordovaPlugins = [
     'cordova-plugin-splashscreen@3.2.2',
     'cordova-plugin-geolocation@2.2.0',
     'cordova-plugin-inappbrowser@1.4.0',
+    'cordova-plugin-android-permissions@0.10.0',
     'https://github.com/VersoSolutions/CordovaClipboard', // only master available
     'https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git#2.5.2',
     'https://github.com/wymsee/cordova-HTTP.git#v1.2.0',

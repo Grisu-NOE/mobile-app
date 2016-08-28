@@ -1,6 +1,6 @@
 angular.module('grisu-noe').controller('overviewTabController',
     function($scope, $rootScope, dataService, util, $ionicModal, $state,
-             $window, storageService, $cordovaClipboard, $cordovaToast, $ionicPopover, md5) {
+             $window, storageService, $cordovaClipboard, $cordovaToast, $ionicPopover, md5, $cordovaSplashscreen) {
 
     var easterEggClickCount;
     var calculatedHashes;
@@ -55,6 +55,15 @@ angular.module('grisu-noe').controller('overviewTabController',
         $scope.infoMessages = messages;
     }
 
+    function hideSplashscreen() {
+        if ($window.cordova) {
+            setTimeout(function() {
+                console.debug('hide splash screen');
+                $cordovaSplashscreen.hide();
+            }, 300);
+        }
+    }
+
     $scope.$on('cordova.resume', function() {
         $scope.doRefresh(false);
     });
@@ -90,6 +99,8 @@ angular.module('grisu-noe').controller('overviewTabController',
         easterEggClickCount = 0;
         $scope.settings = storageService.getObject('settings');
         $scope.magicCookie = storageService.getObject('magicCookie');
+
+        hideSplashscreen();
 
         if ($scope.settings.jumpToDistrict === true &&
             $scope.settings.myDistrict.k !== 'LWZ' &&
