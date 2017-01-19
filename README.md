@@ -1,6 +1,8 @@
 Grisu NÖ - Mobile App [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url] [![Join the chat][chat-image]][chat-url]
 ============
 
+[![Join the chat at https://gitter.im/Grisu-NOE/mobile-app](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Grisu-NOE/mobile-app?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Apple App Store][app-store-image]][app-store-url] [![Google Play Store][play-store-image]][play-store-url]
 
 The already existing mobile web-app (http://mobile.leitstelle122.at/) of WASTL - shortened for "<strong>Wa</strong>rn- und
