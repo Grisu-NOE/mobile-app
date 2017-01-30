@@ -21,35 +21,19 @@ Contributing
 You want to contribute? Great! Thanks for being awesome! Please see the project related
 [issues](https://github.com/Grisu-NOE/mobile-app/issues) before you start coding. Pull requests are always welcome!
 
-### Coding guidelines
+## Setup of development environment
 
-- 4 spaces for indentation
-- 140 character max. line length
-- In general, try to make your code blend in with the surrounding code.
-
-### Setup of development environment
-
-- Install [node.js](http://nodejs.org/) (v4.x)
-- `npm install -g cordova ionic gulp`
-- Optional: Install bower command line utility: `npm install -g bower`
-- Go to project root folder
+- Install [node.js](http://nodejs.org/) (v6.x)
+- `npm install -g cordova ionic`
+- Switch to project root folder
 - Install required node dependencies: `npm install`
-- Run Gulp dependency installation: `gulp install`
-  - If you have problems to execute the Gulp task, try to execute `git config url."https://".insteadOf git://` before
-- Add platforms
-  - `ionic platform --noresources --nosave add ios` (works only on Mac OSX)
-  - `ionic platform --noresources --nosave add android` (you need to install the [Android SDK](https://developer.android.com/sdk/) before)
-- ENJOY!
+- Run the app in the web browser: `ionic serve`
 
-### Useful commands and hints
+## Useful commands and hints
 - Show app log in console when debugging app on Android device with USB
   - `adb logcat -s CordovaLog:D` or `adb logcat -s chromium:D`
 - Start Google Chrome with disabled web security to retrieve data from remote servers
   - see http://stackoverflow.com/a/6083677/1296333
-- Watch SASS changes and compile / move it immediately
-  - `gulp sass:watch`
-- Start web server and open browser. It also watches for code changes.
-  - `ionic serve`
 - Emulate an iOS device with Mac OSX
   - List available emulators: `<PROJECT_ROOT>/platforms/ios/cordova/lib/list-emulator-images`
   - Start emulator: `ionic emulate ios --target="<TARGET>"` e.g.: `ionic emulate ios --target="iPad (Retina)"`
