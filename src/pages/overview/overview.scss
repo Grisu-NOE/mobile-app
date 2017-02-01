@@ -1,0 +1,50 @@
+page-overview {
+	.lower-austria-map {
+		max-height: 200%; // fixes a bug with mobile browsers
+
+		path {
+			fill: color($colors, map-bg);
+			stroke: color($colors, map-stroke);
+			stroke-width: 1.2;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-miterlimit: 10;
+			stroke-dasharray: none;
+			stroke-opacity: 1;
+			fill-opacity: 1;
+
+			&.activated,
+			&:active {
+				opacity: 0.4;
+			}
+		}
+
+		g {
+			stroke-width: 1.2;
+			stroke-miterlimit: 10;
+			stroke-dasharray: none;
+			fill: color($colors, map-bg);
+			fill-opacity: 1;
+		}
+
+		.thin {
+			stroke-width: 0.7;
+		}
+
+		.thick {
+			stroke-width: 2;
+		}
+
+		.low {
+			fill: color($colors, warn-low);
+		}
+
+		.medium {
+			fill: color($colors, warn-medium);
+		}
+
+		.high {
+			fill: color($colors, warn-high);
+		}
+	}
+}

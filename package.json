@@ -13,8 +13,8 @@
 	"scripts": {
 		"clean": "ionic-app-scripts clean",
 		"build": "ionic-app-scripts build",
-		"ionic:build": "ionic-app-scripts build",
-		"ionic:serve": "ionic-app-scripts serve"
+		"serve": "ionic-app-scripts serve",
+		"lint": "ionic-app-scripts lint"
 	},
 	"dependencies": {
 		"@angular/common": "2.2.1",

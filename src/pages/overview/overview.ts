@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
-import { NavController } from 'ionic-angular';
+import {NavController, Refresher} from 'ionic-angular';
 
 @Component({
 	selector: 'page-overview',
@@ -12,4 +12,18 @@ export class OverviewPage {
 
 	}
 
+	doRefresh(refresher: Refresher) {
+		console.log('Begin async operation', refresher);
+
+		setTimeout(() => {
+			console.log('Async operation has ended');
+			refresher.complete();
+		}, 2000);
+	}
+
+	mapTap(districtElement: SVGPathElement) {
+		districtElement.classList.toString()
+		//let pathElement: SVGPathElement = event.currentTarget;
+		console.log(districtElement.classList.toString());
+	}
 }
