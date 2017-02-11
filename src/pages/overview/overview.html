@@ -23,13 +23,13 @@
 
 <ion-content>
 	<ion-refresher (ionRefresh)="doRefresh($event)">
-		<ion-refresher-content pullingText="Aktualisieren" refreshingText="Lade Daten..."></ion-refresher-content>
+		<grisu-refresher-content></grisu-refresher-content>
 	</ion-refresher>
 
 	<ion-list inset>
-		<ion-item>Aktuelle Einsätze: 0</ion-item>
-		<ion-item>Ausgerückte Feuerwehren: 0</ion-item>
-		<ion-item>Aktive Bezirke: 0</ion-item>
+		<ion-item>Aktuelle Einsätze: {{data?.incidentCount}}</ion-item>
+		<ion-item>Ausgerückte Feuerwehren: {{data?.departmentCount}}</ion-item>
+		<ion-item>Aktive Bezirke: {{data?.districtCount}}</ion-item>
 	</ion-list>
 
 	<button ion-button icon-left full color="dark">
