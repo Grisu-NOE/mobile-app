@@ -64,7 +64,7 @@ export class WastlDataService extends AbstractHttpService {
 					identifier == "schwechat" ||
 					identifier == "bruck-leitha" ||
 					identifier == "st-poelten" ||
-					identifier == "stockerau") {
+					identifier == "tulln") {
 					mapping2017[identifier] = new District(identifier, district.t, WarnState.fromIndex(district.z), district.e, district.f);
 				} else {
 				// workaround code end
@@ -82,7 +82,7 @@ export class WastlDataService extends AbstractHttpService {
 				districtCount++;
 			}
 			districts.push(mergedDistrict1);
-			let mergedDistrict2 = this.mergeMappingMembers(mapping2017["stockerau"], mapping2017["klosterneuburg"]);
+			let mergedDistrict2 = this.mergeMappingMembers(mapping2017["tulln"], mapping2017["klosterneuburg"]);
 			if (mergedDistrict2.warnState.index > 0) {
 				districtCount++;
 			}
