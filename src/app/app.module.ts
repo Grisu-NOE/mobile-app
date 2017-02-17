@@ -9,6 +9,10 @@ import {TabsPage} from "../pages/tabs/tabs.page";
 import {GrisuRefresherContentComponent} from "../components/grisu-refresher-content.component";
 import {WastlDataService} from "../services/wastl-data.service";
 import {ToastMessageProvider} from "../common/toast-message-provider";
+import {AboutModal} from "../pages/overview/about.modal";
+import {SettingsModal} from "../pages/overview/settings.modal";
+import {Storage} from "@ionic/storage";
+import {StorageService} from "../services/storage.service";
 
 @NgModule({
 	declarations: [
@@ -18,7 +22,9 @@ import {ToastMessageProvider} from "../common/toast-message-provider";
 		StatisticsPage,
 		WaterPage,
 		TabsPage,
-		GrisuRefresherContentComponent
+		GrisuRefresherContentComponent,
+		AboutModal,
+		SettingsModal
 	],
 	imports: [
 		IonicModule.forRoot(GrisuApp)
@@ -30,9 +36,11 @@ import {ToastMessageProvider} from "../common/toast-message-provider";
 		DistrictsPage,
 		StatisticsPage,
 		WaterPage,
-		TabsPage
+		TabsPage,
+		AboutModal,
+		SettingsModal
 	],
-	providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, WastlDataService, ToastMessageProvider]
+	providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, WastlDataService, ToastMessageProvider, Storage, StorageService]
 })
 export class AppModule {
 }

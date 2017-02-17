@@ -1,7 +1,7 @@
 <ion-header>
 	<ion-navbar>
 		<ion-buttons start>
-			<button ion-button icon-only>
+			<button ion-button icon-only (tap)="showAbout()">
 				<ion-icon name="information-circle"></ion-icon>
 			</button>
 		</ion-buttons>
@@ -14,7 +14,7 @@
 			<button ion-button icon-only>
 				<ion-icon name="mail"></ion-icon> <!-- TODO: mail-open -->
 			</button>
-			<button ion-button icon-only>
+			<button ion-button icon-only (tap)="showSettings()">
 				<ion-icon name="settings"></ion-icon>
 			</button>
 		</ion-buttons>

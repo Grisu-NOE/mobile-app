@@ -1,14 +1,21 @@
 import {Injectable} from "@angular/core";
-import {Response, Http} from "@angular/http";
+import {Response, Http, RequestOptionsArgs, URLSearchParams} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {AbstractHttpService} from "./abstract-http.service";
-import {District, MainData, WarnState} from "../common/models";
+import {District, MainData, WarnState, InfoScreenData, DataState, Incident, Vote, Disposition} from "../common/models";
+import * as moment from "moment";
 
 @Injectable()
 export class WastlDataService extends AbstractHttpService {
 
-	private static readonly MOBILE_BASE_URL = "https://infoscreen.florian10.info/OWS/wastlMobile/";
+	private static readonly BASE_URL = "https://infoscreen.florian10.info/";
+	private static readonly MOBILE_BASE_URL = WastlDataService.BASE_URL + "OWS/wastlMobile/";
+	private static readonly INFO_SCREEN_BASE_URL = WastlDataService.BASE_URL + "OWS/Infoscreen/";
+
 	private static readonly MAIN_DATA_URL = WastlDataService.MOBILE_BASE_URL + "getMainData.ashx";
+	private static readonly INFO_SCREEN_DATA_URL = WastlDataService.INFO_SCREEN_BASE_URL + "Einsatz.ashx";
+	private static readonly INFO_SCREEN_DEMO_URL = WastlDataService.INFO_SCREEN_BASE_URL + "demo.ashx";
+	private static readonly INFO_SCREEN_CONFIG_URL = WastlDataService.INFO_SCREEN_BASE_URL + "config.ashx";
 
 	private static readonly DISTRICT_MAPPING = {
 		"" : "LWZ",
@@ -94,11 +101,93 @@ export class WastlDataService extends AbstractHttpService {
 			districts.push(mergedDistrict3);
 			// workaround code end
 
-			return new MainData(districts, departmentCount, incidentCount, districtCount);
+			let result = new MainData(districts, departmentCount, incidentCount, districtCount);
+			console.debug("Computed main data", result);
+			return result;
+		});
+	}
+
+	public findInfoScreenData(useDemoData?: boolean): Observable<InfoScreenData> {
+		let options: RequestOptionsArgs = {};
+		let url = WastlDataService.INFO_SCREEN_DATA_URL;
+
+		if (useDemoData) {
+			let params = new URLSearchParams();
+			params.set("demo", "3");
+			options.search = params;
+
+			url = WastlDataService.INFO_SCREEN_DEMO_URL;
+		}
+
+		return super.httpGet(url, (response: Response) => {
+			const data = response.json();
+			let dataState: DataState;
+			let incidents: Incident[] = [];
+
+			if (data.currentState == "token") {
+				dataState = DataState.TOKEN;
+			} else if (data.currentState == "waiting") {
+				dataState = DataState.WAITING;
+			} else {
+				dataState = DataState.DATA;
+			}
+
+			for (let einsatz of data.EinsatzData) {
+				let vote = new Vote(einsatz.Rsvp.Yes, einsatz.Rsvp.No);
+				let dispositions: Disposition[] = [];
+
+				for (let dispo of einsatz.Dispositionen) {
+					dispositions.push(new Disposition(
+						dispo.Name,
+						dispo.EldisID,
+						dispo.IsEigenalarmiert,
+						this.wastlDateTimeToMoment(dispo.DispoTime),
+						this.wastlDateTimeToMoment(dispo.AusTime),
+						dispo.IsBackground));
+				}
+
+				incidents.push(new Incident(
+					einsatz.EinsatzID,
+					einsatz.Status,
+					einsatz.Alarmstufe,
+					einsatz.Meldebild,
+					einsatz.Nummer1,
+					einsatz.Nummer2,
+					einsatz.Nummer3,
+					einsatz.Plz,
+					einsatz.Strasse,
+					einsatz.Ort,
+					einsatz.sector,
+					einsatz.Objekt,
+					einsatz.ObjektId,
+					einsatz.Bemerkung,
+					this.wastlDateTimeToMoment(einsatz.EinsatzErzeugt),
+					einsatz.Melder,
+					einsatz.MelderTelefon,
+					einsatz.EinsatzNummer,
+					dispositions,
+					vote));
+			}
+
+			let result = new InfoScreenData(dataState, data.Token, incidents);
+			console.debug("Computed infoscreen data", result);
+			return result;
+		}, options);
+	}
+
+	public findHomeAddress(): Observable<string> {
+		return super.httpGet(WastlDataService.INFO_SCREEN_CONFIG_URL, (response: Response) => {
+			let address = response.json().Config.HomeAddress;
+			console.debug("Computed home address", address);
+			return address;
 		});
 	}
 
 	private mergeMappingMembers(to: District, from: District): District {
+		if (from == null) {
+			return to;
+		}
+
 		let state: WarnState;
 
 		if (from.warnState.index > to.warnState.index) {
@@ -108,6 +197,14 @@ export class WastlDataService extends AbstractHttpService {
 		}
 
 		return new District(to.identifier, to.name, state, from.incidents + to.incidents, from.departments + to.departments);
+	}
+
+	private wastlDateTimeToMoment(wastlDateTime: string): moment.Moment {
+		if (wastlDateTime == null) {
+			return null;
+		}
+
+		return moment(wastlDateTime.substring(0, 19).replace("T", " "), "YYYY-MM-DD HH:mm:ss");
 	}
 }
 

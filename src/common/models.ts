@@ -1,3 +1,5 @@
+import * as moment from "moment";
+
 export class District {
 	public readonly identifier: string;
 	public readonly name: string;
@@ -47,5 +49,128 @@ export class WarnState {
 			}
 		}
 		throw new Error("Cannot find WarnState for index " + index);
+	}
+}
+
+export interface Settings {
+	myDistrict: string;
+	jumpToDistrict: boolean;
+	showIncidentDistance: boolean;
+	showIncidentHydrants: boolean;
+	showExtendedIncidentData: boolean;
+}
+
+export class InfoScreenData {
+	public readonly state: DataState;
+	public readonly token: string;
+	public readonly incidents: Incident[];
+
+	constructor(state: DataState, token: string, incidents: Incident[]) {
+		this.state = state;
+		this.token = token;
+		this.incidents = incidents;
+	}
+}
+
+export class DataState {
+	public static readonly TOKEN = new DataState("token");
+	public static readonly WAITING = new DataState("waiting");
+	public static readonly DATA = new DataState("data");
+
+	private constructor(public value: string) {}
+}
+
+export class Incident {
+	public readonly id: string;
+	public readonly state: number;
+	public readonly type: string;
+	public readonly phrase: string;
+	public readonly number1: string;
+	public readonly number2: string;
+	public readonly number3: string;
+	public readonly zip: string;
+	public readonly street: string;
+	public readonly city: string;
+	public readonly sector: string;
+	public readonly object: string;
+	public readonly objectId: string;
+	public readonly comment: string;
+	public readonly created: moment.Moment;
+	public readonly detector: string;
+	public readonly detectorTel: string;
+	public readonly incidentNumber: number;
+	public readonly dispositions: Disposition[];
+	public readonly vote: Vote;
+
+	constructor(
+		id: string,
+		state: number,
+		type: string,
+		phrase: string,
+		number1: string,
+		number2: string,
+		number3: string,
+		zip: string,
+		street: string,
+		city: string,
+		sector: string,
+		object: string,
+		objectId: string,
+		comment: string,
+		created: moment.Moment,
+		detector: string,
+		detectorTel: string,
+		incidentNumber: number,
+		dispositions: Disposition[],
+		vote: Vote
+	) {
+	this.id = id;
+	this.state = state;
+	this.type = type;
+	this.phrase = phrase;
+	this.number1 = number1;
+	this.number2 = number2;
+	this.number3 = number3;
+	this.zip = zip;
+	this.street = street;
+	this.city = city;
+	this.sector = sector;
+	this.object = object;
+	this.objectId = objectId;
+	this.comment = comment;
+	this.created = created;
+	this.detector = detector;
+	this.detectorTel = detectorTel;
+	this.incidentNumber = incidentNumber;
+	this.dispositions = dispositions;
+	this.vote = vote;
+	}
+}
+
+export class Disposition {
+	public readonly name: string;
+	public readonly eldisId: number;
+	public readonly selfAlarmed: boolean;
+	public readonly dispoTime: moment.Moment;
+	public readonly ausTime: moment.Moment;
+	public readonly background: boolean;
+
+	constructor(name: string, eldisId: number, selfAlarmed: boolean, dispoTime: moment.Moment, ausTime: moment.Moment, background: boolean) {
+		this.name = name;
+		this.eldisId = eldisId;
+		this.selfAlarmed = selfAlarmed;
+		this.dispoTime = dispoTime;
+		this.ausTime = ausTime;
+		this.background = background;
+	}
+}
+
+export class Vote {
+	public readonly yes: number;
+	public readonly no: number;
+
+	constructor(yes: number, no: number) {
+		this.yes = yes;
+		this.no = no;
 	}
 }

@@ -9,4 +9,5 @@ before_install:
   - npm install -g cordova ionic
 
 script:
-  - ionic build
+  - npm run build
+  - npm run lint

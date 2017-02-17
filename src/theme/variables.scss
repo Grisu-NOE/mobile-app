@@ -19,7 +19,7 @@ $colors: (
 $text-color: color($colors, text);
 $background-color: color($colors, main-bg);
 $toolbar-background: color($colors, warn-high);
-$tabs-tab-color-active: color($colors, danger);
+$tabs-tab-color-active: color($colors, warn-high);
 $list-background-color: color($colors, main-bg);
 $list-md-border-color: color($colors, dark);
 $list-ios-border-color: color($colors, dark);

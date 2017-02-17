@@ -1,45 +1,66 @@
-import {Component} from "@angular/core";
-import {Refresher, Platform} from "ionic-angular";
+import {Component, ElementRef, OnInit} from "@angular/core";
+import {Refresher, Platform, ModalController} from "ionic-angular";
 import {WastlDataService} from "../../services/wastl-data.service";
 import {MainData, WarnState} from "../../common/models";
 import {ToastMessageProvider} from "../../common/toast-message-provider";
+import {AboutModal} from "./about.modal";
+import {SettingsModal} from "./settings.modal";
 
 @Component({
 	selector: "page-overview",
 	templateUrl: "overview.html"
 })
-export class OverviewPage {
+export class OverviewPage implements OnInit {
 
 	private data: MainData;
+	private elementReference: ElementRef;
+	private mapElement: SVGElement;
 
-	constructor(private dataService: WastlDataService, private messageProvider: ToastMessageProvider, platform: Platform) {
+	constructor(private dataService: WastlDataService,
+				private messageProvider: ToastMessageProvider,
+				private modalController: ModalController,
+				platform: Platform,
+				elementReference: ElementRef) {
+
 		platform.resume.subscribe(this.doRefresh);
+		this.elementReference = elementReference;
 	}
 
 	private doRefresh(refresher?: Refresher): void {
 		this.dataService.findMainData().subscribe(data => {
 			this.data = data;
 			this.updateMap();
-		}, this.messageProvider.showHttpError, () => {
+		}, e => this.messageProvider.showHttpError(e), () => {
 			if (refresher != null) {
 				refresher.complete()
 			}
 		});
 	}
 
-	private ionViewWillEnter(): void {
+	public ngOnInit(): void {
+		this.mapElement = this.elementReference.nativeElement.querySelector(".lower-austria-map");
+	}
+
+	public ionViewWillEnter(): void {
 		this.doRefresh();
 	}
 
-	private mapTap(districtElement: SVGPathElement): void {
-		districtElement.classList.toString()
+	public mapTap(districtElement: SVGPathElement): void {
+		districtElement.classList.toString();
 		// TODO
 		console.log(districtElement.classList.toString());
 	}
 
+	public showAbout(): void {
+		this.modalController.create(AboutModal).present();
+	}
+
+	public showSettings(): void {
+		this.modalController.create(SettingsModal, { districts: this.data.districts }).present();
+	}
+
 	private updateMap(): void {
-		let svg: SVGElement = <SVGElement> document.getElementsByClassName("lower-austria-map")[0];
-		let allPaths: NodeListOf<SVGPathElement> = svg.getElementsByTagName("path");
+		let allPaths: NodeListOf<SVGPathElement> = this.mapElement.getElementsByTagName("path");
 
 		// cleanup of css classes
 		for (let i = 0; i < allPaths.length; i++) {
@@ -52,7 +73,7 @@ export class OverviewPage {
 
 		// add new classes to colorize map
 		for (let district of this.data.districts) {
-			let districtPaths: NodeListOf<Element> = svg.getElementsByClassName(district.identifier);
+			let districtPaths: NodeListOf<Element> = this.mapElement.getElementsByClassName(district.identifier);
 
 			for (let i = 0; i < districtPaths.length; i++) {
 				let path: Element = districtPaths.item(i);
