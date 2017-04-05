@@ -1,10 +1,10 @@
-import {Component, ElementRef, OnInit} from "@angular/core";
-import {Refresher, Platform, ModalController} from "ionic-angular";
-import {WastlDataService} from "../../services/wastl-data.service";
-import {MainData, WarnState} from "../../common/models";
-import {ToastMessageProvider} from "../../common/toast-message-provider";
-import {AboutModal} from "./about.modal";
-import {SettingsModal} from "./settings.modal";
+import { Component, ElementRef, OnInit } from "@angular/core";
+import { Refresher, Platform, ModalController } from "ionic-angular";
+import { WastlDataService } from "../../services/wastl-data.service";
+import { MainData, WarnState } from "../../common/models";
+import { ToastMessageProvider } from "../../common/toast-message-provider";
+import { AboutModal } from "./about.modal";
+import { SettingsModal } from "./settings.modal";
 import "rxjs/add/operator/finally";
 
 @Component({
@@ -18,10 +18,10 @@ export class OverviewPage implements OnInit {
 	private mapElement: SVGElement;
 
 	constructor(private dataService: WastlDataService,
-				private messageProvider: ToastMessageProvider,
-				private modalController: ModalController,
-				platform: Platform,
-				elementReference: ElementRef) {
+		private messageProvider: ToastMessageProvider,
+		private modalController: ModalController,
+		platform: Platform,
+		elementReference: ElementRef) {
 
 		platform.resume.subscribe(this.doRefresh());
 		this.elementReference = elementReference;
