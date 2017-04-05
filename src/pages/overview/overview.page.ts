@@ -5,6 +5,7 @@ import {MainData, WarnState} from "../../common/models";
 import {ToastMessageProvider} from "../../common/toast-message-provider";
 import {AboutModal} from "./about.modal";
 import {SettingsModal} from "./settings.modal";
+import "rxjs/add/operator/finally";
 
 @Component({
 	selector: "page-overview",
@@ -22,19 +23,21 @@ export class OverviewPage implements OnInit {
 				platform: Platform,
 				elementReference: ElementRef) {
 
-		platform.resume.subscribe(this.doRefresh);
+		platform.resume.subscribe(this.doRefresh());
 		this.elementReference = elementReference;
 	}
 
 	private doRefresh(refresher?: Refresher): void {
-		this.dataService.findMainData().subscribe(data => {
-			this.data = data;
-			this.updateMap();
-		}, e => this.messageProvider.showHttpError(e), () => {
-			if (refresher != null) {
-				refresher.complete()
-			}
-		});
+		this.dataService.findMainData()
+			.finally(() => {
+				if (refresher != null) {
+					refresher.complete();
+				}
+			})
+			.subscribe(data => {
+				this.data = data;
+				this.updateMap();
+			}, error => this.messageProvider.showHttpError(error));
 	}
 
 	public ngOnInit(): void {
@@ -56,6 +59,10 @@ export class OverviewPage implements OnInit {
 	}
 
 	public showSettings(): void {
+		if (this.data == null) {
+			this.messageProvider.showError("Daten konnten nicht geladen werden. Bitte aktualisieren.");
+			return;
+		}
 		this.modalController.create(SettingsModal, { districts: this.data.districts }).present();
 	}
 

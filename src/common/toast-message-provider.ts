@@ -10,8 +10,12 @@ export class ToastMessageProvider {
 	}
 
 	public showHttpError(errorMessage: string): void {
+		this.showError("Daten konnten nicht geladen werden. Fehlerdetails: " + errorMessage);
+	}
+
+	public showError(errorMessage: string): void {
 		this.toastController.create({
-			message: "Daten konnten nicht geladen werden. Fehlerdetails: " + errorMessage,
+			message: errorMessage,
 			duration: ToastMessageProvider.DEFAULT_DURATION,
 			position: "middle"
 		}).present();

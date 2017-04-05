@@ -12,7 +12,7 @@ export abstract class AbstractHttpService {
 
 	constructor(protected http: Http) {}
 
-	private handleError(errorResponse: Response): ErrorObservable {
+	private handleError(errorResponse: Response): ErrorObservable<string> {
 		console.error("HTTP error", errorResponse);
 
 		if (errorResponse.status == 0) {

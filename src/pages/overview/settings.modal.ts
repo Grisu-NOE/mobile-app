@@ -1,10 +1,10 @@
 import {Component, KeyValueDiffers, KeyValueDiffer, DoCheck, KeyValueChangeRecord} from "@angular/core";
 import {ViewController, NavParams} from "ionic-angular";
 import {District, Settings, DataState} from "../../common/models";
-import {InAppBrowser} from "ionic-native";
 import {WastlDataService} from "../../services/wastl-data.service";
 import {ToastMessageProvider} from "../../common/toast-message-provider";
 import {StorageService} from "../../services/storage.service";
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 
 @Component({
 	selector: "settings-modal",
@@ -13,7 +13,7 @@ import {StorageService} from "../../services/storage.service";
 export class SettingsModal implements DoCheck {
 
 	private districts: District[];
-	private differ: KeyValueDiffer;
+	private differ: KeyValueDiffer<string, any>;
 
 	private token: string = "";
 	private waitForToken: boolean = false;
@@ -33,9 +33,10 @@ export class SettingsModal implements DoCheck {
 				private storageService: StorageService,
 				private differs: KeyValueDiffers,
 				private dataService: WastlDataService,
-				private messageProvider: ToastMessageProvider) {
+				private messageProvider: ToastMessageProvider,
+				private browser: InAppBrowser) {
 
-		this.differ = differs.find({}).create(null);
+		this.differ = differs.find({}).create();
 		this.districts = navParams.get("districts");
 
 		storageService.findSettings().then(settings => {
@@ -62,7 +63,7 @@ export class SettingsModal implements DoCheck {
 
 		this.storageService.saveSettings(this.settings);
 
-		changes.forEachChangedItem((record: KeyValueChangeRecord) => {
+		changes.forEachChangedItem((record: KeyValueChangeRecord<string, any>) => {
 			if (record.key == "showExtendedIncidentData" && record.currentValue == true) {
 				this.updateToken();
 			}
@@ -73,12 +74,12 @@ export class SettingsModal implements DoCheck {
 		changes.forEachRemovedItem(r => this.debugSettingsChange("removed", r));
 	}
 
-	private debugSettingsChange(type: string, record: KeyValueChangeRecord): void {
+	private debugSettingsChange(type: string, record: KeyValueChangeRecord<string, any>): void {
 		console.debug("Settings changed: " + record.toString() + " " + type);
 	}
 
 	public openUrl(url: string) {
-		new InAppBrowser(url, "_system");
+		this.browser.create(url, "_system");
 	}
 
 	public copyTokenToClipboard(): void {

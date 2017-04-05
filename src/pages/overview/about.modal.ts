@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {ViewController} from "ionic-angular";
-import {InAppBrowser} from "ionic-native";
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 
 @Component({
 	selector: "about-modal",
@@ -10,7 +10,7 @@ export class AboutModal {
 
 	private date: Date;
 
-	constructor(private viewController: ViewController) {
+	constructor(private viewController: ViewController, private browser: InAppBrowser) {
 		this.date = new Date();
 	}
 
@@ -23,6 +23,6 @@ export class AboutModal {
 	}
 
 	public openUrl(url: string) {
-		new InAppBrowser(url, "_system");
+		this.browser.create(url, "_system");
 	}
 }
