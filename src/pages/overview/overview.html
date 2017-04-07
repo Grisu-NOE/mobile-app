@@ -14,7 +14,7 @@
 			<button ion-button icon-only>
 				<ion-icon name="mail"></ion-icon> <!-- TODO: mail-open -->
 			</button>
-			<button ion-button icon-only (tap)="showSettings()">
+			<button ion-button icon-only (tap)="showSettings()" [disabled]="!data">
 				<ion-icon name="settings"></ion-icon>
 			</button>
 		</ion-buttons>

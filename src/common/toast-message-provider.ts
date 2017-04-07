@@ -9,15 +9,15 @@ export class ToastMessageProvider {
 	constructor(private toastController: ToastController) {
 	}
 
-	public showHttpError(errorMessage: string): void {
-		this.showError("Daten konnten nicht geladen werden. Fehlerdetails: " + errorMessage);
+	public showHttpError(details: string): void {
+		this.showNotification("Daten konnten nicht geladen werden. Fehlerdetails: " + details);
 	}
 
-	public showError(errorMessage: string): void {
+	public showNotification(message: string, position?: string): void {
 		this.toastController.create({
-			message: errorMessage,
+			message: message,
 			duration: ToastMessageProvider.DEFAULT_DURATION,
-			position: "middle"
+			position: position != null ? position : "middle"
 		}).present();
 	}
 }

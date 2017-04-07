@@ -1,10 +1,11 @@
 import {Component, KeyValueDiffers, KeyValueDiffer, DoCheck, KeyValueChangeRecord} from "@angular/core";
-import {ViewController, NavParams} from "ionic-angular";
+import { ViewController, NavParams, Platform } from "ionic-angular";
 import {District, Settings, DataState} from "../../common/models";
 import {WastlDataService} from "../../services/wastl-data.service";
 import {ToastMessageProvider} from "../../common/toast-message-provider";
 import {StorageService} from "../../services/storage.service";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
+import { Clipboard } from '@ionic-native/clipboard';
 
 @Component({
 	selector: "settings-modal",
@@ -34,7 +35,9 @@ export class SettingsModal implements DoCheck {
 				private differs: KeyValueDiffers,
 				private dataService: WastlDataService,
 				private messageProvider: ToastMessageProvider,
-				private browser: InAppBrowser) {
+				private browser: InAppBrowser,
+				private clipboard: Clipboard,
+				private platform: Platform) {
 
 		this.differ = differs.find({}).create();
 		this.districts = navParams.get("districts");
@@ -83,17 +86,19 @@ export class SettingsModal implements DoCheck {
 	}
 
 	public copyTokenToClipboard(): void {
-		// TODO
+		if (this.platform.is('cordova')) {
+			this.clipboard.copy(this.token).then(() => this.messageProvider.showNotification("Code wurde in die Zwischenablage kopiert"));
+		}
 	}
 
 	private updateToken(): void {
 		this.loadingTokenInfo = true;
 
 		this.dataService.findInfoScreenData().subscribe(data => {
-			this.waitForToken = data.state == DataState.TOKEN || data.state == DataState.WAITING;
+			this.waitForToken = data.state == DataState.TOKEN || data.state == DataState.WAITING || data.state == DataState.ERROR;
 
 			if (this.waitForToken) {
-				this.token = data.token;
+				this.token = data.state == DataState.ERROR ? "Fehler beim Laden des Tokens" : data.token;
 			}
 
 			this.loadingTokenInfo = false;

@@ -13,7 +13,7 @@ export abstract class AbstractHttpService {
 	constructor(protected http: Http) {}
 
 	private handleError(errorResponse: Response): ErrorObservable<string> {
-		console.error("HTTP error", errorResponse);
+		console.error("HTTP error: " + errorResponse.toString(), errorResponse);
 
 		if (errorResponse.status == 0) {
 			return Observable.throw("Server kann nicht erreicht werden. Statuscode 0.");

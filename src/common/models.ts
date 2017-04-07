@@ -36,7 +36,7 @@ export class WarnState {
 	public static readonly MEDIUM = new WarnState("medium", 2);
 	public static readonly HIGH = new WarnState("high", 3);
 
-	private constructor(public value: string, public index: number) {}
+	private constructor(public value: string, public index: number) { }
 
 	public static all(): WarnState[] {
 		return [WarnState.NONE, WarnState.LOW, WarnState.MEDIUM, WarnState.HIGH];
@@ -73,11 +73,25 @@ export class InfoScreenData {
 }
 
 export class DataState {
+	public static readonly DATA = new DataState("data");
 	public static readonly TOKEN = new DataState("token");
 	public static readonly WAITING = new DataState("waiting");
-	public static readonly DATA = new DataState("data");
+	public static readonly ERROR = new DataState("error");
 
-	private constructor(public value: string) {}
+	private constructor(public value: string) { }
+
+	private static all(): DataState[] {
+		return [DataState.DATA, DataState.TOKEN, DataState.WAITING, DataState.ERROR];
+	}
+
+	public static fromString(examinee: string): DataState {
+		for (let dataState of this.all()) {
+			if (dataState.value == examinee) {
+				return dataState;
+			}
+		}
+		throw new Error("Cannot find DataState for examinee string " + examinee);
+	}
 }
 
 export class Incident {
@@ -124,26 +138,26 @@ export class Incident {
 		dispositions: Disposition[],
 		vote: Vote
 	) {
-	this.id = id;
-	this.state = state;
-	this.type = type;
-	this.phrase = phrase;
-	this.number1 = number1;
-	this.number2 = number2;
-	this.number3 = number3;
-	this.zip = zip;
-	this.street = street;
-	this.city = city;
-	this.sector = sector;
-	this.object = object;
-	this.objectId = objectId;
-	this.comment = comment;
-	this.created = created;
-	this.detector = detector;
-	this.detectorTel = detectorTel;
-	this.incidentNumber = incidentNumber;
-	this.dispositions = dispositions;
-	this.vote = vote;
+		this.id = id;
+		this.state = state;
+		this.type = type;
+		this.phrase = phrase;
+		this.number1 = number1;
+		this.number2 = number2;
+		this.number3 = number3;
+		this.zip = zip;
+		this.street = street;
+		this.city = city;
+		this.sector = sector;
+		this.object = object;
+		this.objectId = objectId;
+		this.comment = comment;
+		this.created = created;
+		this.detector = detector;
+		this.detectorTel = detectorTel;
+		this.incidentNumber = incidentNumber;
+		this.dispositions = dispositions;
+		this.vote = vote;
 	}
 }
 

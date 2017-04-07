@@ -18,6 +18,7 @@ import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { HttpModule } from "@angular/http";
 import { InAppBrowser } from "@ionic-native/in-app-browser";
+import { Clipboard } from "@ionic-native/clipboard";
 
 @NgModule({
 	declarations: [
@@ -52,6 +53,7 @@ import { InAppBrowser } from "@ionic-native/in-app-browser";
 		StatusBar,
 		SplashScreen,
 		InAppBrowser,
+		Clipboard,
 		{ provide: ErrorHandler, useClass: IonicErrorHandler },
 		WastlDataService,
 		ToastMessageProvider,

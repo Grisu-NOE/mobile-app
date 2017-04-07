@@ -27,7 +27,11 @@ You want to contribute? Great! Thanks for being awesome! Please see the project 
 - `npm install -g cordova ionic`
 - Switch to project root folder
 - Install required node dependencies: `npm install`
+- Restore the app's platforms and plugins: `ionic state restore`
 - Run the app in the web browser: `ionic serve`
+- Run/emulate the app on iOS/Android: `ionic run/emulate ios/android`
+  - For iOS Mac OSX is required
+  - For Android the Android SDK is required
 
 ## Useful commands and hints
 - Show app log in console when debugging app on Android device with USB

@@ -59,10 +59,6 @@ export class OverviewPage implements OnInit {
 	}
 
 	public showSettings(): void {
-		if (this.data == null) {
-			this.messageProvider.showError("Daten konnten nicht geladen werden. Bitte aktualisieren.");
-			return;
-		}
 		this.modalController.create(SettingsModal, { districts: this.data.districts }).present();
 	}
 

@@ -121,15 +121,12 @@ export class WastlDataService extends AbstractHttpService {
 
 		return super.httpGet(url, (response: Response) => {
 			const data = response.json();
-			let dataState: DataState;
+			let dataState: DataState = DataState.fromString(data.CurrentState);
 			let incidents: Incident[] = [];
 
-			if (data.currentState == "token") {
-				dataState = DataState.TOKEN;
-			} else if (data.currentState == "waiting") {
-				dataState = DataState.WAITING;
-			} else {
-				dataState = DataState.DATA;
+			if (DataState.DATA != dataState) {
+				console.debug("Cannot compute infoscreen data, state is " + dataState.value);
+				return new InfoScreenData(dataState, data.Token || null, incidents);
 			}
 
 			for (let einsatz of data.EinsatzData) {
@@ -177,8 +174,15 @@ export class WastlDataService extends AbstractHttpService {
 
 	public findHomeAddress(): Observable<string> {
 		return super.httpGet(WastlDataService.INFO_SCREEN_CONFIG_URL, (response: Response) => {
+			const data = response.json();
+
+			if (DataState.fromString(data.CurrentState) != DataState.DATA) {
+				console.debug("Cannot fetch home address, data state is " + data.CurrentState);
+				return "";
+			}
+
 			let address = response.json().Config.HomeAddress;
-			console.debug("Computed home address", address);
+			console.debug("Found home address", address);
 			return address;
 		});
 	}
