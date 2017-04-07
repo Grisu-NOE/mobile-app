@@ -1,5 +1,6 @@
-Grisu NÖ - Mobile App [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url] [![Join the chat][chat-image]][chat-url]
+Grisu NÖ - Mobile App
 ============
+[![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url] [![NPM dependency Status][david-image]][david-url] [![NPM dev dependency Status][david-dev-image]][david-dev-url] [![Join the chat][chat-image]][chat-url]
 
 [![Apple App Store][app-store-image]][app-store-url] [![Google Play Store][play-store-image]][play-store-url]
 
@@ -52,6 +53,12 @@ Grisu NÖ is licenced under the [MIT License (MIT)](LICENSE).
 
 [travis-url]: https://travis-ci.org/Grisu-NOE/mobile-app
 [travis-image]: https://travis-ci.org/Grisu-NOE/mobile-app.svg?branch=master
+
+[david-url]: https://david-dm.org/Grisu-NOE/mobile-app
+[david-image]: https://david-dm.org/Grisu-NOE/mobile-app.svg
+
+[david-dev-url]: https://david-dm.org/Grisu-NOE/mobile-app?type=dev
+[david-dev-image]: https://david-dm.org/Grisu-NOE/mobile-app/dev-status.svg
 
 [chat-image]: https://badges.gitter.im/Join%20Chat.svg
 [chat-url]: https://gitter.im/Grisu-NOE/mobile-app?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
