@@ -1,6 +1,7 @@
-import {Component} from "@angular/core";
-import {ViewController} from "ionic-angular";
-import {InAppBrowser} from "@ionic-native/in-app-browser";
+import { Component } from "@angular/core";
+import { ViewController, PopoverController } from "ionic-angular";
+import { InAppBrowser } from "@ionic-native/in-app-browser";
+import { EasterEggPopover } from "./easteregg.popover";
 
 @Component({
 	selector: "about-modal",
@@ -9,8 +10,9 @@ import {InAppBrowser} from "@ionic-native/in-app-browser";
 export class AboutModal {
 
 	private date: Date;
+	private easterEggTaps: number = 0;
 
-	constructor(private viewController: ViewController, private browser: InAppBrowser) {
+	constructor(private viewController: ViewController, private browser: InAppBrowser, private popoverController: PopoverController) {
 		this.date = new Date();
 	}
 
@@ -19,7 +21,11 @@ export class AboutModal {
 	}
 
 	public easterEggTap(): void {
-		// TODO: handle easter egg
+		this.easterEggTaps++;
+		if (this.easterEggTaps > 10) {
+            this.easterEggTaps = 0;
+            this.popoverController.create(EasterEggPopover).present();
+        }
 	}
 
 	public openUrl(url: string) {

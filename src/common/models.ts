@@ -188,3 +188,8 @@ export class Vote {
 		this.no = no;
 	}
 }
+
+export interface MagicCookie {
+	value: string,
+	active: boolean
+}

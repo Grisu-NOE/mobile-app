@@ -19,6 +19,7 @@ import { SplashScreen } from "@ionic-native/splash-screen";
 import { HttpModule } from "@angular/http";
 import { InAppBrowser } from "@ionic-native/in-app-browser";
 import { Clipboard } from "@ionic-native/clipboard";
+import { EasterEggPopover } from "../pages/overview/easteregg.popover";
 
 @NgModule({
 	declarations: [
@@ -30,7 +31,8 @@ import { Clipboard } from "@ionic-native/clipboard";
 		TabsPage,
 		GrisuRefresherContentComponent,
 		AboutModal,
-		SettingsModal
+		SettingsModal,
+		EasterEggPopover
 	],
 	imports: [
 		BrowserModule,
@@ -47,7 +49,8 @@ import { Clipboard } from "@ionic-native/clipboard";
 		WaterPage,
 		TabsPage,
 		AboutModal,
-		SettingsModal
+		SettingsModal,
+		EasterEggPopover
 	],
 	providers: [
 		StatusBar,
