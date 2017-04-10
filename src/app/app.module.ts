@@ -20,6 +20,8 @@ import { HttpModule } from "@angular/http";
 import { InAppBrowser } from "@ionic-native/in-app-browser";
 import { Clipboard } from "@ionic-native/clipboard";
 import { EasterEggPopover } from "../pages/overview/easteregg.popover";
+import { GeoService } from "../services/geo.service";
+import { Geolocation } from "@ionic-native/geolocation";
 
 @NgModule({
 	declarations: [
@@ -60,7 +62,9 @@ import { EasterEggPopover } from "../pages/overview/easteregg.popover";
 		{ provide: ErrorHandler, useClass: IonicErrorHandler },
 		WastlDataService,
 		ToastMessageProvider,
-		StorageService
+		StorageService,
+		GeoService,
+		Geolocation
 	]
 })
 export class AppModule {

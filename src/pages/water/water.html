@@ -1,11 +1,18 @@
 <ion-header>
 	<ion-navbar>
-		<ion-title>
-			Wasserentnahmestellen
-		</ion-title>
+		<ion-title>Wasserentnahmestellen</ion-title>
+		<ion-buttons end>
+			<button ion-button icon-only (tap)="showHelp()">
+				<ion-icon name="help"></ion-icon>
+			</button>
+		</ion-buttons>
 	</ion-navbar>
 </ion-header>
 
-<ion-content>
-	<h1>Water</h1>
+<ion-content class="map-content">
+	<div class="map"></div>
+	<button (tap)="takeScreenshot()" ion-button>
+		<ion-icon name="camera"></ion-icon>
+		Screenshot
+	</button>
 </ion-content>

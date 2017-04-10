@@ -193,3 +193,8 @@ export interface MagicCookie {
 	value: string,
 	active: boolean
 }
+
+export interface MapCircle {
+	radius: number,
+	color: string
+}
