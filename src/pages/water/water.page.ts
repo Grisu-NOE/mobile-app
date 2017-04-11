@@ -1,9 +1,9 @@
 import { Component, OnInit, ElementRef } from "@angular/core";
 import { GeoService } from "../../services/geo.service";
-import { LatLng, Control, Map, Layer, Marker, Circle } from "leaflet";
+import { LatLng, Map } from "leaflet";
 import { Geolocation } from "@ionic-native/geolocation";
 import { ToastMessageProvider } from "../../common/toast-message-provider";
-import { MapCircle } from "../../common/models";
+import { MapService } from "../../services/map.service";
 
 @Component({
 	selector: "page-water",
@@ -11,37 +11,53 @@ import { MapCircle } from "../../common/models";
 })
 export class WaterPage implements OnInit {
 
-	private layers: Layer[] = [];
-	private circleModels: MapCircle[] = [];
-	private circles: Circle[] = [];
+	private layers: any[] = [];
 	private map: Map;
+	private lastPosition: LatLng = MapService.DEFAULT_LAT_LNG;
 
 	constructor(
 		private geoService: GeoService,
 		private elementReference: ElementRef,
 		private geolocation: Geolocation,
-		private messageProvider: ToastMessageProvider) { }
+		private messageProvider: ToastMessageProvider,
+		private mapService: MapService) { }
 
 	public ngOnInit(): void {
-		this.map = new Map(this.elementReference.nativeElement.querySelector(".map"), {
-			center: new LatLng(48.16387421351802, 16.12121343612671),
-			zoom: 15,
-			layers: [GeoService.BASEMAP_LAYER]
-		});
+		this.map = this.mapService.createStandardMap(this.elementReference.nativeElement.querySelector(".map"));
+		this.map.on("click", (event: L.MouseEvent) => this.handlePositionChange(event.latlng));
+		this.locate();
+	}
 
-		new Control.Layers(this.geoService.getTileLayersAsObject()).addTo(this.map);
-		new Control.Scale().addTo(this.map);
+	/**
+	 * Re-center map after view changes
+	 */
+	public ionViewDidEnter(): void {
+		if (MapService.DEFAULT_LAT_LNG.equals(this.lastPosition)) {
+			return;
+		}
+		this.handlePositionChange(this.lastPosition);
+	}
 
+	private locate(): void {
 		this.geolocation.getCurrentPosition().then(position => {
-			this.map.panTo(new LatLng(position.coords.latitude, position.coords.longitude));
-			this.updateLayersAndHydrants();
+			this.handlePositionChange(new LatLng(position.coords.latitude, position.coords.longitude));
 		}).catch(error => {
-			// Wolfsgraben
-			this.map.panTo(new LatLng(48.16387421351802, 16.12121343612671));
-
-			this.updateLayersAndHydrants();
 			this.messageProvider.showNotification("Konnte aktuelle Position nicht automatisch bestimmen. Bitte gewünschte Position manuell wählen.");
+			this.handlePositionChange(MapService.DEFAULT_LAT_LNG);
 		});
+	}
+
+	private addMarker(): void {
+		let marker = this.mapService.createStandardMarker(this.map.getCenter());
+		this.map.addLayer(marker);
+		this.layers.push(marker);
+	}
+
+	private addCircles(): void {
+		for (let circle of this.mapService.createCirclesForPosition(this.map.getCenter())) {
+			circle.addTo(this.map);
+			this.layers.push(circle);
+		}
 	}
 
 	private removeLayers(): void {
@@ -49,56 +65,32 @@ export class WaterPage implements OnInit {
 			this.map.removeLayer(layer);
 		}
 		this.layers = [];
-	};
-
-	private addMarker(): void {
-		// FIXME use normal red icon
-		let marker = new Marker(this.map.getCenter(), {
-			// icon: (L as any).AwesomeMarkers.icon({
-			// 	icon: 'ion-radio',
-			// 	markerColor: 'red',
-			// 	iconColor: 'white'
-			// })
-		});
-
-		this.map.addLayer(marker);
-		this.layers.push(marker);
-	};
-
-	private addLayers(): void {
-		this.removeLayers();
-		this.addMarker();
-
-		for (let circleModel of this.circleModels) {
-			let circle = this.geoService.createCircle(circleModel, this.map.getCenter());
-			circle.addTo(this.map);
-			this.circles.push(circle);
-		}
-	};
+	}
 
 	private updateLayersAndHydrants(): void {
-		this.addLayers();
+		this.removeLayers();
+		this.addMarker();
+		this.addCircles();
 
-		// this.geoService.findHydrantsForPosition(this.map.getCenter()).then(data => {
-		// 	// cleanup
-		// 	for (let i = 0; i < this.hydrants.length; i++) {
-		// 		this.map.removeLayer(this.hydrants[i]);
-		// 	}
-		// 	this.hydrants = [];
-
-		// 	// add hydrants
-		// 	geoService.addHydrantsToMap(data, map, hydrants);
-		// }, function () {
-		// 	if ($window.cordova) {
-		// 		$cordovaToast.showShortBottom('In der Umgebung gelegene Wasserentnahmestellen konnten nicht geladen werden.');
-		// 	}
-		// }).finally(function () {
-		// 	util.hideLoading();
-		// });
+		// TODO: add hyndrants
 	};
+
+	private handlePositionChange(newPosition: LatLng): void {
+		if (this.map.getCenter().equals(newPosition)) {
+			return;
+		}
+		this.map.once("moveend", () => this.updateLayersAndHydrants());
+		this.map.panTo(newPosition);
+		this.lastPosition = newPosition;
+	}
 
 	public showHelp(): void {
 		console.log("show help");
+		// TODO
+	}
+
+	public takeScreenshot(): void {
+		console.log("screenshot");
 		// TODO
 	}
 }

@@ -22,6 +22,7 @@ import { Clipboard } from "@ionic-native/clipboard";
 import { EasterEggPopover } from "../pages/overview/easteregg.popover";
 import { GeoService } from "../services/geo.service";
 import { Geolocation } from "@ionic-native/geolocation";
+import { MapService } from "../services/map.service";
 
 @NgModule({
 	declarations: [
@@ -64,6 +65,7 @@ import { Geolocation } from "@ionic-native/geolocation";
 		ToastMessageProvider,
 		StorageService,
 		GeoService,
+		MapService,
 		Geolocation
 	]
 })
