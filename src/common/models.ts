@@ -198,3 +198,70 @@ export interface MapCircle {
 	radius: number,
 	color: string
 }
+
+export class GeoCodeResponse {
+	public readonly latitude: number;
+	public readonly longitude: number;
+
+	constructor(longitude: number, latitude: number) {
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+}
+
+export class WastlHydrantType {
+	public static readonly OF = new WastlHydrantType("OF", "Oberflurhydrant");
+	public static readonly BA = new WastlHydrantType("BA", "Bach");
+	public static readonly BRUNNEN = new WastlHydrantType("BRUNNEN", "Brunnen");
+	public static readonly LT = new WastlHydrantType("LT", "Löschteich");
+	public static readonly LWBH = new WastlHydrantType("LWBH", "Löschwasserbehäter");
+	public static readonly PU = new WastlHydrantType("PU", "Pumpe");
+	public static readonly SL = new WastlHydrantType("SL", "Steigleitung");
+	public static readonly SS = new WastlHydrantType("SS", "Saugstelle");
+	public static readonly UF = new WastlHydrantType("UF", "Unterflurhydrant");
+
+	private constructor(public value: string, public translation: string) { }
+
+	private static all(): WastlHydrantType[] {
+		return [
+			WastlHydrantType.OF,
+			WastlHydrantType.BA,
+			WastlHydrantType.BRUNNEN,
+			WastlHydrantType.LT,
+			WastlHydrantType.LWBH,
+			WastlHydrantType.PU,
+			WastlHydrantType.SL,
+			WastlHydrantType.SS,
+			WastlHydrantType.UF
+		];
+	}
+
+	public static fromString(examinee: string): WastlHydrantType {
+		for (let hydrantType of this.all()) {
+			if (hydrantType.value == examinee) {
+				return hydrantType;
+			}
+		}
+		throw new Error("Cannot find WastlHydrantType for examinee string " + examinee);
+	}
+}
+
+export class WastlHydrant {
+	public readonly latitude: number;
+	public readonly longitude: number;
+	public readonly type: WastlHydrantType;
+	public readonly description: string;
+	public readonly distance: number;
+	public readonly address: string;
+	public readonly id: string;
+
+	constructor(latitude: number, longitude: number, type: WastlHydrantType, description: string, distance: number, address: string, id: string) {
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.type = type;
+		this.description = description;
+		this.distance = distance;
+		this.address = address;
+		this.id = id;
+	}
+}

@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from "@angular/core";
 import { GeoService } from "../../services/geo.service";
-import { LatLng, Map } from "leaflet";
+import { LatLng, Map, Layer } from "leaflet";
 import { Geolocation } from "@ionic-native/geolocation";
 import { ToastMessageProvider } from "../../common/toast-message-provider";
 import { MapService } from "../../services/map.service";
@@ -11,7 +11,7 @@ import { MapService } from "../../services/map.service";
 })
 export class WaterPage implements OnInit {
 
-	private layers: any[] = [];
+	private layers: Layer[] = [];
 	private map: Map;
 	private lastPosition: LatLng = MapService.DEFAULT_LAT_LNG;
 
@@ -23,7 +23,7 @@ export class WaterPage implements OnInit {
 		private mapService: MapService) { }
 
 	public ngOnInit(): void {
-		this.map = this.mapService.createStandardMap(this.elementReference.nativeElement.querySelector(".map"));
+		this.map = this.mapService.createStandardMap(this.elementReference.nativeElement.querySelector(".map"), true);
 		this.map.on("click", (event: L.MouseEvent) => this.handlePositionChange(event.latlng));
 		this.locate();
 	}
@@ -60,6 +60,19 @@ export class WaterPage implements OnInit {
 		}
 	}
 
+	private addWastlHydrants(): void {
+		const latitude = this.map.getCenter().lat.toString();
+		const longitude = this.map.getCenter().lng.toString();
+
+		this.geoService.findWastlHydrantsForPosition(latitude, longitude).subscribe(data => {
+			for (let hydrant of data) {
+				let marker = this.mapService.createWastlHydrantMarker(hydrant);
+				this.map.addLayer(marker);
+				this.layers.push(marker);
+			}
+		}, error => this.messageProvider.showNotification("In der Umgebung gelegene WASTL-Wasserentnahmestellen konnten nicht geladen werden."));
+	}
+
 	private removeLayers(): void {
 		for (let layer of this.layers) {
 			this.map.removeLayer(layer);
@@ -69,10 +82,10 @@ export class WaterPage implements OnInit {
 
 	private updateLayersAndHydrants(): void {
 		this.removeLayers();
+
 		this.addMarker();
 		this.addCircles();
-
-		// TODO: add hyndrants
+		this.addWastlHydrants();
 	};
 
 	private handlePositionChange(newPosition: LatLng): void {
