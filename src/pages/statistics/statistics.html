@@ -4,8 +4,47 @@
 			Statistiken
 		</ion-title>
 	</ion-navbar>
+
+	<ion-toolbar color="dark">
+		<ion-segment [(ngModel)]="selectedTimeSpan" (ngModelChange)="doRefresh()" color="light">
+			<ion-segment-button value="now">Aktuell</ion-segment-button>
+			<ion-segment-button value="12h">12h</ion-segment-button>
+			<ion-segment-button value="24h">24h</ion-segment-button>
+		</ion-segment>
+	</ion-toolbar>
 </ion-header>
 
 <ion-content>
-	<h1>Charts</h1>
+	<ion-refresher (ionRefresh)="doRefresh($event)">
+		<grisu-refresher-content></grisu-refresher-content>
+	</ion-refresher>
+
+	<ion-grid>
+		<ion-row>
+			<ion-col text-center col-12 col-md align-self-center>
+				<canvas class="bar-chart"></canvas>
+			</ion-col>
+			<ion-col text-center col-12 col-md align-self-center>
+				<canvas class="pie-chart"></canvas>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+
+	<ion-grid>
+		<ion-row class="separator" *ngFor="let entry of historyEntries">
+			<ion-col col-11>
+				<span class="incident-type {{ entry.type.value }}">{{ entry.type.value }}</span>
+				<span *ngIf="!entry.hasPhrase" class="no-alarm-image">Kein Meldebild</span>
+				<span *ngIf="entry.hasPhrase">{{ entry.phrase }}</span>
+			</ion-col>
+			<ion-col text-right col-1>{{ entry.count }}</ion-col>
+		</ion-row>
+		<ion-row class="separator sum">
+			<ion-col col-12 text-right>
+				Insgesamt {{ historyCount }} Einsätze
+			</ion-col>
+        </ion-row>
+	</ion-grid>
+
+	<!-- TODO: refresh resume, cahce???, refresh behavior, swipe tabs, UI tests -->
 </ion-content>

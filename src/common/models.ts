@@ -17,16 +17,30 @@ export class District {
 }
 
 export class MainData {
-	public districts: District[];
-	public departmentCount: number;
-	public incidentCount: number;
-	public districtCount: number;
+	public readonly districts: District[];
+	public readonly departmentCount: number;
+	public readonly incidentCount: number;
+	public readonly districtCount: number;
+	public readonly currentHistory: HistoryEntry[];
+	public readonly history12h: HistoryEntry[];
+	public readonly history24h: HistoryEntry[];
 
-	constructor(districts: District[], departmentCount: number, incidentCount: number, districtCount: number) {
+	constructor(
+		districts: District[],
+		departmentCount: number,
+		incidentCount: number,
+		districtCount: number,
+		currentHistory: HistoryEntry[],
+		history12h: HistoryEntry[],
+		history24h: HistoryEntry[]) {
+
 		this.districts = districts;
 		this.departmentCount = departmentCount;
 		this.incidentCount = incidentCount;
 		this.districtCount = districtCount;
+		this.currentHistory = currentHistory;
+		this.history12h = history12h;
+		this.history24h = history24h;
 	}
 }
 
@@ -97,7 +111,7 @@ export class DataState {
 export class Incident {
 	public readonly id: string;
 	public readonly state: number;
-	public readonly type: string;
+	public readonly type: AlarmType;
 	public readonly phrase: string;
 	public readonly number1: string;
 	public readonly number2: string;
@@ -119,7 +133,7 @@ export class Incident {
 	constructor(
 		id: string,
 		state: number,
-		type: string,
+		type: AlarmType,
 		phrase: string,
 		number1: string,
 		number2: string,
@@ -263,5 +277,59 @@ export class WastlHydrant {
 		this.distance = distance;
 		this.address = address;
 		this.id = id;
+	}
+}
+
+export class HistoryEntry {
+	public readonly type: AlarmType;
+	public readonly phrase: string;
+	public readonly count: number;
+	public readonly hasPhrase: boolean;
+
+	constructor(type: AlarmType, phrase: string, count: number) {
+		this.type = type;
+		this.phrase = phrase;
+		this.count = count;
+
+		this.hasPhrase = phrase != "unspezifiziert";
+	}
+}
+
+export class AlarmType {
+	public static readonly T1 = new AlarmType("T1");
+	public static readonly T2 = new AlarmType("T2");
+	public static readonly T3 = new AlarmType("T3");
+	public static readonly B1 = new AlarmType("B1");
+	public static readonly B2 = new AlarmType("B2");
+	public static readonly B3 = new AlarmType("B3");
+	public static readonly B4 = new AlarmType("B4");
+	public static readonly S1 = new AlarmType("S1");
+	public static readonly S2 = new AlarmType("S2");
+	public static readonly S3 = new AlarmType("S3");
+
+	private constructor(public value: string) { }
+
+	public static all(): AlarmType[] {
+		return [
+			AlarmType.T1,
+			AlarmType.T2,
+			AlarmType.T3,
+			AlarmType.B1,
+			AlarmType.B2,
+			AlarmType.B3,
+			AlarmType.B4,
+			AlarmType.S1,
+			AlarmType.S2,
+			AlarmType.S3
+		];
+	}
+
+	public static fromString(examinee: string): AlarmType {
+		for (let alarmType of this.all()) {
+			if (alarmType.value == examinee) {
+				return alarmType;
+			}
+		}
+		throw new Error("Cannot find AlarmType for examinee string " + examinee);
 	}
 }

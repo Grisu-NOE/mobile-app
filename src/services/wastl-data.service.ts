@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Response, Http, RequestOptionsArgs, URLSearchParams} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {AbstractHttpService} from "./abstract-http.service";
-import {District, MainData, WarnState, InfoScreenData, DataState, Incident, Vote, Disposition} from "../common/models";
+import { District, MainData, WarnState, InfoScreenData, DataState, Incident, Vote, Disposition, HistoryEntry, AlarmType } from "../common/models";
 import * as moment from "moment";
 
 @Injectable()
@@ -101,9 +101,24 @@ export class WastlDataService extends AbstractHttpService {
 			districts.push(mergedDistrict3);
 			// workaround code end
 
-			let result = new MainData(districts, departmentCount, incidentCount, districtCount);
+			let result = new MainData(
+				districts,
+				departmentCount,
+				incidentCount,
+				districtCount,
+				this.buildHistory(data.h1.v),
+				this.buildHistory(data.h2.v),
+				this.buildHistory(data.h3.v)
+			);
+
 			console.debug("Computed main data", result);
 			return result;
+		});
+	}
+
+	private buildHistory(entries: Array<any>): Array<HistoryEntry> {
+		return entries.map(entry => {
+			return new HistoryEntry(AlarmType.fromString(entry.a), entry.m, entry.s);
 		});
 	}
 
@@ -146,7 +161,7 @@ export class WastlDataService extends AbstractHttpService {
 				incidents.push(new Incident(
 					einsatz.EinsatzID,
 					einsatz.Status,
-					einsatz.Alarmstufe,
+					AlarmType.fromString(einsatz.Alarmstufe),
 					einsatz.Meldebild,
 					einsatz.Nummer1,
 					einsatz.Nummer2,
