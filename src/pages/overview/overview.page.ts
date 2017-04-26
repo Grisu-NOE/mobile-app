@@ -14,17 +14,15 @@ import "rxjs/add/operator/finally";
 export class OverviewPage implements OnInit {
 
 	private data: MainData;
-	private elementReference: ElementRef;
 	private mapElement: SVGElement;
 
 	constructor(private dataService: WastlDataService,
 		private messageProvider: ToastMessageProvider,
 		private modalController: ModalController,
-		platform: Platform,
-		elementReference: ElementRef) {
+		private elementReference: ElementRef,
+		platform: Platform) {
 
 		platform.resume.subscribe(this.doRefresh());
-		this.elementReference = elementReference;
 	}
 
 	private doRefresh(refresher?: Refresher): void {

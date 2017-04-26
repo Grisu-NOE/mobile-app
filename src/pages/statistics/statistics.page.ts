@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit } from "@angular/core";
 import { Chart, LinearChartData, LinearTickOptions } from "chart.js";
-import { Refresher } from "ionic-angular";
+import { Refresher, Gesture, Platform } from "ionic-angular";
 import { WastlDataService } from "../../services/wastl-data.service";
 import { HistoryEntry, AlarmType } from "../../common/models";
 import { ToastMessageProvider } from "../../common/toast-message-provider";
@@ -18,12 +18,21 @@ export class StatisticsPage implements OnInit {
 	private historyEntries: Array<HistoryEntry> = new Array();
 	private historyCount: number = 0;
 
-	constructor(private elementReference: ElementRef, private dataService: WastlDataService, private messageProvider: ToastMessageProvider) { }
+	constructor(
+		private elementReference: ElementRef,
+		private dataService: WastlDataService,
+		private messageProvider: ToastMessageProvider,
+		platform: Platform) {
+
+		platform.resume.subscribe(this.doRefresh());
+	}
 
 	public ngOnInit(): void {
 		this.initBarChart(".bar-chart");
 		this.initPieChart(".pie-chart");
+	}
 
+	public ionViewWillEnter(): void {
 		this.doRefresh();
 	}
 
@@ -194,5 +203,27 @@ export class StatisticsPage implements OnInit {
 				}
 			}
 		});
+	}
+
+	public swipeLeft(event: Gesture): void {
+		if (this.selectedTimeSpan == "24h") {
+			this.selectedTimeSpan = "12h";
+		} else if (this.selectedTimeSpan == "12h") {
+			this.selectedTimeSpan = "now";
+		} else {
+			this.selectedTimeSpan = "24h"
+		}
+		this.doRefresh();
+	}
+
+	public swipeRight(event: Gesture): void {
+		if (this.selectedTimeSpan == "now") {
+			this.selectedTimeSpan = "12h";
+		} else if (this.selectedTimeSpan == "12h") {
+			this.selectedTimeSpan = "24h";
+		} else {
+			this.selectedTimeSpan = "now"
+		}
+		this.doRefresh();
 	}
 }

@@ -14,7 +14,7 @@
 	</ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content (swipeleft)="swipeRight($event)" (swiperight)="swipeLeft($event)">
 	<ion-refresher (ionRefresh)="doRefresh($event)">
 		<grisu-refresher-content></grisu-refresher-content>
 	</ion-refresher>
@@ -46,5 +46,5 @@
         </ion-row>
 	</ion-grid>
 
-	<!-- TODO: refresh resume, cahce???, refresh behavior, swipe tabs, UI tests -->
+	<!-- TODO: swipe problem, overview map not visible, map broken after some tab changes, first time data loads multiple times, resume not working, cahce???, refresh behavior, UI tests -->
 </ion-content>
