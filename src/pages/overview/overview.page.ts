@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from "@angular/core";
-import { Refresher, Platform, ModalController } from "ionic-angular";
+import { Refresher, ModalController } from "ionic-angular";
 import { WastlDataService } from "../../services/wastl-data.service";
 import { MainData, WarnState } from "../../common/models";
 import { ToastMessageProvider } from "../../common/toast-message-provider";
@@ -19,11 +19,7 @@ export class OverviewPage implements OnInit {
 	constructor(private dataService: WastlDataService,
 		private messageProvider: ToastMessageProvider,
 		private modalController: ModalController,
-		private elementReference: ElementRef,
-		platform: Platform) {
-
-		platform.resume.subscribe(this.doRefresh());
-	}
+		private elementReference: ElementRef) {}
 
 	private doRefresh(refresher?: Refresher): void {
 		this.dataService.findMainData()

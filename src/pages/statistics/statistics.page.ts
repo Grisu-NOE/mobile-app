@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit } from "@angular/core";
 import { Chart, LinearChartData, LinearTickOptions } from "chart.js";
-import { Refresher, Gesture, Platform } from "ionic-angular";
+import { Refresher, Gesture } from "ionic-angular";
 import { WastlDataService } from "../../services/wastl-data.service";
 import { HistoryEntry, AlarmType } from "../../common/models";
 import { ToastMessageProvider } from "../../common/toast-message-provider";
@@ -21,11 +21,7 @@ export class StatisticsPage implements OnInit {
 	constructor(
 		private elementReference: ElementRef,
 		private dataService: WastlDataService,
-		private messageProvider: ToastMessageProvider,
-		platform: Platform) {
-
-		platform.resume.subscribe(this.doRefresh());
-	}
+		private messageProvider: ToastMessageProvider) {}
 
 	public ngOnInit(): void {
 		this.initBarChart(".bar-chart");
