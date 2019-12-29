@@ -1,0 +1,47 @@
+.lower-austria-map {
+	max-height: 200%; /* fixes a bug with mobile browsers */
+}
+
+.lower-austria-map path {
+	fill: #545454;
+	stroke: #1d1d1d;
+	stroke-width: 1.2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-miterlimit: 10;
+	stroke-dasharray: none;
+	stroke-opacity: 1;
+	fill-opacity: 1;
+}
+
+.lower-austria-map path:active {
+	opacity: 0.4;
+}
+
+.lower-austria-map g {
+	stroke-width: 1.2;
+	stroke-miterlimit: 10;
+	stroke-dasharray: none;
+	fill: #545454;
+	fill-opacity: 1;
+}
+
+.lower-austria-map .thin {
+	stroke-width: 0.7;
+}
+
+.lower-austria-map .thick {
+	stroke-width: 2;
+}
+
+.lower-austria-map .low {
+	fill: #ffff00;
+}
+
+.lower-austria-map .medium {
+	fill: #ff6600;
+}
+
+.lower-austria-map .high {
+	fill: #cd0200;
+}
