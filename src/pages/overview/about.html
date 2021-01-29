@@ -1,0 +1,56 @@
+<ion-header>
+	<ion-navbar color="dark">
+		<ion-title>Info</ion-title>
+
+		<ion-buttons end>
+			<button ion-button icon-only (tap)="close()">
+				<ion-icon name="close"></ion-icon>
+			</button>
+		</ion-buttons>
+	</ion-navbar>
+</ion-header>
+
+<ion-content>
+	<div text-center padding-top>
+		<img src="assets/app-icon.png" width="60" height="60" (tap)="easterEggTap()">
+		<h3 color="light">Grisu NÖ</h3>
+	</div>
+
+	<ion-list>
+		<ion-item>Version: 2.0.0</ion-item>
+		<ion-item>© {{ date | date: 'yyyy' }} Alex Gassner</ion-item>
+		<a ion-item (tap)="openUrl('https://github.com/Grisu-NOE/mobile-app')">
+			<h2>Online</h2>
+			<h3>https://github.com/Grisu-NOE/mobile-app</h3>
+			<ion-icon name="arrow-forward" item-right></ion-icon>
+		</a>
+		<a ion-item (tap)="openUrl('mailto:alexander.gassner@feuerwehr.gv.at')">
+			<h2>Kontakt / Fragen</h2>
+			<h3>alexander.gassner@feuerwehr.gv.at</h3>
+			<ion-icon name="arrow-forward" item-right></ion-icon>
+		</a>
+		<a ion-item (tap)="openUrl('http://www.ff-wolfsgraben.at/')">
+			<h2>Unterstützt durch FF Wolfsgraben</h2>
+			<h3>http://www.ff-wolfsgraben.at/</h3>
+			<ion-icon name="arrow-forward" item-right></ion-icon>
+		</a>
+	</ion-list>
+
+	<p padding-horizontal>
+		Die verwendeten Daten stammen dankenswerterweise von der Warn- und Alarmstufenliste NÖ (WASTL).
+		Abgesehen davon steht die Applikation in keinerlei Zusammenhang mit WASTL.
+	</p>
+
+	<p padding-horizontal>
+		Keine Gewähr auf Richtigkeit und Vollständigkeit der Daten.
+		Insbesondere die Positionsangaben der virtuellen Karten sind oft ungenau
+		und auf keinen Fall für einen Einsatz zu verwenden.
+	</p>
+
+	<p padding-horizontal padding-bottom>
+		Datenquellen der interaktiven Land- und Straßenkarten:
+		<a (tap)="openUrl('http://www.basemap.at/')">basemap.at</a>,
+		<a (tap)="openUrl('https://www.openstreetmap.org/')">openstreetmap.org</a> und
+		<a (tap)="openUrl('http://www.openfiremap.org/')">openfiremap.org</a>
+	</p>
+</ion-content>

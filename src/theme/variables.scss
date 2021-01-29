@@ -1,0 +1,38 @@
+$font-path: "../assets/fonts";
+@import "ionic.globals";
+
+$colors: (
+	primary: #387ef5,
+	secondary: #32db64,
+	danger: #ef4e3a,
+	light: #f4f4f4,
+	dark: #444,
+	text: #afafaf,
+	main-bg: #272727,
+	map-bg: #545454,
+	map-stroke: #1d1d1d,
+	warn-low: #ffff00,
+	warn-medium: #ff6600,
+	warn-high: #cd0200
+);
+
+$text-color: color($colors, text);
+$background-color: color($colors, main-bg);
+$toolbar-background: color($colors, warn-high);
+$tabs-tab-color-active: color($colors, warn-high);
+$list-background-color: color($colors, main-bg);
+$list-md-border-color: color($colors, dark);
+$list-ios-border-color: color($colors, dark);
+$refresher-icon-color: $text-color;
+$refresher-text-color: $text-color;
+$refresher-border-color: $background-color;
+$spinner-ios-crescent-color: $text-color;
+$spinner-md-crescent-color: $text-color;
+
+@import "ionic.theme.default";
+@import "ionic.ionicons";
+
+@import "leaflet";
+
+@import "roboto";
+@import "noto-sans";

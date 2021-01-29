@@ -1,0 +1,25 @@
+<ion-header>
+	<ion-navbar>
+		<ion-buttons start>
+			<button ion-button icon-only (tap)="locate()">
+				<ion-icon name="locate"></ion-icon>
+			</button>
+		</ion-buttons>
+
+		<ion-title>Wasserentnahmestellen</ion-title>
+
+		<ion-buttons end>
+			<button ion-button icon-only (tap)="showHelp()">
+				<ion-icon name="help-circle"></ion-icon>
+			</button>
+		</ion-buttons>
+	</ion-navbar>
+</ion-header>
+
+<ion-content class="map-content">
+	<div class="map"></div>
+
+	<button class="screenshot-button" (tap)="takeScreenshot()" ion-button icon-only>
+		<ion-icon name="camera"></ion-icon>
+	</button>
+</ion-content>

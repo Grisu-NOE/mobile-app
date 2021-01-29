@@ -1,0 +1,62 @@
+<ion-header>
+	<ion-navbar color="dark">
+		<ion-title>Einstellungen</ion-title>
+
+		<ion-buttons end>
+			<button ion-button icon-only (tap)="close()">
+				<ion-icon name="close"></ion-icon>
+			</button>
+		</ion-buttons>
+	</ion-navbar>
+</ion-header>
+
+<ion-content>
+	<ion-list>
+		<ion-item>
+			<ion-label>Mein Bezirk</ion-label>
+			<ion-select [(ngModel)]="settings.myDistrict">
+				<ion-option *ngFor="let district of districts" [value]="district.identifier">{{ district.name }}</ion-option>
+			</ion-select>
+		</ion-item>
+
+		<ion-item>
+			<ion-label>Direkt in Bezirk springen</ion-label>
+			<ion-toggle [(ngModel)]="settings.jumpToDistrict" color="danger"></ion-toggle>
+		</ion-item>
+
+		<ion-item>
+			<ion-label>Einsatzkarte Distanzen</ion-label>
+			<ion-toggle [(ngModel)]="settings.showIncidentDistance" color="danger"></ion-toggle>
+		</ion-item>
+
+		<ion-item>
+			<ion-label>Einsatzkarte Hydranten</ion-label>
+			<ion-toggle [(ngModel)]="settings.showIncidentHydrants" color="danger"></ion-toggle>
+		</ion-item>
+
+		<ion-item>
+			<ion-label>Erweiterte Einsatzdaten</ion-label>
+			<ion-toggle [(ngModel)]="settings.showExtendedIncidentData" color="danger"></ion-toggle>
+		</ion-item>
+	</ion-list>
+
+	<ion-card *ngIf="settings.showExtendedIncidentData" color="light">
+		<ion-card-content>
+			<h2 *ngIf="loadingTokenInfo">Bitte warten...</h2>
+			<h2 *ngIf="!loadingTokenInfo && waitForToken" (tap)="copyTokenToClipboard()">Code: {{ token }}</h2>
+			<h2 *ngIf="!loadingTokenInfo && !waitForToken">Erweiterte Einsatzdaten {{ homeAddress }} werden verwendet!</h2>
+		</ion-card-content>
+	</ion-card>
+
+	<p *ngIf="settings.showExtendedIncidentData && !loadingTokenInfo && waitForToken" padding-horizontal>
+		Falls du Mitglied einer Feuerwehr bist und deine Feuerwehr den
+		<a (tap)="openUrl('http://www.feuerwehr-krems.at/ShowArtikel.asp?Artikel=8930')">
+			WASTL-Infoscreen der FF Krems
+		</a> verwendet,
+		kannst du mit Grisu NÖ erweiterte Einsatzdaten (genauer Einsatzort, Rückmeldefunktion, Bemerkungen,
+		Historie etc.) der Einsätze deiner Feuerwehr anzeigen lassen. Dazu benötigst du lediglich eine
+		Freischaltung des obenstehenden Codes. Am besten wendest du dich mit dem Code an deinen Kameraden, der
+		für den WASTL-Infoscreen in deiner Feuerwehr zuständig ist. Nach erfolgter Freischaltung werden in
+		der App Einsätze mit erweiterten Einsatzdaten mit einem Stern in der Einsatzliste gekennzeichnet.
+	</p>
+</ion-content>

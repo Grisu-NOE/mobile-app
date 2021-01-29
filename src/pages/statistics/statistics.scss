@@ -1,0 +1,53 @@
+page-statistics {
+	.pie-chart,
+	.bar-chart {
+		display: inline-block !important;
+	}
+
+	.bar-chart {
+		max-width: 100%;
+	}
+
+	.pie-chart {
+		max-width: 50%;
+	}
+
+	.incident-type {
+    	padding: 3px;
+
+    	&.T1,
+    	&.T2,
+    	&.T3 {
+        	background-color: color($colors, primary);
+        	color: white;
+    	}
+
+    	&.B1,
+    	&.B2,
+    	&.B3,
+    	&.B4 {
+        	background-color: color($colors, danger);
+        	color: white;
+    	}
+
+    	&.S1,
+    	&.S2,
+    	&.S3 {
+        	background-color: color($colors, secondary);
+        	color: white;
+    	}
+	}
+
+	.no-alarm-image {
+    	font-style: italic;
+		color: color($colors, dark);
+	}
+
+	.separator {
+        border-top: 1px solid color($colors, dark);
+
+        &.sum {
+            border-top-width: 3px;
+        }
+    }
+}

@@ -1,5 +1,6 @@
-Grisu NÖ - Mobile App [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url] [![Join the chat][chat-image]][chat-url]
+Grisu NÖ - Mobile App
 ============
+[![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url] [![NPM dependency Status][david-image]][david-url] [![NPM dev dependency Status][david-dev-image]][david-dev-url] [![Join the chat][chat-image]][chat-url]
 
 [![Apple App Store][app-store-image]][app-store-url] [![Google Play Store][play-store-image]][play-store-url]
 
@@ -21,35 +22,23 @@ Contributing
 You want to contribute? Great! Thanks for being awesome! Please see the project related
 [issues](https://github.com/Grisu-NOE/mobile-app/issues) before you start coding. Pull requests are always welcome!
 
-### Coding guidelines
+## Setup of development environment
 
-- 4 spaces for indentation
-- 140 character max. line length
-- In general, try to make your code blend in with the surrounding code.
-
-### Setup of development environment
-
-- Install [node.js](http://nodejs.org/) (v4.x)
-- `npm install -g cordova ionic gulp`
-- Optional: Install bower command line utility: `npm install -g bower`
-- Go to project root folder
+- Install [node.js](http://nodejs.org/) (v6.x)
+- `npm install -g cordova ionic`
+- Switch to project root folder
 - Install required node dependencies: `npm install`
-- Run Gulp dependency installation: `gulp install`
-  - If you have problems to execute the Gulp task, try to execute `git config url."https://".insteadOf git://` before
-- Add platforms
-  - `ionic platform --noresources --nosave add ios` (works only on Mac OSX)
-  - `ionic platform --noresources --nosave add android` (you need to install the [Android SDK](https://developer.android.com/sdk/) before)
-- ENJOY!
+- Restore the app's platforms and plugins: `ionic state restore`
+- Run the app in the web browser: `ionic serve`
+- Run/emulate the app on iOS/Android: `ionic run/emulate ios/android`
+  - For iOS Mac OSX is required
+  - For Android the Android SDK is required
 
-### Useful commands and hints
+## Useful commands and hints
 - Show app log in console when debugging app on Android device with USB
   - `adb logcat -s CordovaLog:D` or `adb logcat -s chromium:D`
 - Start Google Chrome with disabled web security to retrieve data from remote servers
   - see http://stackoverflow.com/a/6083677/1296333
-- Watch SASS changes and compile / move it immediately
-  - `gulp sass:watch`
-- Start web server and open browser. It also watches for code changes.
-  - `ionic serve`
 - Emulate an iOS device with Mac OSX
   - List available emulators: `<PROJECT_ROOT>/platforms/ios/cordova/lib/list-emulator-images`
   - Start emulator: `ionic emulate ios --target="<TARGET>"` e.g.: `ionic emulate ios --target="iPad (Retina)"`
@@ -64,6 +53,12 @@ Grisu NÖ is licenced under the [MIT License (MIT)](LICENSE).
 
 [travis-url]: https://travis-ci.org/Grisu-NOE/mobile-app
 [travis-image]: https://travis-ci.org/Grisu-NOE/mobile-app.svg?branch=master
+
+[david-url]: https://david-dm.org/Grisu-NOE/mobile-app
+[david-image]: https://david-dm.org/Grisu-NOE/mobile-app.svg
+
+[david-dev-url]: https://david-dm.org/Grisu-NOE/mobile-app?type=dev
+[david-dev-image]: https://david-dm.org/Grisu-NOE/mobile-app/dev-status.svg
 
 [chat-image]: https://badges.gitter.im/Join%20Chat.svg
 [chat-url]: https://gitter.im/Grisu-NOE/mobile-app?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge

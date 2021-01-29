@@ -1,0 +1,41 @@
+// use the default background color for scroll contents
+// to avoid visible content of the pull to refresh component
+ion-content div.scroll-content {
+	background-color: color($colors, main-bg);
+}
+
+.map-content {
+    div.map {
+        width: 100%;
+        height: 100%;
+    }
+
+    // don't display a link to OSM or other layers
+    .leaflet-control-attribution {
+        display: none;
+    }
+
+	.legend {
+		padding: 6px 8px;
+    	background: color($colors, light);
+    	background: rgba(255, 255, 255, 0.8);
+    	box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    	border-radius: 5px;
+
+		i {
+			width: 18px;
+			height: 18px;
+    		float: left;
+    		margin-right: 8px;
+    		opacity: 0.7;
+    		border-bottom: 1px solid color($colors, light);
+		}
+	}
+
+	.screenshot-button {
+    	position: absolute;
+    	bottom: 2px;
+    	left: 105px;
+		z-index: 9999;
+	}
+}
